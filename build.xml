@@ -293,7 +293,7 @@
   
   <target name="clean" depends="clean.module.biocode-fims-commons, clean.module.arms-fims" description="cleanup all"/>
   
-  <target name="build.modules" depends="init, clean, compile.module.biocode-fims-commons, compile.module.arms-fims" description="build all modules"/>
+  <target name="build.modules" depends="init, compile.module.biocode-fims-commons, compile.module.arms-fims" description="build all modules"/>
   
   <target name="all" depends="build.modules" description="build all"/>
 
@@ -335,7 +335,7 @@
   <target name="deployWar" depends="war" description="deploy application as war">
     <copy todir="${deploy.path}" preservelastmodified="true">
       <fileset dir="dist">
-        <include name="*.war"/>
+        <include name="${deploy.root.path}.war"/>
       </fileset>
     </copy>
   </target>
