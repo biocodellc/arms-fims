@@ -43,8 +43,7 @@ public class Projects extends FimsService {
         JSONObject response = new JSONObject();
 
         try {
-//            File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), true).getOutputFile();
-            File configFile = new File(uploadPath() + "config.1.xml");
+            File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), true).getOutputFile();
 
             Mapping mapping = new Mapping();
             mapping.addMappingRules(new Digester(), configFile);

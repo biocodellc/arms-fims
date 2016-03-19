@@ -3,26 +3,41 @@ package biocode.fims.rest.services.rest;
 import biocode.fims.bcid.Bcid;
 import biocode.fims.bcid.BcidMinter;
 import biocode.fims.bcid.ExpeditionMinter;
+import biocode.fims.bcid.Resolver;
 import biocode.fims.config.ConfigurationFileTester;
-import biocode.fims.fasta.FastaManager;
-import biocode.fims.fimsExceptions.FimsRuntimeException;
-import biocode.fims.fimsExceptions.UnauthorizedRequestException;
+import biocode.fims.digester.Attribute;
+import biocode.fims.fimsExceptions.*;
+import biocode.fims.fimsExceptions.BadRequestException;
+import biocode.fims.mysql.MySqlDatasetTableValidator;
+import biocode.fims.mysql.MySqlUploader;
+import biocode.fims.reader.CsvTabularDataConverter;
+import biocode.fims.renderers.Message;
+import biocode.fims.renderers.RowMessage;
 import biocode.fims.rest.FimsService;
 import biocode.fims.run.Process;
 import biocode.fims.run.ProcessController;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  */
 @Path("validate")
 public class Validate extends FimsService {
+
+    @Autowired
+    private MySqlUploader mySqlUploader;
+
+    @Autowired
+    private MySqlDatasetTableValidator mySqlDatasetTableValidator;
 
     /**
      * service to validate a dataset against a project's rules
@@ -42,16 +57,16 @@ public class Validate extends FimsService {
                            @FormDataParam("expeditionCode") String expeditionCode,
                            @FormDataParam("upload") String upload,
                            @FormDataParam("public_status") String publicStatus,
-                           @FormDataParam("fasta") InputStream fastaIs,
-                           @FormDataParam("fasta") FormDataContentDisposition fastaFileData,
                            @FormDataParam("dataset") InputStream datasetIs,
                            @FormDataParam("dataset") FormDataContentDisposition datasetFileData) {
         StringBuilder retVal = new StringBuilder();
         Boolean removeController = true;
         Boolean deleteInputFile = true;
-        String inputFile = null;
-        String fastaFile = null;
-        FastaManager fastaManager = null;
+        String inputFile;
+        if (datasetFileData.getFileName() == null) {
+            throw new BadRequestException("dataset is null");
+
+        }
 
         // create a new processController
         ProcessController processController = new ProcessController(projectId, expeditionCode);
@@ -63,57 +78,32 @@ public class Validate extends FimsService {
 
         // update the status
         processController.appendStatus("Initializing...<br>");
-        // save the dataset and/or fasta files
-        if (datasetFileData.getFileName() != null) {
-            processController.appendStatus("inputFilename = " + processController.stringToHTMLJSON(
-                    datasetFileData.getFileName()) + "<br>");
+        // save the dataset
+        processController.appendStatus("inputFilename = " + processController.stringToHTMLJSON(
+                datasetFileData.getFileName()) + "<br>");
 
-            // Save the uploaded dataset file
-            String splitArray[] = datasetFileData.getFileName().split("\\.");
-            String ext;
-            if (splitArray.length == 0) {
-                // if no extension is found, then guess
-                ext = "xls";
-            } else {
-                ext = splitArray[splitArray.length - 1];
-            }
-            inputFile = processController.saveTempFile(datasetIs, ext);
-            // if inputFile null, then there was an error saving the file
-            if (inputFile == null) {
-                throw new FimsRuntimeException("Server error saving dataset file.", 500);
-            }
-            processController.setInputFilename(inputFile);
+        // Save the uploaded dataset file
+        String splitArray[] = datasetFileData.getFileName().split("\\.");
+        String ext;
+        if (splitArray.length == 0) {
+            // if no extension is found, then guess
+            ext = "xls";
+        } else {
+            ext = splitArray[splitArray.length - 1];
         }
+        inputFile = processController.saveTempFile(datasetIs, ext);
+
+        // if inputFile null, then there was an error saving the file
+        if (inputFile == null) {
+            throw new FimsRuntimeException("Server error saving dataset file.", 500);
+        }
+        processController.setInputFilename(inputFile);
+
         // Create the process object --- this is done each time to orient the application
         Process p = new Process(
                 uploadPath(),
-                processController,
-                new File(uploadPath() + "config.1.xml")
+                processController
         );
-        if (fastaFileData.getFileName() != null) {
-            processController.appendStatus("fastaFilename = " + processController.stringToHTMLJSON(
-                    fastaFileData.getFileName()) + "<br>");
-
-            // Save the uploaded fasta file
-            String splitArray[] = fastaFileData.getFileName().split("\\.");
-            String fastaExt;
-            if (splitArray.length == 0) {
-                // if no extension is found, then guess
-                fastaExt = "fasta";
-            } else {
-                fastaExt = splitArray[splitArray.length - 1];
-            }
-            fastaFile = processController.saveTempFile(fastaIs, fastaExt);
-            // if inputFile null, then there was an error saving the file
-            if (fastaFile == null) {
-                throw new FimsRuntimeException("Server error saving fasta file.", 500);
-            }
-
-            fastaManager = new FusekiFastaManager(
-                    processController.getMapping().getMetadata().getQueryTarget(), processController, fastaFile);
-            processController.setFastaManager(fastaManager);
-        }
-
 
         // Test the configuration file to see that we're good to go...
         ConfigurationFileTester cFT = new ConfigurationFileTester();
@@ -138,11 +128,10 @@ public class Validate extends FimsService {
         if (configurationGood) {
             processController.appendStatus("Validating...<br>");
 
-            if (processController.getInputFilename() != null) {
-                p.runValidation();
-            }
-            if (fastaManager != null) {
-                fastaManager.validate(uploadPath());
+            p.runValidation();
+            if (mySqlDatasetTableValidator.validate(processController.getMapping())) {
+                processController.addMessage(processController.getMapping().getDefaultSheetName(),
+                        new RowMessage("database and configuration file need to be synced", "System Error", Message.ERROR));
             }
 
             // if there were validation errors, we can't upload
@@ -189,11 +178,9 @@ public class Validate extends FimsService {
         }
 
         if (deleteInputFile) {
-            if (inputFile != null) {
-                new File(inputFile).delete();
-            }
-            if (fastaFile != null) {
-                new File(fastaFile).delete();
+            new File(inputFile).delete();
+            if (processController.getTabularDataReader() != null) {
+                processController.getTabularDataReader().closeFile();
             }
         }
         if (removeController) {
@@ -214,10 +201,7 @@ public class Validate extends FimsService {
     @Path("/continue")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public String upload(@QueryParam("createExpedition") @DefaultValue("false") Boolean createExpedition) {
-        FastaManager fastaManager;
-        String previousGraph;
-        String currentGraph;
-        String successMessage = null;
+        String successMessage;
         ProcessController processController = (ProcessController) session.getAttribute("processController");
 
         // if no processController is found, we can't do anything
@@ -234,110 +218,72 @@ public class Validate extends FimsService {
         processController.setClearedOfWarnings(true);
         processController.setValidated(true);
 
-        fastaManager = processController.getFastaManager();
-        // if fastaManager is null, then we are not uploading a dataset. In that case, we need to copy over the sequences
-        // from the old graph to the new graph
-        if (fastaManager == null) {
-            fastaManager = new FusekiFastaManager(processController.getMapping().getMetadata().getQueryTarget(),
-                    processController, null);
-        }
-
         // Create the process object --- this is done each time to orient the application
         Process p = new Process(
                 uploadPath(),
-                processController,
-                new File(uploadPath() + "config.1.xml")
+                processController
         );
 
         String outputPrefix = processController.getExpeditionCode() + "_output";
-        // if there is an inputFilename, then there is a dataset to upload
-        if (processController.getInputFilename() != null) {
 
-            // create this expedition if the user wants to
-            if (createExpedition) {
-                processController.setExpeditionTitle(processController.getExpeditionCode() + " spreadsheet");
-                p.runExpeditionCreate();
-            }
-
-            if (!processController.isExpeditionAssignedToUserAndExists()) {
-                p.runExpeditionCheck();
-            }
-
-            if (processController.isExpeditionCreateRequired()) {
-                // ask the user if they want to create this expedition
-                return "{\"continue\": {\"message\": \"The expedition code \\\"" + JSONObject.escape(processController.getExpeditionCode()) +
-                        "\\\" does not exist.  " +
-                        "Do you wish to create it now?<br><br>" +
-                        "If you choose to continue, your data will be associated with this new expedition code.\"}}";
-            }
-
-            // fetch the current graph before uploading the new graph. This is needed to copy over the fasta sequences
-            previousGraph = fastaManager.fetchGraph();
-
-            // run the triplifier
-            Triplifier triplifier = new Triplifier(outputPrefix, uploadPath(), processController);
-
-            triplifier.run(processController.getValidation().getSqliteFile());
-
-            // upload the dataset
-            Uploader uploader = new Uploader(processController.getMapping().getMetadata().getTarget(),
-                    new File(triplifier.getTripleOutputFile()));
-
-            uploader.execute();
-            currentGraph = uploader.getGraphID();
-
-            // Detect if this is user=demo or not.  If this is "demo" then do not request EZIDs.
-            // User account Demo can still create Data Groups, but they just don't get registered and will be purged periodically
-            boolean ezidRequest = true;
-            if (username.equals("demo") || sm.retrieveValue("ezidRequests").equalsIgnoreCase("false")) {
-                ezidRequest = false;
-            }
-
-            // Mint the data group
-            BcidMinter bcidMinter = new BcidMinter(ezidRequest);
-            String identifier = bcidMinter.createEntityBcid(new Bcid(processController.getUserId(), "http://purl.org/dc/dcmitype/Dataset",
-                    processController.getExpeditionCode() + " Dataset", uploader.getEndpoint(), currentGraph, null,
-                    processController.getFinalCopy(), false));
-            bcidMinter.close();
-            successMessage = "Dataset Identifier: http://n2t.net/" + identifier + " (wait 15 minutes for resolution to become active)";
-
-            // Associate the expeditionCode with this identifier
-            ExpeditionMinter expedition = new ExpeditionMinter();
-            expedition.attachReferenceToExpedition(processController.getExpeditionCode(), identifier, processController.getProjectId());
-            expedition.close();
-            successMessage += "<br>\t" + "Data Elements Root: " + processController.getExpeditionCode();
-
-            // copy over the fasta sequences if this is not the first dataset uploaded, but only if there is no
-            // new fasta file to upload
-            if (previousGraph != null && fastaManager.getFastaFilename() == null) {
-                fastaManager.copySequences(previousGraph, currentGraph);
-            }
-
-            // delete the temporary file now that it has been uploaded
-            new File(processController.getInputFilename()).delete();
-        } else {
-            currentGraph = fastaManager.fetchGraph();
+        // create this expedition if the user wants to
+        if (createExpedition) {
+            processController.setExpeditionTitle(processController.getExpeditionCode() + " spreadsheet");
+            p.runExpeditionCreate();
         }
 
-        // if fataFilename isn't null, then we have a fasta file to upload
-        if (fastaManager.getFastaFilename() != null) {
-            if (!processController.isExpeditionAssignedToUserAndExists()) {
-                p.runExpeditionCheck();
-                if (processController.isExpeditionCreateRequired()) {
-                    throw new BadRequestException("You can only upload fasta files to existing expeditions unless you" +
-                            " are simultaneously uploading a new dataset.");
-                }
-            }
-
-            if (currentGraph == null) {
-                throw new BadRequestException("No existing dataset was detected. Your fasta file must be " + "" +
-                        "associated with an existing dataset.");
-            }
-            fastaManager.upload(currentGraph, uploadPath(), outputPrefix);
-
-            // delete the temporary file now that it has been uploaded
-            new File(fastaManager.getFastaFilename()).delete();
+        if (!processController.isExpeditionAssignedToUserAndExists()) {
+            p.runExpeditionCheck();
         }
+
+        if (processController.isExpeditionCreateRequired()) {
+            // ask the user if they want to create this expedition
+            return "{\"continue\": {\"message\": \"The expedition code \\\"" + JSONObject.escape(processController.getExpeditionCode()) +
+                    "\\\" does not exist.  " +
+                    "Do you wish to create it now?<br><br>" +
+                    "If you choose to continue, your data will be associated with this new expedition code.\"}}";
+        }
+
+        String destination = uploadPath();
+
+        // convert the dataset to csv file for uploading
+        CsvTabularDataConverter csvTabularDataConverter = new CsvTabularDataConverter(
+                processController.getTabularDataReader(), destination, outputPrefix);
+
+        List<String> acceptableColumns = new LinkedList<>();
+        for (Attribute attribute : processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName())) {
+            acceptableColumns.add(attribute.getColumn());
+        }
+        csvTabularDataConverter.convert(acceptableColumns);
+
+        Resolver resolver = new Resolver(processController.getExpeditionCode(), processController.getProjectId(),
+                                        "Resource");
+        // upload the dataset
+        mySqlUploader.execute(resolver.getIdentifier(), acceptableColumns,csvTabularDataConverter.getCsvFile().getPath());
+
+        // Detect if this is user=demo or not.  If this is "demo" then do not request EZIDs.
+        // User account Demo can still create Data Groups, but they just don't get registered and will be purged periodically
+        boolean ezidRequest = true;
+        if (username.equals("demo") || sm.retrieveValue("ezidRequests").equalsIgnoreCase("false")) {
+            ezidRequest = false;
+        }
+
+        // Mint the data group
+        BcidMinter bcidMinter = new BcidMinter(ezidRequest);
+        String identifier = bcidMinter.createEntityBcid(new Bcid(processController.getUserId(), "http://purl.org/dc/dcmitype/Dataset",
+                processController.getExpeditionCode() + " Dataset", null, null, null,
+                processController.getFinalCopy(), false));
+        successMessage = "Dataset Identifier: http://n2t.net/" + identifier + " (wait 15 minutes for resolution to become active)";
+
+        // Associate the expeditionCode with this identifier
+        ExpeditionMinter expedition = new ExpeditionMinter();
+        expedition.attachReferenceToExpedition(processController.getExpeditionCode(), identifier, processController.getProjectId());
+        successMessage += "<br>\t" + "Data Elements Root: " + processController.getExpeditionCode();
+
+        // delete the temporary file now that it has been uploaded
+        new File(processController.getInputFilename()).delete();
+        // close the TabularDataReader file
+        processController.getTabularDataReader().closeFile();
 
         successMessage += "<br><font color=#188B00>Successfully Uploaded!</font><br><br>";
         processController.appendStatus(successMessage);
