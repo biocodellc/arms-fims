@@ -1,7 +1,11 @@
-package mysql;
+package biocode.fims.mysql;
 
 import biocode.fims.fimsExceptions.ServerErrorException;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,6 +17,19 @@ import java.util.List;
 public class MySqlUploader {
     private String csvFilepath;
     private List<String> columnNames;
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    private DataSource dataSource;
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public MySqlUploader() {
+    }
 
     public MySqlUploader(String csvFilepath, List<String> columnNames) {
         this.csvFilepath = csvFilepath;
@@ -27,7 +44,7 @@ public class MySqlUploader {
         StringBuilder sql = new StringBuilder();
 
         try {
-            conn = MySqlDatasetDatabase.getConnection();
+            conn = dataSource.getConnection();
             sql.append("LOAD DATA INFILE ? INTO TABLE dataset FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n' (");
             int col = 0;
             for (String colname : columnNames) {
@@ -47,7 +64,7 @@ public class MySqlUploader {
         } catch (SQLException e) {
             throw new ServerErrorException(e);
         } finally {
-            MySqlDatasetDatabase.close(conn, stmt, null);
+//            dataSource.close(conn, stmt, null);
         }
     }
 
@@ -56,7 +73,7 @@ public class MySqlUploader {
         PreparedStatement stmt = null;
 
         try {
-            conn = MySqlDatasetDatabase.getConnection();
+            conn = dataSource.getConnection();
             String sql = "DELETE FROM dataset WHERE identifier = ?";
 
             stmt = conn.prepareStatement(sql);
@@ -66,7 +83,17 @@ public class MySqlUploader {
         } catch (SQLException e) {
             throw new ServerErrorException(e);
         } finally {
-            MySqlDatasetDatabase.close(conn, stmt, null);
+//            MySqlDatasetDatabase.close(conn, stmt, null);
         }
+    }
+
+    public static void main(String[] args) {
+        ApplicationContext context =
+//                new ClassPathXmlApplicationContext();
+                new ClassPathXmlApplicationContext("applicationContext.xml");
+
+//        new MysqlDataSource().
+        MySqlUploader mySqlUploader = (MySqlUploader) context.getBean("mySqlUploader");
+        int i = 0;
     }
 }

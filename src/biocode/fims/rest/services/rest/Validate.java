@@ -1,4 +1,4 @@
-package services.rest;
+package biocode.fims.rest.services.rest;
 
 import biocode.fims.bcid.Bcid;
 import biocode.fims.bcid.BcidMinter;
@@ -7,9 +7,6 @@ import biocode.fims.config.ConfigurationFileTester;
 import biocode.fims.fasta.FastaManager;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 import biocode.fims.fimsExceptions.UnauthorizedRequestException;
-import biocode.fims.fuseki.Uploader;
-import biocode.fims.fuseki.fasta.FusekiFastaManager;
-import biocode.fims.fuseki.triplify.Triplifier;
 import biocode.fims.rest.FimsService;
 import biocode.fims.run.Process;
 import biocode.fims.run.ProcessController;
