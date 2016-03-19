@@ -7,7 +7,28 @@
 	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <context:component-scan base-package="biocode.fims.*" />
+    <context:property-placeholder location="classpath:arms-fims.props" />
 
+    <bean id="dataSource"
+          class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" >
 
+        <property name="url" value="${bcidUrl}" />
+        <property name="user" value="${bcidUser}" />
+        <property name="password" value="${bcidPassword}" />
+    </bean>
+    <bean id="datasetDataSource"
+          class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" >
+
+        <property name="url" value="${datasetUrl}" />
+        <property name="user" value="${datasetUser}" />
+        <property name="password" value="${datasetPassword}" />
+    </bean>
+
+    <bean id="mySqlUploader" class="biocode.fims.mysql.MySqlUploader">
+        <constructor-arg name="dataSource" ref="datasetDataSource" />
+    </bean>
+    <bean id="mySqlDatasetTableValidator" class="biocode.fims.mysql.MySqlDatasetTableValidator">
+        <constructor-arg name="dataSource" ref="datasetDataSource" />
+    </bean>
 
 </beans>

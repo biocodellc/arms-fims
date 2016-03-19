@@ -329,7 +329,7 @@
       <classes dir="${arms-fims.output.dir}"/>
       <classes dir="${biocode-fims-commons.output.dir}"/>
       <classes dir="" includes="arms-fims.props"/>
-      <classes dir="" includes="applicationContext.props"/>
+      <classes dir="" includes="applicationContext.xml"/>
     </war>
   </target>
 

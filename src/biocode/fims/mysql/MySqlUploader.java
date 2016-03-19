@@ -1,42 +1,33 @@
 package biocode.fims.mysql;
 
+import biocode.fims.bcid.Database;
 import biocode.fims.fimsExceptions.ServerErrorException;
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 /**
  * Class to upload a csv file to a mysql database
  */
+@Repository
 public class MySqlUploader {
-    private String csvFilepath;
-    private List<String> columnNames;
 
-    public DataSource getDataSource() {
-        return dataSource;
-    }
+    private final DataSource dataSource;
 
-    private DataSource dataSource;
-
-    public void setDataSource(DataSource dataSource) {
+    @Autowired
+    public MySqlUploader(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public MySqlUploader() {
-    }
-
-    public MySqlUploader(String csvFilepath, List<String> columnNames) {
-        this.csvFilepath = csvFilepath;
-        this.columnNames = columnNames;
-    }
-
-    public void execute(String identifier) {
+    public void execute(String identifier, List<String> columnNames, String csvFilepath) {
         deleteExistingDataset(identifier);
 
         Connection conn = null;
@@ -64,7 +55,7 @@ public class MySqlUploader {
         } catch (SQLException e) {
             throw new ServerErrorException(e);
         } finally {
-//            dataSource.close(conn, stmt, null);
+            Database.close(conn, stmt, null);
         }
     }
 
@@ -83,17 +74,7 @@ public class MySqlUploader {
         } catch (SQLException e) {
             throw new ServerErrorException(e);
         } finally {
-//            MySqlDatasetDatabase.close(conn, stmt, null);
+            Database.close(conn, stmt, null);
         }
-    }
-
-    public static void main(String[] args) {
-        ApplicationContext context =
-//                new ClassPathXmlApplicationContext();
-                new ClassPathXmlApplicationContext("applicationContext.xml");
-
-//        new MysqlDataSource().
-        MySqlUploader mySqlUploader = (MySqlUploader) context.getBean("mySqlUploader");
-        int i = 0;
     }
 }
