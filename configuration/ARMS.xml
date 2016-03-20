@@ -113,7 +113,7 @@
     </mapping>
     <validation>
         <worksheet sheetname='Samples'>
-            <rule type='duplicateColumnNames' level='error'></rule>
+            <rule type='duplicateColumnNames' level='error'/>
             <rule type='RequiredColumns' column='RequiredColumns' level='error'>
                 <field>numLayers</field>
                 <field>ARMS Model</field>
@@ -165,13 +165,14 @@
                 <field>permitInformationURL</field>
                 <field>actualDeploymentTimeOfDay</field>
             </rule>
-            <rule type='uniqueValue' column='deploymentID' level='error'></rule>
-            <rule type='controlledVocabulary' column='country' list='country' level='warning'></rule>
-            <rule type='validateNumeric' column='decimalLatitude' level='error' value='%3E%3D-90+and+%3C%3D90'></rule>
-            <rule type='validateNumeric' column='decimalLongitude' level='error' value='%3E%3D-180+and+%3C%3D180'></rule>
-            <rule type='validateNumeric' column='depthInMeters' level='warning' value='%3E%3D0'></rule>
-            <rule type='validateNumeric' column='depthOfBottomMeters' level='warning' value='%3E%3D0'></rule>
-            <rule type='validateNumeric' column='error radius' level='warning' value='%3E%3D0'></rule>
+            <rule type="datasetContainsExtraColumns" level="warning" />
+            <rule type='uniqueValue' column='deploymentID' level='error'/>
+            <rule type='controlledVocabulary' column='country' list='country' level='warning'/>
+            <rule type='validateNumeric' column='decimalLatitude' level='error' value='%3E%3D-90+and+%3C%3D90'/>
+            <rule type='validateNumeric' column='decimalLongitude' level='error' value='%3E%3D-180+and+%3C%3D180'/>
+            <rule type='validateNumeric' column='depthInMeters' level='warning' value='%3E%3D0'/>
+            <rule type='validateNumeric' column='depthOfBottomMeters' level='warning' value='%3E%3D0'/>
+            <rule type='validateNumeric' column='error radius' level='warning' value='%3E%3D0'/>
         </worksheet>
         <lists>
             <list alias='intent' caseInsensitive='true'>
