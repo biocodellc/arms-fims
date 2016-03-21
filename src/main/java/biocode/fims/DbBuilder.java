@@ -23,7 +23,7 @@ public class DbBuilder {
     String pass = sm.retrieveValue("datasetPassword");
 
     static {
-        sm = SettingsManager.getInstance("arms-fims.props");
+        sm = SettingsManager.getInstance("src/main/resources/arms-fims.props");
     }
 
     public DbBuilder() throws Exception {
@@ -59,8 +59,8 @@ public class DbBuilder {
     }
 
     public static void main(String args[]) throws Exception {
-        SettingsManager.getInstance("arms-fims.props");
-        String projectConfig = "/Users/rjewing/IdeaProjects/biscicol-fims/web/tripleOutput/config.1.xml";
+        SettingsManager.getInstance("src/main/resources/arms-fims.props");
+        String projectConfig = "/Users/rjewing/IdeaProjects/biscicol-fims/src.main.web/tripleOutput/config.1.xml";
         DbBuilder dbBuilder = new DbBuilder();
         dbBuilder.buildTable(projectConfig);
 
