@@ -36,3 +36,7 @@ gretty {
 }
 
 libsDirName = "../dist"
+
+clean {
+    delete libsDir
+}
