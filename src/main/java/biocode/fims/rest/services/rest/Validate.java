@@ -11,6 +11,7 @@ import biocode.fims.fimsExceptions.BadRequestException;
 import biocode.fims.mysql.MySqlDatasetTableValidator;
 import biocode.fims.mysql.MySqlUploader;
 import biocode.fims.reader.CsvTabularDataConverter;
+import biocode.fims.reader.plugins.TabularDataReader;
 import biocode.fims.renderers.Message;
 import biocode.fims.renderers.RowMessage;
 import biocode.fims.rest.FimsService;
@@ -179,9 +180,6 @@ public class Validate extends FimsService {
 
         if (deleteInputFile) {
             new File(inputFile).delete();
-            if (processController.getTabularDataReader() != null) {
-                processController.getTabularDataReader().closeFile();
-            }
         }
         if (removeController) {
             session.removeAttribute("processController");
@@ -246,9 +244,13 @@ public class Validate extends FimsService {
 
         String destination = uploadPath();
 
+        TabularDataReader tdr = p.getTabularDataReader();
+
         // convert the dataset to csv file for uploading
         CsvTabularDataConverter csvTabularDataConverter = new CsvTabularDataConverter(
-                processController.getTabularDataReader(), destination, outputPrefix);
+                tdr, destination, outputPrefix);
+
+        tdr.closeFile();
 
         List<String> acceptableColumns = new LinkedList<>();
         for (Attribute attribute : processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName())) {
@@ -282,8 +284,6 @@ public class Validate extends FimsService {
 
         // delete the temporary file now that it has been uploaded
         new File(processController.getInputFilename()).delete();
-        // close the TabularDataReader file
-        processController.getTabularDataReader().closeFile();
 
         successMessage += "<br><font color=#188B00>Successfully Uploaded!</font><br><br>";
         processController.appendStatus(successMessage);
