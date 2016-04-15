@@ -1,0 +1,19 @@
+<?php
+///**
+//* @file
+//* A description of what your module does.
+//*/
+/**
+ * Implements hook_menu().
+ */
+function Fims_menu()
+{
+  // The paths given here need to match the ones in foobar.routing.yml exactly.
+  $items['admin/foobar'] = array(
+    'title' => 'Foobar',
+    'description' => 'This is the demo foobar page.',
+    // The name of the route from foobar.routing.yml
+    'route_name' => 'foobar',
+  );
+  return $items;
+}

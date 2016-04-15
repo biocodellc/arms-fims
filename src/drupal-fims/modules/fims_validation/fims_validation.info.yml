@@ -1,0 +1,14 @@
+name: Biocode-Fims Validation
+description: 'provides a Biocode-Fims validation interface'
+package: Biocode-Fims
+
+type: module
+core: 8.x
+
+dependencies:
+  - node
+  - block
+  - drupal:views
+  - fims
+
+hidden: false

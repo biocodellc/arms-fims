@@ -1,0 +1,6 @@
+fims.validation:
+  path: 'fims/validation'
+  defaults:
+    _form: '\Drupal\fims_validation\Form\FimsValidationForm'
+  requirements:
+    _permission: 'access content'
