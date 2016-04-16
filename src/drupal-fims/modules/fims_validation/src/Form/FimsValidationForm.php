@@ -10,6 +10,13 @@ namespace Drupal\fims_validation\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+use GuzzleHttp\Client;
+use \GuzzleHttp\HandlerStack;
+use CommerceGuys\Guzzle\Oauth2\GrantType\RefreshToken;
+use CommerceGuys\Guzzle\Oauth2\GrantType\PasswordCredentials;
+use CommerceGuys\Guzzle\Oauth2\Middleware\OAuthMiddleware;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * Implements the SimpleForm form controller.
  *
@@ -19,6 +26,28 @@ use Drupal\Core\Form\FormStateInterface;
  * @see \Drupal\Core\Form\FormBase
  */
 class FimsValidationForm extends FormBase {
+
+  /**
+   * @var \GuzzleHttp\Client
+   */
+  protected $fimsClient;
+
+  /**
+   * FimsValidationForm constructor.
+   * @param \GuzzleHttp\Client $fims_client
+   */
+  public function __construct(Client $fims_client) {
+    $this->fimsClient = $fims_client;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('fims.client')
+    );
+  }
 
   /**
    * Build the simple form.
@@ -57,7 +86,7 @@ class FimsValidationForm extends FormBase {
       '#options' => $this->getExpeditionCodes(1),
       '#states' => [
         'visible' => [
-          "input[name='upload']" => ['checked' => TRUE ],
+          "input[name='upload']" => ['checked' => TRUE],
         ],
       ],
     ];
@@ -67,16 +96,16 @@ class FimsValidationForm extends FormBase {
       '#title' => 'Public Project',
       '#states' => [
         'visible' => [
-          "input[name='upload']" => ['checked' => TRUE ],
+          "input[name='upload']" => ['checked' => TRUE],
         ],
       ],
     ];
 
-    // Add a hidden projectId
+    // Add a hidden projectId.
     $form['projectId'] = [
       '#type' => 'hidden',
       // TODO make this a configuration setting?
-      '#value' => '1'
+      '#value' => '1',
     ];
 
     // Group submit handlers in an actions element with a key of "actions" so
@@ -150,33 +179,30 @@ class FimsValidationForm extends FormBase {
   /**
    * Fetch the expeditions belonging to a project
    *
-   * @param $projectId
+   * @param $project_id
    * @return array containing expeditionCode => expeditionTitle pairs
    */
-  private function getExpeditionCodes($projectId) {
-    $expeditionSelect = ['0' => 'Create a new Expedition',];
-    $client = \Drupal::httpClient();
-//    try {
+  private function getExpeditionCodes($project_id) {
+    $expedition_select = ['0' => 'Create a new Expedition'];
+
+    
+    // try {
     // TODO move url to configuration
     // TODO centralize all rest calls?
-      $response = $client->get(
-        "localhost:8080/biocode-fims/rest/projects/" . $projectId . "/expeditions",
-        ['query' => [
-          'access_token' => 'YJuPMXwWjcT6Jxb48FYn'
-        ]
-        ]
-      );
-      $expeditions = json_decode($response->getBody(), true);
+    $response = $this->fimsClient->get(
+      "biocode-fims/rest/projects/" . $project_id . "/expeditions"
+    );
+    $expeditions = json_decode($response->getBody(), TRUE);
 
-      foreach($expeditions as $expedition) {
-        $expeditionSelect[$expedition["expeditionId"]] = $expedition["expeditionTitle"];
-      }
+    foreach ($expeditions as $expedition) {
+      $expedition_select[$expedition["expeditionId"]] = $expedition["expeditionTitle"];
+    }
 
-//    } catch (RequestException $e) {
-//      return($this->t('Error'));
-//    }
+    // } catch (RequestException $e) {
+    //   return($this->t('Error'));
+    // }
 
-    return $expeditionSelect;
+    return $expedition_select;
   }
 
 }

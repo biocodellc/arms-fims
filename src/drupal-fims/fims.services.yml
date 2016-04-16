@@ -1,0 +1,7 @@
+# Service definition in YAML.
+services:
+  fims.client:
+    class: GuzzleHttp\Client
+    factory: fims.client.factory:get
+  fims.client.factory:
+    class: Drupal\fims\ClientFactory
