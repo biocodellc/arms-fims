@@ -1,0 +1,14 @@
+{
+  "name": "biocodellc/fims",
+  "description": "Provides functionality for interfacing with the Biocode-Fims system",
+  "type": "drupal-module",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/lemasson-h/guzzle-oauth2-plugin"
+    }
+  ],
+  "require": {
+    "commerceguys/guzzle-oauth2-plugin": "dev-master"
+  }
+}
