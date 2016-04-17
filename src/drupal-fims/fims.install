@@ -11,7 +11,7 @@ function fims_requirements($phase) {
   $requirements = array();
 
   if ($phase == 'runtime') {
-    $found = class_exists('CommerceGuys\Guzzle\Oauth2\OAuthMiddleware');
+    $found = class_exists('CommerceGuys\Guzzle\Oauth2\Middleware\OAuthMiddleware');
 
     $description = \Drupal::translation()->translate('The Guzzle OAuth2 plugin library is required for the OAuth2 module to function.
       Download the library using composer, download it from <a href="https://github.com/lemasson-h/guzzle-oauth2-plugin" target="_blank">GitHub</a>  or use composer manager.');

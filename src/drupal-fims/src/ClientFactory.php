@@ -14,32 +14,32 @@ class ClientFactory {
    * Return a configured Client object.
    */
   public function get() {
-    $base_uri = 'localhost:8080/';
+    $fims_config = \Drupal::config('fims.settings');
 
     $handler_stack = HandlerStack::create();
     $client = new Client([
       'handler' => $handler_stack,
-      'base_uri' => $base_uri,
+      'base_uri' => $fims_config->get('fims_rest_uri'),
       'auth' => 'oauth2',
     ]);
 
     $config = [
-      'username' => '',
-      'password' => '',
-      'token_url' => 'biocode-fims/rest/authenticationService/oauth/accessToken',
-      'client_id' => '',
-      'client_secret' => '',
+      'username' => 'demo',
+      'password' => 'demo',
+      'token_url' => $fims_config->get('fims_rest_uri') . 'authenticationService/oauth/accessToken',
+      'client_id' => $fims_config->get('oauth2_client_id'),
+      'client_secret' => $fims_config->get('oauth2_client_secret'),
     ];
 
     $refresh_config = $config;
-    $refresh_config['token_url'] = 'biocode-fims/rest/authenticationService/oauth/refreshToken';
+    $refresh_config['token_url'] = $fims_config->get('fims_rest_uri') . 'authenticationService/oauth/refreshToken';
 
     $token = new PasswordCredentials($client, $config);
     $refresh_token = new RefreshToken($client, $refresh_config);
     $middleware = new OAuthMiddleware($client, $token, $refresh_token);
 
     $handler_stack->push($middleware->onBefore());
-    $handler_stack->push($middleware->onFailure(5));
+    $handler_stack->push($middleware->onFailure(1));
 
     return $client;
   }

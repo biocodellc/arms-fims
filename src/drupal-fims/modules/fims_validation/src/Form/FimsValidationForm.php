@@ -11,10 +11,6 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 use GuzzleHttp\Client;
-use \GuzzleHttp\HandlerStack;
-use CommerceGuys\Guzzle\Oauth2\GrantType\RefreshToken;
-use CommerceGuys\Guzzle\Oauth2\GrantType\PasswordCredentials;
-use CommerceGuys\Guzzle\Oauth2\Middleware\OAuthMiddleware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

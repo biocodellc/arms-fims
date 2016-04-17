@@ -1,0 +1,4 @@
+oauth2_client_id: 'your_client_id'
+oauth2_client_secret: 'your_client_secret'
+fims_rest_uri: 'localhost:8080/biocode-fims/rest/'
+fims_resolver_rest_uri: 'localhost:8080/id/'
