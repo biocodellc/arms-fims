@@ -186,7 +186,7 @@ class FimsValidationForm extends FormBase {
     // TODO move url to configuration
     // TODO centralize all rest calls?
     $response = $this->fimsClient->get(
-      "biocode-fims/rest/projects/" . $project_id . "/expeditions"
+      "projects/" . $project_id . "/expeditions"
     );
     $expeditions = json_decode($response->getBody(), TRUE);
 
