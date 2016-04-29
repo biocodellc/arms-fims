@@ -8,4 +8,4 @@ classes/*
 javadocs/*
 javadocs/
 .gradle
-jetty-env.xml
+src/main/web/WEB-INF/web.xml
