@@ -1,11 +1,13 @@
 package biocode.fims;
 
-import biocode.fims.bcid.BcidDatabase;
 import biocode.fims.digester.Attribute;
 import biocode.fims.digester.Mapping;
 import biocode.fims.settings.*;
 import biocode.fims.utils.Timer;
 import org.apache.commons.digester3.Digester;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.sql.*;
@@ -17,16 +19,14 @@ import java.sql.Connection;
 public class DbBuilder {
     protected Connection conn;
 
-    static SettingsManager sm;
-    String url = sm.retrieveValue("datasetUrl");
-    String user = sm.retrieveValue("datasetUser");
-    String pass = sm.retrieveValue("datasetPassword");
+    private final SettingsManager settingsManager;
 
-    static {
-        sm = SettingsManager.getInstance("src/main/resources/arms-fims.props");
-    }
-
-    public DbBuilder() throws Exception {
+    @Autowired
+    public DbBuilder(SettingsManager settingsManager) throws Exception {
+        this.settingsManager = settingsManager;
+        String url = settingsManager.retrieveValue("datasetUrl");
+        String user = settingsManager.retrieveValue("datasetUser");
+        String pass = settingsManager.retrieveValue("datasetPassword");
         conn = DriverManager.getConnection(url, user, pass);
     }
 
@@ -59,9 +59,9 @@ public class DbBuilder {
     }
 
     public static void main(String args[]) throws Exception {
-        SettingsManager.getInstance("src/main/resources/arms-fims.props");
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("/applicationContext.xml");
+        DbBuilder dbBuilder = applicationContext.getBean(DbBuilder.class);
         String projectConfig = "/Users/rjewing/IdeaProjects/biscicol-fims/src.main.web/tripleOutput/config.1.xml";
-        DbBuilder dbBuilder = new DbBuilder();
         dbBuilder.buildTable(projectConfig);
 
     }

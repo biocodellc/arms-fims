@@ -3,7 +3,7 @@ package biocode.fims.rest;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 /**
- * Created by rjewing on 3/18/16.
+ * Jersey Application for arms-fims rest services
  */
 public class ArmsApplication extends FimsApplication {
 

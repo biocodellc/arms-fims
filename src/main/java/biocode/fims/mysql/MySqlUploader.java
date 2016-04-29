@@ -8,6 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +28,7 @@ public class MySqlUploader {
         this.dataSource = dataSource;
     }
 
-    public void execute(String identifier, List<String> columnNames, String csvFilepath) {
+    public void execute(URI identifier, List<String> columnNames, String csvFilepath) {
         deleteExistingDataset(identifier);
 
         Connection conn = null;
@@ -49,7 +50,7 @@ public class MySqlUploader {
 
             stmt = conn.prepareStatement(sql.toString());
             stmt.setString(1, csvFilepath);
-            stmt.setString(2, identifier);
+            stmt.setString(2, String.valueOf(identifier));
 
             stmt.execute();
         } catch (SQLException e) {
@@ -59,16 +60,16 @@ public class MySqlUploader {
         }
     }
 
-    private void deleteExistingDataset(String identifier) {
+    private void deleteExistingDataset(URI identifier) {
         Connection conn = null;
         PreparedStatement stmt = null;
 
         try {
             conn = dataSource.getConnection();
-            String sql = "DELETE FROM dataset WHERE identifier = ?";
+            String sql = "DELETE FROM dataset WHERE BINARY identifier = ?";
 
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, identifier);
+            stmt.setString(1, String.valueOf(identifier));
 
             stmt.execute();
         } catch (SQLException e) {

@@ -1,11 +1,9 @@
 package biocode.fims.rest.services.rest;
 
-import biocode.fims.bcid.Bcid;
-import biocode.fims.bcid.BcidMinter;
-import biocode.fims.bcid.ExpeditionMinter;
-import biocode.fims.bcid.Resolver;
+import biocode.fims.bcid.*;
 import biocode.fims.config.ConfigurationFileTester;
 import biocode.fims.digester.Attribute;
+import biocode.fims.entities.Expedition;
 import biocode.fims.fimsExceptions.*;
 import biocode.fims.fimsExceptions.BadRequestException;
 import biocode.fims.mysql.MySqlDatasetTableValidator;
@@ -17,6 +15,8 @@ import biocode.fims.renderers.RowMessage;
 import biocode.fims.rest.FimsService;
 import biocode.fims.run.Process;
 import biocode.fims.run.ProcessController;
+import biocode.fims.service.BcidService;
+import biocode.fims.service.ExpeditionService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
@@ -34,12 +34,19 @@ import java.util.List;
 @Path("validate")
 public class Validate extends FimsService {
 
-    @Autowired
-    private MySqlUploader mySqlUploader;
+    private final MySqlUploader mySqlUploader;
+    private final MySqlDatasetTableValidator mySqlDatasetTableValidator;
+    private final ExpeditionService expeditionService;
+    private final BcidService bcidService;
 
     @Autowired
-    private MySqlDatasetTableValidator mySqlDatasetTableValidator;
-
+    public Validate(MySqlUploader mySqlUploader, MySqlDatasetTableValidator mySqlDatasetTableValidator,
+                    ExpeditionService expeditionService, BcidService bcidService) {
+        this.mySqlUploader = mySqlUploader;
+        this.mySqlDatasetTableValidator = mySqlDatasetTableValidator;
+        this.expeditionService = expeditionService;
+        this.bcidService = bcidService;
+    }
     /**
      * service to validate a dataset against a project's rules
      *
@@ -258,10 +265,13 @@ public class Validate extends FimsService {
         }
         csvTabularDataConverter.convert(acceptableColumns);
 
-        Resolver resolver = new Resolver(processController.getExpeditionCode(), processController.getProjectId(),
-                                        "Resource");
+        biocode.fims.entities.Bcid rootBcid = expeditionService.getRootBcid(
+                processController.getExpeditionCode(),
+                processController.getProjectId(),
+                "Resource");
+
         // upload the dataset
-        mySqlUploader.execute(resolver.getIdentifier(), acceptableColumns,csvTabularDataConverter.getCsvFile().getPath());
+        mySqlUploader.execute(rootBcid.getIdentifier(), acceptableColumns,csvTabularDataConverter.getCsvFile().getPath());
 
         // Detect if this is user=demo or not.  If this is "demo" then do not request EZIDs.
         // User account Demo can still create Data Groups, but they just don't get registered and will be purged periodically
@@ -270,17 +280,25 @@ public class Validate extends FimsService {
             ezidRequest = false;
         }
 
-        // Mint the data group
-        BcidMinter bcidMinter = new BcidMinter(ezidRequest);
-        String identifier = bcidMinter.createEntityBcid(new Bcid(processController.getUserId(), "http://purl.org/dc/dcmitype/Dataset",
-                processController.getExpeditionCode() + " Dataset", null, null, null,
-                processController.getFinalCopy(), false));
-        successMessage = "Dataset Identifier: http://n2t.net/" + identifier + " (wait 15 minutes for resolution to become active)";
+        // fetch the Expedition
+        Expedition expedition = expeditionService.getExpedition(
+                processController.getExpeditionCode(),
+                processController.getProjectId()
+        );
 
-        // Associate the expeditionCode with this identifier
-        ExpeditionMinter expedition = new ExpeditionMinter();
-        expedition.attachReferenceToExpedition(processController.getExpeditionCode(), identifier, processController.getProjectId());
-        successMessage += "<br>\t" + "Data Elements Root: " + processController.getExpeditionCode();
+        // Mint the data group
+        biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(user, ResourceTypes.DATASET_RESOURCE_TYPE)
+                .title(processController.getExpeditionCode() + " Dataset")
+                .finalCopy(processController.getFinalCopy())
+                .ezidRequest(ezidRequest)
+                .expedition(expedition)
+                .build();
+
+        bcidService.create(bcid);
+
+        successMessage = "Dataset Identifier: http://n2t.net/" + bcid.getIdentifier() +
+                " (wait 15 minutes for resolution to become active)" +
+                "<br>\t" + "Data Elements Root: " + expedition.getExpeditionCode();
 
         // delete the temporary file now that it has been uploaded
         new File(processController.getInputFilename()).delete();

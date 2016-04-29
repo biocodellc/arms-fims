@@ -6,16 +6,10 @@
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
+    <import resource="classpath:data-access-config.xml" />
     <context:component-scan base-package="biocode.fims.*" />
     <context:property-placeholder location="classpath:arms-fims.props" />
 
-    <bean id="dataSource"
-          class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" >
-
-        <property name="url" value="${bcidUrl}" />
-        <property name="user" value="${bcidUser}" />
-        <property name="password" value="${bcidPassword}" />
-    </bean>
     <bean id="datasetDataSource"
           class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" >
 
