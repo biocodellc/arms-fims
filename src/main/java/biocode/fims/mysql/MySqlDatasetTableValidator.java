@@ -48,7 +48,7 @@ public final class MySqlDatasetTableValidator {
         ResultSet rs = null;
         List<String> tableColumns = new ArrayList<>();
         try {
-            String sql = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'dataset'";
+            String sql = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'deployments'";
             conn = dataSource.getConnection();
             stmt = conn.prepareStatement(sql);
 

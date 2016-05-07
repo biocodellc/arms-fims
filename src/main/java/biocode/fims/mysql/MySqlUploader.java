@@ -37,7 +37,7 @@ public class MySqlUploader {
 
         try {
             conn = dataSource.getConnection();
-            sql.append("LOAD DATA INFILE ? INTO TABLE dataset FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n' (");
+            sql.append("LOAD DATA INFILE ? INTO TABLE deployments FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n' (");
             int col = 0;
             for (String colname : columnNames) {
                 if (col > 0)
