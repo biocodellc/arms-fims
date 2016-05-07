@@ -1,16 +1,42 @@
-angular.module('fims.validation', ['fims.users'])
+angular.module('fims.validation', ['fims.users', 'fims.modals'])
 
-    .controller('ValidationCtrl', ['$rootScope', '$scope', '$location', 'AuthFactory', 'PROJECT_ID',
-        function ($rootScope, $scope, $location, AuthFactory, PROJECT_ID) {
+    .controller('ValidationCtrl', ['$rootScope', '$scope', '$location', 'AuthFactory', 'PROJECT_ID', 'ExpeditionFactory', 'FailModalFactory',
+        function ($rootScope, $scope, $location, AuthFactory, PROJECT_ID, ExpeditionFactory, FailModalFactory) {
+            // TODO fix the confusing variable names. armsProjects are biocode Expeditions
             var vm = this;
             vm.projectId = PROJECT_ID;
             vm.isAuthenticated = AuthFactory.isAuthenticated;
+            vm.expeditionCode = "0";
+            vm.armsProjects = [];
+            vm.isPublicProject = false;
+            vm.updateIsPublicProject = updateIsPublicProject();
+            
+            function getArmsProjects() {
+                ExpeditionFactory.getExpeditions(vm.projectId)
+                    .then(function(response) {
+                        angular.extend(vm.armsProjects, response.data);
+                    }, function (response, status) {
+                        FailModalFactory.open("Failed to load expeditions", response.data.usrMessage);
+                    })
+            }
+            
+            function updateIsPublicProject() {
+                if (vm.expeditionCode != 0) {
+                    for (expedition in armsProjects) {
+                        if (expedition.expeditionCode == vm.expeditionCode) {
+                            vm.isPublicProject = expedition.public;
+                            break;
+                        }
+                    }
+                }
+                
+            }
 
             angular.element(document).ready(function() {
                 fimsBrowserCheck($('#warning'));
 
                 if (vm.isAuthenticated)
-                    getExpeditionCodes();
+                    getArmsProjects();
 
                 validationFormToggle();
 

@@ -28,13 +28,20 @@
 
 
                         <tr class="toggle-content-upload toggle-content" id="expeditionCode_toggle">
-                            <td align="right">Dataset Code&nbsp;&nbsp;</td>
-                            <td colspan=2><input type="select" name="expeditionCode" id="expeditionCode" /></td>
+                            <td align="right">Arms Project&nbsp;&nbsp;</td>
+                            <td colspan=2>
+                                <select id="expeditionCode" name="expeditionCode" ng-model="vm.expeditionCode" ng-change="vm.updateIsPublicExpedition" style="width:300px">
+                                    <option value="0">Select a project</option>
+                                    <option ng-repeat="expedition in vm.armsProjects"
+                                            value="{{ expedition.expeditionCode}}">
+                                        {{ expedition.expeditionCode }} ({{ expedition.expeditionTitle }})
+                                    </option>
+                                </select>
                         </tr>
 
                         <tr class="toggle-content-upload toggle-content" id="expedition_public_toggle">
                             <td align="right">Public&nbsp;&nbsp;</td>
-                            <td><input type="checkbox" name="public_status" id="public_status" /></td>
+                            <td><input type="checkbox" name="public_status" id="public_status" ng-model="vm.isPublicProject"/></td>
                         </tr>
 
                         <tr>

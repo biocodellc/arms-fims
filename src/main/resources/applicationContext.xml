@@ -9,6 +9,5 @@
     <import resource="classpath:data-access-config.xml" />
     <import resource="classpath:arms-data-access-config.xml" />
     <context:component-scan base-package="biocode.fims.*" />
-    <context:property-placeholder location="classpath:arms-fims.props" />
 
 </beans>

@@ -33,6 +33,16 @@
         <url-pattern>rest/*</url-pattern>
     </servlet-mapping>
 
+    <!-- FimsDefaultServlet must be listed after all other servlets -->
+    <servlet>
+        <servlet-name>FimsDefaultServlet</servlet-name>
+        <servlet-class>biocode.fims.rest.FimsDefaultServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FimsDefaultServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>ClickjackFilterDeny</filter-name>
         <filter-class>biocode.fims.rest.filters.ClickJackFilter</filter-class>

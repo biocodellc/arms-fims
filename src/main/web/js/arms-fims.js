@@ -1152,7 +1152,7 @@ function validForm(expeditionCode) {
         // check if expeditionCode is a select and val = 0
         if (!$("#" + datasetId).val() && $("#" + fastaId).val() &&
             $("#expeditionCode").is("select") && $("#expeditionCode").val() == 0) {
-            message = "You must select an existing expedition code if you are not uploading a new dataset.";
+            message = "You must select an existing expedition.";
             error = true;
             // if it doesn't pass the regexp test, then set error message and set error to true
         } else if (!dRE.test(expeditionCode)) {
@@ -1181,26 +1181,7 @@ function validForm(expeditionCode) {
 
 // submit dataset to be validated/uploaded
 function validatorSubmit() {
-    // User wants to create a new expedition
-    if ($("#upload").is(":checked") && $("#expeditionCode").val() == 0) {
-        createExpedition().done(function (e) {
-
-            if (validForm(e)) {
-                $("#" + datasetId).attr("name","dataset");
-                $("#" + fastaId).attr("name","fasta");
-
-                // if the form is valid, update the dataset code value
-                $("#expeditionCode").replaceWith("<input name='expeditionCode' id='expeditionCode' type='text' value=" + e + " />");
-
-                // Submit form
-                submitForm().done(function(data) {
-                    validationResults(data);
-                }).fail(function(jqxhr) {
-                    failError(jqxhr);
-                });
-            }
-        })
-    } else if (validForm($("#expeditionCode").val())) {
+    if (validForm($("#expeditionCode").val())) {
 
         // change the input names to the appropriate file type
         $("#" + datasetId).attr("name","dataset");
@@ -1357,61 +1338,6 @@ function hideUpload() {
 
     if (!$('.toggle-content#expeditionCode_toggle').is(':hidden'))
         $('.toggle-content#expeditionCode_toggle').hide(400);
-}
-
-// update the checkbox to reflect the expedition's public status
-function updateExpeditionPublicStatus(expeditionList) {
-    $('#expeditionCode').change(function() {
-        var code = $('#expeditionCode').val();
-        var public;
-        $.each(expeditionList, function(key, e) {
-            if (e.expeditionCode == code) {
-                public = e.public;
-                return false;
-            }
-        });
-        if (public == 'true') {
-            $('#public_status').prop('checked', true);
-        } else {
-            $('#public_status').prop('checked', false);
-        }
-    });
-}
-
-// get the expeditions codes a user owns for a project
-function getExpeditionCodes() {
-    var projectID = $("#project").val();
-    $.getJSON(armsFimsRestRoot + "projects/" + projectID + "/expeditions/")
-        .done(function(data) {
-            var select = "<select name='expeditionCode' id='expeditionCode' style='max-width:199px'>" +
-                "<option value='0'>Create New Expedition</option>";
-            $.each(data, function(key, e) {
-                select += "<option value=" + e.expeditionCode + ">" + e.expeditionCode + " (" + e.expeditionTitle + ")</option>";
-            });
-
-            select += "</select>";
-            $("#expeditionCode").replaceWith(select);
-            updateExpeditionPublicStatus(data);
-        }).fail(function(jqxhr) {
-            var msg;
-            var title = "Error!";
-            if (jqxhr.status = 401) {
-                msg = "Please login to load your expeditions.";
-                title = "Warning!";
-            } else {
-                msg = JSON.stringify($.parseJSON(jqxhr.responseText).usrMessage);
-                $("#dialogContainer").addClass("error");
-            }
-
-            $("#expeditionCode").replaceWith('<input type="text" name="expeditionCode" id="expeditionCode" />');
-            var buttons = {
-                "Ok": function() {
-                    $("#dialogContainer").removeClass("error");
-                    $(this).dialog("close");
-                }
-            }
-            dialog("Error fetching expeditions!<br><br>" + msg, title, buttons)
-        });
 }
 
 // function to handle the results from the rest service /biocode-fims/rest/validate
