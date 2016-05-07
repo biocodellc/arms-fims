@@ -18,7 +18,7 @@ angular.module('armsApp')
             })
             .state('validate', {
                 url: "/validate",
-                templateUrl: "app/components/validation/validation.jsp",
+                templateUrl: "app/components/validation/validation.html",
                 controller: "ValidationCtrl as vm"
             })
             .state('lookup', {
@@ -38,16 +38,16 @@ angular.module('armsApp')
             })
             .state('reset', {
                 url: "/reset",
-                templateUrl: "app/components/users/reset.jsp",
+                templateUrl: "app/components/users/reset.html",
             })
             .state('template', {
                 url: "/template?projectId",
-                templateUrl: "app/components/templates/templates.jsp",
+                templateUrl: "app/components/templates/templates.html",
                 controller: "TemplateCtrl as vm"
             })
             .state('query', {
                 url: "/query",
-                templateUrl: "app/components/query/query.jsp",
+                templateUrl: "app/components/query/query.html",
                 controller: "QueryCtrl as vm",
             })
             .state('creator', {
@@ -58,19 +58,19 @@ angular.module('armsApp')
             })
             .state('profile', {
                 url: "/secure/profile",
-                templateUrl: "app/components/users/profile.jsp",
+                templateUrl: "app/components/users/profile.html",
                 controller: "UserCtrl as vm",
                 loginRequired: true
             })
             .state('projects', {
                 url: "/secure/projects",
-                templateUrl: "app/components/projects/projects.jsp",
+                templateUrl: "app/components/projects/projects.html",
                 controller: "ProjectCtrl as vm",
                 loginRequired: true
             })
             .state('expeditionManager', {
                 url: "/secure/expeditions",
-                templateUrl: "app/components/expeditions/expeditions.jsp",
+                templateUrl: "app/components/expeditions/expeditions.html",
                 controller: "ExpeditionCtrl as vm",
                 loginRequired: true
             })
@@ -84,29 +84,4 @@ angular.module('armsApp')
 
         // For any unmatched url, redirect to /
         $urlRouterProvider.otherwise("/");
-
-        // redirect all legacy route
-        $urlRouterProvider
-            .when('/index.jsp', 'home')
-            .when('/login.jsp', 'login')
-            .when('/validation.jsp', 'validate')
-            .when('/lookup.jsp', ['$state', '$location', function ($state, $location) {
-                // forward query params
-                $state.go('lookup', $location.search());
-            }])
-            .when('/query.jsp', ['$state', '$location', function ($state, $location) {
-                $state.go('query', $location.search());
-            }])
-            .when('/reset.jsp', 'reset')
-            .when('/resetPass.jsp', ['$state', '$location', function ($state, $location) {
-                $state.go('template', $location.search());
-            }])
-            .when('/resourceTypes.jsp', 'resourceTypes')
-            .when('/templates.jsp', ['$state', '$location', function ($state, $location) {
-                $state.go('template', $location.search());
-            }])
-            .when('/secure/bcidCreator.jsp', 'creator')
-            .when('/secure/expeditions.jsp', 'expeditionManager')
-            .when('/secure/profile.jsp', 'profile')
-            .when('/secure/projects.jsp', 'projects')
     }]);

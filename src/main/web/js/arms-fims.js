@@ -210,29 +210,6 @@ function populateDivFromService(url,elementID,failMessage)  {
             $(elementID).html(failMessage);
         });
 }
-
-function populateProjects() {
-    theUrl = armsFimsRestRoot + "projects/list?includePublic=true";
-    var jqxhr = $.getJSON( theUrl, function(data) {
-        var listItems = "";
-        listItems+= "<option value='0'>Select a project ...</option>";
-        $.each(data, function(index, project) {
-            listItems+= "<option value='" + project.projectId + "'>" + project.projectTitle + "</option>";
-        });
-        $("#projects").html(listItems);
-        // Set to the first value in the list which should be "select one..."
-        $("#projects").val($("#projects option:first").val());
-
-    }).fail(function(jqXHR,textStatus) {
-        if (textStatus == "timeout") {
-            showMessage ("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
-        } else {
-            showMessage ("Error completing request!");
-        }
-    });
-    return jqxhr;
-}
-
 function failError(jqxhr) {
     var buttons = {
         "OK": function(){
@@ -293,11 +270,10 @@ $('#alerts').append(
 
 // Get the projectID
 function getProjectID() {
-    var e = document.getElementById('projects');
-    return  e.options[e.selectedIndex].value;
+    return $('#project').val();
 }
 
-/* ====== reset.jsp Functions ======= */
+/* ====== reset.html Functions ======= */
 
 function resetSubmit() {
     var jqxhr = $.get(armsFimsRestRoot + "users/" + $("#username").val() + "/sendResetToken")
@@ -381,9 +357,9 @@ function bcidCreatorSubmit() {
         });
 }
 
-/* ====== expeditions.jsp Functions ======= */
+/* ====== expeditions.html Functions ======= */
 
-// function to populate the expeditions.jsp page
+// function to populate the expeditions.html page
 function populateExpeditionPage(username) {
     var jqxhr = listProjects(username, armsFimsRestRoot + 'projects/user/list', true
     ).done(function() {
@@ -396,7 +372,7 @@ function populateExpeditionPage(username) {
     });
 }
 
-// function to load the expeditions.jsp subsections
+// function to load the expeditions.html subsections
 function loadExpeditions(id) {
     if ($('.toggle-content#'+id).is(':hidden')) {
         $('.img-arrow', '#'+id).attr("src", appRoot + "images/down-arrow.png");
@@ -462,7 +438,7 @@ function listExpeditions(divId) {
         });
 }
 
-// function to populate the expedition resources, datasets, or configuration subsection of expeditions.jsp
+// function to populate the expedition resources, datasets, or configuration subsection of expeditions.html
 function populateExpeditionSubsections(divId) {
     // load config table from REST service
     var expeditionId= $(divId).data('expeditionId');
@@ -532,7 +508,7 @@ function editExpedition(projectId, expeditionCode, e) {
     }
     dialog(message, title, buttons);
 }
-/* ====== profile.jsp Functions ======= */
+/* ====== profile.html Functions ======= */
 
 // function to submit the user's profile editor form
 function profileSubmit(divId) {
@@ -599,9 +575,9 @@ function getProfileEditor(username) {
     });
 }
 
-/* ====== projects.jsp Functions ======= */
+/* ====== projects.html Functions ======= */
 
-// populate the metadata subsection of projects.jsp from REST service
+// populate the metadata subsection of projects.html from REST service
 function populateMetadata(id, projectID) {
     var jqxhr = populateDivFromService(
         armsFimsRestRoot + 'projects/' + projectID + '/metadata',
@@ -643,7 +619,7 @@ function confirmRemoveUserDialog(element) {
     dialog(msg, title, buttons);
 }
 
-// populate the users subsection of projects.jsp from REST service
+// populate the users subsection of projects.html from REST service
 function populateUsers(id, projectID) {
     var jqxhr = populateDivFromService(
         armsFimsRestRoot + 'projects/' + projectID + '/users',
@@ -680,7 +656,7 @@ function populateUsers(id, projectID) {
     return jqxhr;
 }
 
-// function to populate the subsections of the projects.jsp page. Populates the metadata, expeditions, and users
+// function to populate the subsections of the projects.html page. Populates the metadata, expeditions, and users
 // subsections
 function populateProjectSubsections(id) {
     var projectID = $(id).data('projectId');
@@ -796,7 +772,7 @@ function projectMetadataSubmit(projectId, divId) {
     });
 }
 
-// function to populate the bcid projects.jsp page
+// function to populate the bcid projects.html page
 function populateProjectPage(username) {
     var jqxhr = listProjects(username, armsFimsRestRoot + 'projects/admin/list', false
     ).done(function() {
@@ -827,18 +803,7 @@ function projectToggle(id) {
     $(idElement).slideToggle('slow');
 }
 
-/* ====== templates.jsp Functions ======= */
-function hideTemplateInfo() {
-    if (!$('#abstract').is(':hidden')) {
-        $('#abstract').hide(400);
-    }
-    if (!$('#definition').is(':hidden')) {
-        $('#definition').hide(400);
-    }
-    if (!$('#cat1').is(':hidden')) {
-        $('#cat1').hide(400);
-    }
-}
+/* ====== templates.html Functions ======= */
 
 function showTemplateInfo() {
     if ($('#abstract').is(':hidden')) {
@@ -881,8 +846,7 @@ function download_file(){
 
 // for template generator, get the definitions when the user clicks on DEF
 function populateDefinitions(column) {
-    var e = document.getElementById('projects');
-    var projectId = e.options[e.selectedIndex].value;
+    var projectId = getProjectID();
 
     theUrl = armsFimsRestRoot + "projects/" + projectId + "/getDefinition/" + column;
 
@@ -897,8 +861,7 @@ function populateDefinitions(column) {
 }
 
 function populateColumns(targetDivId) {
-    var e = document.getElementById('projects');
-    var projectId = e.options[e.selectedIndex].value;
+    var projectId = getProjectID();
 
     if (projectId != 0) {
         theUrl = armsFimsRestRoot + "projects/" + projectId + "/attributes/";
@@ -926,8 +889,7 @@ function populateColumns(targetDivId) {
 function populateAbstract(targetDivId) {
     $(targetDivId).html("Loading ...");
 
-    var e = document.getElementById('projects');
-    var projectId = e.options[e.selectedIndex].value;
+    var projectId = getProjectID();
 
     theUrl = armsFimsRestRoot + "projects/" + projectId + "/abstract/";
 
@@ -966,10 +928,10 @@ function saveTemplateConfig() {
             });
 
             savedConfig = configName;
-            $.post(armsFimsRestRoot + "projects/" + $("#projects").val() + "/saveTemplateConfig", $.param(
+            $.post(armsFimsRestRoot + "projects/" + $("#project").val() + "/saveTemplateConfig", $.param(
                 {"configName": configName,
                     "checkedOptions": checked,
-                    "projectId": $("#projects").val()
+                    "projectId": $("#project").val()
                 }, true)
             ).done(function(data) {
                 if (data.error != null) {
@@ -1000,7 +962,7 @@ function saveTemplateConfig() {
 }
 
 function populateConfigs() {
-    var projectId = $("#projects").val();
+    var projectId = $("#project").val();
     if (projectId == 0) {
         $("#configs").html("<option value=0>Select a Project</option>");
     } else {
@@ -1022,13 +984,10 @@ function populateConfigs() {
 
             // if there are more then the default config, show the remove link
             if (data.length > 1) {
-                if ($('.toggle-content#remove_config_toggle').is(':hidden')) {
-                    $('.toggle-content#remove_config_toggle').show(400);
-                }
+                $("#removeConfig").replaceWith('<button class="btn btn-primary" id="removeConfig">Remove</button>');
+                $("#removeConfig").click(removeConfig);
             } else {
-                if (!$('.toggle-content#remove_config_toggle').is(':hidden')) {
-                    $('.toggle-content#remove_config_toggle').hide();
-                }
+                $("#removeConfig").replaceWith('<button class="btn btn-default" id="removeConfig" style="border-color:#fff"></button>');
             }
 
         }).fail(function(jqXHR,textStatus) {
@@ -1046,7 +1005,7 @@ function updateCheckedBoxes() {
     if (configName == "Default") {
         populateColumns("#cat1");
     } else {
-        $.getJSON(armsFimsRestRoot + "projects/" + $("#projects").val() + "/getTemplateConfig/" + configName.replace(/\//g, "%2F")).done(function(data) {
+        $.getJSON(armsFimsRestRoot + "projects/" + $("#project").val() + "/getTemplateConfig/" + configName.replace(/\//g, "%2F")).done(function(data) {
             if (data.error != null) {
                 showMessage(data.error);
                 return;
@@ -1092,12 +1051,13 @@ function removeConfig() {
             }
             var title = "Remove Template Generator Configuration";
 
-            $.getJSON(armsFimsRestRoot + "projects/" + $("#projects").val() + "/removeTemplateConfig/" + configName.replace("/\//g", "%2F")).done(function(data) {
+            $.getJSON(armsFimsRestRoot + "projects/" + $("#project").val() + "/removeTemplateConfig/" + configName.replace("/\//g", "%2F")).done(function(data) {
                 if (data.error != null) {
                     showMessage(data.error);
                     return;
                 }
 
+                savedConfig = null;
                 populateConfigs();
                 dialog(data.success, title, buttons);
             }).fail(function(jqXHR) {
@@ -1113,13 +1073,13 @@ function removeConfig() {
     dialog(message, title, buttons);
 }
 
-/* ====== validation.jsp Functions ======= */
+/* ====== validation.html Functions ======= */
 var datasetId;
 var fastaId;
 
 // Function to display a list in a message
 function list(listName, columnName) {
-    var projectId = $("#projects").val();
+    var projectId = $("#project").val();
     $.getJSON(armsFimsRestRoot + "projects/" + projectId + "/getListFields/" + listName)
     .done(function(data) {
         if (data.length == 0) {
@@ -1185,7 +1145,7 @@ function validForm(expeditionCode) {
     if (!$("#" + datasetId).val() && !$("#" + fastaId).val()) {
         message = "Please provide a dataset or fasta file";
         error = true;
-    } else if ($('#projects').val() == 0) {
+    } else if ($('#project').val() == 0) {
         message = "Please select a project.";
         error = true;
     } else if ($("#upload").is(":checked")) {
@@ -1351,29 +1311,8 @@ function validationFormToggle() {
                 }
             });
 
-            $.when(parseSpreadsheet("~project_id=[0-9]+~", "Instructions")).done(function(projectId) {
-                if ($("#projects option[value='" + projectId + "']").length !== 0) {
-                    $('#projects').val(projectId);
-                    $('#projects').prop('disabled', true);
-                    $('#projects').trigger("change");
-                    if ($('.toggle-content#projects_toggle').is(':hidden')) {
-                        $('.toggle-content#projects_toggle').show(400);
-                    }
-                } else {
-                    var p = $("#projects");
-                    // add a refresh map link incase the new dataset has the same project as the previous dataset. In that
-                    // case, the user won't change projects and needs to manually refresh the map
-                    if (p.val() != 0 && $("#refresh_map").length == 0) {
-                        p.parent().append("<a id='refresh_map' href='#' onclick=\"generateMap('map', " + p.val() + ")\">Refresh Map</a>");
-                    }
-                    p.prop('disabled', false);
-                    if (!$("#" + datasetId).val()) {
-                        $(".toggle-content#projects_toggle").hide(400);
-                    } else if ($('.toggle-content#projects_toggle').is(':hidden')) {
-                        $('.toggle-content#projects_toggle').show(400);
-                    }
-                }
-            });
+            generateMap('map', getProjectID());
+
         } else if (ext.toLowerCase() == "fasta") {
             // always need to set dataset and fasta id's
             fastaId = this.id;
@@ -1383,14 +1322,6 @@ function validationFormToggle() {
                 datasetId = "file1";
             }
         }
-
-        if (!$("#" + datasetId).val()) {
-            $("#projects").prop('disabled', false);
-            if ($('.toggle-content#projects_toggle').is(':hidden')) {
-                $('.toggle-content#projects_toggle').show(400);
-            }
-        }
-
     });
 
     $('#upload').change(function() {
@@ -1398,19 +1329,6 @@ function validationFormToggle() {
             showUpload();
         else
             hideUpload();
-    });
-
-    $("#projects").change(function() {
-        // generate the map if the dataset isn't empty
-        if ($("#" + datasetId).val()) {
-            generateMap('map', this.value);
-        }
-
-        // only get expedition codes if a user is logged in
-        if (angular.element(document.body).injector().get('AuthFactory').isAuthenticated) {
-            $("#expeditionCode").replaceWith("<p id='expeditionCode'>Loading ... </p>");
-            getExpeditionCodes();
-        }
     });
 
     $("#file_button").on("click", function() {
@@ -1431,9 +1349,6 @@ function showUpload() {
 
     if ($('.toggle-content#expeditionCode_toggle').is(':hidden'))
         $('.toggle-content#expeditionCode_toggle').show(400);
-
-    if ($('.toggle-content#projects_toggle').is(':hidden'))
-        $('.toggle-content#projects_toggle').show(400);
 }
 
 function hideUpload() {
@@ -1465,7 +1380,7 @@ function updateExpeditionPublicStatus(expeditionList) {
 
 // get the expeditions codes a user owns for a project
 function getExpeditionCodes() {
-    var projectID = $("#projects").val();
+    var projectID = $("#project").val();
     $.getJSON(armsFimsRestRoot + "projects/" + projectID + "/expeditions/")
         .done(function(data) {
             var select = "<select name='expeditionCode' id='expeditionCode' style='max-width:199px'>" +
@@ -1547,10 +1462,8 @@ function uploadResults(data) {
         dialog(message, title, buttons);
         // reset the form to default state
         $('form').clearForm();
-        $('.toggle-content#projects_toggle').hide(400);
         $('.toggle-content#expedition_public_toggle').hide(400);
         $('.toggle-content#expeditionCode_toggle').hide(400);
-//        <!--$('.toggle-content#upload-toggle').hide(400);-->
 
     } else {
         // ask user if want to proceed
@@ -1658,11 +1571,7 @@ function submitForm(){
         url: armsFimsRestRoot + "validate/",
         type: "POST",
         contentType: "multipart/form-data",
-        beforeSerialize: function(form, options) {
-            $('#projects').prop('disabled', false);
-        },
         beforeSubmit: function(form, options) {
-            $('#projects').prop('disabled', true);
             dialog("Loading ...", "Validation Results", null);
             // For browsers that don't support the upload progress listener
             var xhr = $.ajaxSettings.xhr();
@@ -1711,7 +1620,7 @@ function getResourceTypesTable(a) {
         });
 }
 
-/* ====== query.jsp Functions ======= */
+/* ====== query.html Functions ======= */
 
 // handle displaying messages/results in the graphs(spreadsheets) select list
 function graphsMessage(message) {
@@ -1724,7 +1633,7 @@ function graphsMessage(message) {
 function populateGraphs(projectId) {
     $("#resultsContainer").hide();
     // Don't let this progress if this is the first option, then reset graphs message
-    if ($("#projects").val() == 0)  {
+    if ($("#project").val() == 0)  {
         graphsMessage('Choose an project to see loaded spreadsheets');
         return;
     }

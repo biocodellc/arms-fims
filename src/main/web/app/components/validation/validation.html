@@ -10,13 +10,8 @@
                 <div class="col-md-8">
                     <table class="table">
                         <tr>
-                            <td align="right">&nbsp;&nbsp;FIMS Data&nbsp;&nbsp;</td>
+                            <td align="right">&nbsp;&nbsp;Deployments Spreadsheet&nbsp;&nbsp;</td>
                             <td><input type="file" class="btn btn-default btn-xs" name="file" id="file1" /></td>
-                        </tr>
-
-                        <tr>
-                            <td align="right">FASTA Data (optional)&nbsp;&nbsp;</td>
-                            <td colspan=2><input type="file" class="btn btn-default btn-xs" name="file" id="file2" /></td>
                         </tr>
 
                         <tr class="toggle-content" id="projects_toggle" project-select></tr>
@@ -44,6 +39,7 @@
 
                         <tr>
                             <td></td>
+                            <td><input type="hidden" value="{{ vm.projectId }}" name="projectId" id="project"></td>
                             <td><input type="button" id="validationSubmit" value="Submit" class="btn btn-default btn-xs"></td>
                         </tr>
                     </table>
