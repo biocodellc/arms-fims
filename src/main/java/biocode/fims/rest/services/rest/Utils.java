@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Biscicol-Fims utility services
+ * arms-Fims utility services
  */
 @Path("utils/")
 public class Utils extends FimsService {
