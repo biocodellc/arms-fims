@@ -1,4 +1,4 @@
-rootProject.name = 'ARMS-Fims'
+rootProject.name = 'arms-fims'
 
 include ":biocode-fims-commons"
 
