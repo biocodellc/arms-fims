@@ -19,7 +19,7 @@ import java.util.List;
  * helper class providing access to the mysql dataset database
  */
 @Repository
-public final class MySqlDatasetTableValidator {
+public class MySqlDatasetTableValidator {
 
     private final DataSource dataSource;
 

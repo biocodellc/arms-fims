@@ -7,7 +7,20 @@
 	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <import resource="classpath:data-access-config.xml" />
-    <import resource="classpath:arms-data-access-config.xml" />
+    <!--<import resource="classpath:arms-data-access-config.xml" />-->
     <context:component-scan base-package="biocode.fims.*" />
+    <context:property-placeholder location="classpath:arms-fims.props" />
+
+    <bean id="propsFileResource" class="org.springframework.core.io.ClassPathResource">
+        <constructor-arg value="/arms-fims.props" />
+    </bean>
+
+    <bean id="settingsManager"  class="biocode.fims.settings.SettingsManager" factory-method="getInstance">
+        <constructor-arg ref="propsFileResource" />
+    </bean>
+
+    <bean id="springApplicationContext" class="biocode.fims.utils.SpringApplicationContext"/>
+
+    <bean id="expeditionMinter" class="biocode.fims.bcid.ExpeditionMinter"/>
 
 </beans>

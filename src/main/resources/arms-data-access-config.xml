@@ -6,11 +6,13 @@
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:repository="http://www.springframework.org/schema/data/repository"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
-       http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd ">
+       http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+       http://www.springframework.org/schema/data/repository http://www.springframework.org/schema/data/repository/spring-repository.xsd ">
 
     <context:property-placeholder location="classpath:arms-fims-database.properties" ignore-unresolvable="true"/>
 
@@ -25,7 +27,7 @@
     <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
     </bean>
 
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="armsEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
         <property name="packagesToScan" value="biocode.fims.arms.entities"/>
@@ -42,15 +44,9 @@
     </bean>
 
     <!-- Enables the Hibernate @Transactional programming model -->
-    <tx:annotation-driven transaction-manager="transactionManager" />
+    <tx:annotation-driven transaction-manager="armsTransactionManager" />
 
-    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
-
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory" />
-        <property name="dataSource" ref="dataSource" />
-        <property name="jpaDialect" ref="jpaDialect" />
-    </bean>
+    <bean id="armsTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>
 
     <bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
@@ -61,5 +57,5 @@
         <constructor-arg name="dataSource" ref="dataSource" />
     </bean>
 
-    <jpa:repositories base-package="biocode.fims.arms.repositories" />
+    <jpa:repositories base-package="biocode.fims.arms.repositories" entity-manager-factory-ref="armsEntityManagerFactory"/>
 </beans>

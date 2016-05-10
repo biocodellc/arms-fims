@@ -120,7 +120,6 @@ task copyFimsLocal  {
             from war.destinationDir
             into localWarDirectory
             include war.archiveName
-            rename war.archiveName, "root.war"
         }
     }
 }

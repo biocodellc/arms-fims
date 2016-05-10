@@ -9,3 +9,4 @@ javadocs/*
 javadocs/
 .gradle
 src/main/web/WEB-INF/web.xml
+out/
