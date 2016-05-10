@@ -69,6 +69,6 @@ public class Deployment {
     private String substrateType;
     private URI permitInformationUrl;
 
-    private ArmsProject armsProject;
+    private ArmsExpedition armsExpedition;
 
 }

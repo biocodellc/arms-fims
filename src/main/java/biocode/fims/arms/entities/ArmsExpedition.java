@@ -1,20 +1,21 @@
 package biocode.fims.arms.entities;
 
 import biocode.fims.entities.Expedition;
+import biocode.fims.fimsExceptions.FimsRuntimeException;
 
 import javax.persistence.*;
 import java.net.URI;
 import java.util.Set;
 
 /**
- * ArmsProject domain object. An ArmsProject has a one-to-one unidirectional relationship to
+ * ArmsExpedition domain object. An ArmsExpedition has a one-to-one unidirectional relationship to
  * a biocode-fims {@link Expedition}.
  */
 @Entity
-@Table(name = "armsProject")
-public class ArmsProject {
+@Table(name = "armsExpedition")
+public class ArmsExpedition {
 
-    private int id;
+    private int expeditionId;
     private String principalInvestigator;
     private String contactName;
     private String contactEmail;
@@ -23,14 +24,14 @@ public class ArmsProject {
     private String geographicScope;
     private String goals;
     private String leadOrganization;
-    private URI identifier;
+//    private URI identifier;
 
     private Expedition expedition;
     private Set<Deployment> deployments;
 
-    class ArmsProjectBuilder {
+    class ArmsExpeditionBuilder {
         private String principalInvestigator;
-        private URI identifier;
+//        private URI identifier;
         private Expedition expedition;
 
         private String contactName;
@@ -41,58 +42,73 @@ public class ArmsProject {
         private String goals;
         private String leadOrganization;
 
-        public ArmsProjectBuilder(String principalInvestigator, URI identifier, Expedition expedition) {
+        public ArmsExpeditionBuilder(String principalInvestigator, Expedition expedition) {
             this.principalInvestigator = principalInvestigator;
-            this.identifier = identifier;
+//            this.identifier = identifier;
             this.expedition = expedition;
         }
 
-        public ArmsProjectBuilder contactName(String contactName) {
+        public ArmsExpeditionBuilder contactName(String contactName) {
             this.contactName = contactName;
             return this;
         }
 
-        public ArmsProjectBuilder contactEmail(String contactEmail) {
+        public ArmsExpeditionBuilder contactEmail(String contactEmail) {
             this.contactEmail = contactEmail;
             return this;
         }
 
-        public ArmsProjectBuilder fundingSource(String fundingSource) {
+        public ArmsExpeditionBuilder fundingSource(String fundingSource) {
             this.fundingSource = fundingSource;
             return this;
         }
 
-        public ArmsProjectBuilder envisionedDuration(int envisionedDuration) {
+        public ArmsExpeditionBuilder envisionedDuration(int envisionedDuration) {
             this.envisionedDuration = envisionedDuration;
             return this;
         }
 
-        public ArmsProjectBuilder geographicScope(String geographicScope) {
+        public ArmsExpeditionBuilder geographicScope(String geographicScope) {
             this.geographicScope = geographicScope;
             return this;
         }
 
-        public ArmsProjectBuilder goals(String goals) {
+        public ArmsExpeditionBuilder goals(String goals) {
             this.goals = goals;
             return this;
         }
 
-        public ArmsProjectBuilder leadOrganization(String leadOrganization) {
+        public ArmsExpeditionBuilder leadOrganization(String leadOrganization) {
             this.leadOrganization = leadOrganization;
             return this;
         }
 
-        public ArmsProject build() {
-            return new ArmsProject(this);
+        private boolean validArmsExpedition() {
+            if (principalInvestigator == null || expedition == null || contactName == null || contactEmail == null ||
+                    fundingSource == null || envisionedDuration == 0 || geographicScope == null ||
+                    goals == null || leadOrganization == null) {
+                return false;
+            }
+            return true;
+        }
+
+        public ArmsExpedition build() {
+            if (!validArmsExpedition())
+                throw new FimsRuntimeException("", "Trying to create an invalid expedition. " +
+                        "principalInvestigator, expedition, contactName, contactEmail, fundingSource, envisionedDuration," +
+                        "geographicScope, goals, and leadOrganization must not be null", 500);
+
+            return new ArmsExpedition(this);
         }
     }
 
     // needed for hibernate
-    private ArmsProject() {}
+    private ArmsExpedition() {}
 
-    public ArmsProject(ArmsProjectBuilder builder) {
+    public ArmsExpedition(ArmsExpeditionBuilder builder) {
+        this.expeditionId = builder.expedition.getExpeditionId();
         this.principalInvestigator = builder.principalInvestigator;
-        this.identifier = builder.identifier;
+//        this.identifier = builder.identifier;
         this.expedition = builder.expedition;
         this.contactName = builder.contactName;
         this.contactEmail = builder.contactEmail;
@@ -103,12 +119,13 @@ public class ArmsProject {
         this.leadOrganization = builder.leadOrganization;
     }
 
-    public int getId() {
-        return id;
+    @Id
+    public int getExpeditionId() {
+        return expeditionId;
     }
 
-    private void setId(int id) {
-        this.id = id;
+    private void setExpeditionId(int id) {
+        this.expeditionId = id;
     }
 
     public String getPrincipalInvestigator() {
@@ -175,15 +192,16 @@ public class ArmsProject {
         this.leadOrganization = leadOrganization;
     }
 
-    public URI getIdentifier() {
-        return identifier;
-    }
+//    public URI getIdentifier() {
+//        return identifier;
+//    }
+//
+//    private void setIdentifier(URI identifier) {
+//        // todo should this just be set when the expedition is passed in?
+//        this.identifier = identifier;
+//    }
 
-    private void setIdentifier(URI identifier) {
-        // todo should this just be set when the expedition is passed in?
-        this.identifier = identifier;
-    }
-
+    @Transient
     public Expedition getExpedition() {
         return expedition;
     }
@@ -193,7 +211,7 @@ public class ArmsProject {
     }
 
     @OneToMany(targetEntity = Deployment.class,
-            mappedBy = "armsProject",
+            mappedBy = "armsExpedition",
             fetch = FetchType.LAZY
     )
     public Set<Deployment> getDeployments() {
