@@ -7,107 +7,143 @@
     </metadata>
     <mapping>
         <entity worksheet="Samples" worksheetUniqueKey="deploymentID" conceptAlias="Event" conceptURI="http://rs.tdwg.org/dwc/terms/Event" entityID="1" conceptForwardingAddress="">
-            <attribute column='numLayers' uri='urn:numLayers' group='ARMS Details' defined_by='urn:numLayers'>
-                <!--<![CDATA[DwC_Ext: Controlled vocabulary: “not required”, “yes”, “no”, “unknown” Biocode: no or NULL]]>-->
-                <!--<synonyms><![CDATA["accessBenefitSharing" = DwC_Ext, "PublicAccess" = Biocode.backend,]]>-->
-                <!--</synonyms>-->
-                <!--<dataFormat><![CDATA[Select from lookup list. Yes or No]]></dataFormat>-->
+            <attribute column='armsModel' column_internal='armsModel' uri='urn:armsModel' group='ARMS Details'
+                       defined_by='urn:armsModel'>
             </attribute>
-            <attribute column='ARMS Model' uri='urn:armsModel' group='ARMS Details' defined_by='urn:armsModel'>
+            <attribute column='deploymentID' column_internal="deploymentId" uri='urn:deploymentID' group='ARMS Details'
+                       defined_by='urn:deploymentID'>
             </attribute>
-            <attribute column='deploymentID' uri='urn:deploymentID' group='ARMS Details' defined_by='urn:deploymentID'>
+            <attribute column='laminates' column_internal="laminates" uri='urn:laminates' group='ARMS Details'
+                       defined_by='urn:laminates'>
             </attribute>
-            <attribute column='laminates' uri='urn:laminates' group='ARMS Details' defined_by='urn:laminates'>
+            <attribute column='new/reused' column_internal="newOrReused" uri='urn:newReused' group='ARMS Details'
+                       defined_by='urn:newReused'>
             </attribute>
-            <attribute column='new/reused' uri='urn:newReused' group='ARMS Details' defined_by='urn:newReused'>
+            <attribute column='numLayers' column_internal="numLayers" uri='urn:numLayers' group='ARMS Details'
+                       defined_by='urn:numLayers'>
             </attribute>
-            <attribute column='hasScrubbieLayer' uri='urn:hasScrubbieLayer' group='ARMS Details' defined_by='urn:hasScrubbieLayer'>
+            <attribute column='hasScrubbieLayer' column_internal="hasScrubbieLayer" uri='urn:hasScrubbieLayer'
+                       group='ARMS Details' defined_by='urn:hasScrubbieLayer'>
             </attribute>
-            <attribute column='weightsAttached' uri='urn:weightsAttached' group='ARMS Details' defined_by='urn:weightsAttached'>
+            <attribute column='weightsAttached' column_internal="weightsAttached" uri='urn:weightsAttached'
+                       group='ARMS Details' defined_by='urn:weightsAttached'>
             </attribute>
-            <attribute column='attachment method' uri='urn:attachmentMethod' group='ARMS Details' defined_by='urn:attachmentMethod'>
+            <attribute column='attachment method' column_internal="attachmentMethod" uri='urn:attachmentMethod'
+                       group='ARMS Details' defined_by='urn:attachmentMethod'>
             </attribute>
-            <attribute column='intentToBarcode' uri='urn:intentToBarcode' group='Data' defined_by='urn:intentToBarcode'>
+            <attribute column='intentToBarcode' column_internal="intentToBarcode" uri='urn:intentToBarcode'
+                       group='Data' defined_by='urn:intentToBarcode'>
             </attribute>
-            <attribute column='intentToMetabarcode' uri='urn:intentToMetabarcode' group='Data' defined_by='urn:intentToMetabarcode'>
+            <attribute column='intentToMetabarcode' column_internal="intentToMetabarcode" uri='urn:intentToMetabarcode'
+                       group='Data' defined_by='urn:intentToMetabarcode'>
             </attribute>
-            <attribute column='intentToCollectOtherDatatypes' uri='urn:intentToCollectOtherDatatypes' group='Data' defined_by='urn:intentToCollectOtherDatatypes'>
+            <attribute column='intentToCollectOtherDatatypes' column_internal="intentToCollectOtherDatatypes"
+                       uri='urn:intentToCollectOtherDatatypes' group='Data' defined_by='urn:intentToCollectOtherDatatypes'>
             </attribute>
-            <attribute column='intentToPhotographPlates' uri='urn:intentToPhotographPlates' group='Data' defined_by='urn:intentToPhotographPlates'>
+            <attribute column='intentToPhotographPlates' column_internal="intentToPhotographPlates"
+                       uri='urn:intentToPhotographPlates' group='Data' defined_by='urn:intentToPhotographPlates'>
             </attribute>
-            <attribute column='intentToPhotographSpecimens' uri='urn:intentToPhotographSpecimens' group='Data' defined_by='urn:intentToPhotographSpecimens'>
+            <attribute column='intentToPhotographSpecimens' column_internal="intentToPhotographSpecimens"
+                       uri='urn:intentToPhotographSpecimens' group='Data' defined_by='urn:intentToPhotographSpecimens'>
             </attribute>
-            <attribute column='numReplicatesInSet' uri='urn:numReplicatesInSet' group='Data' defined_by='urn:numReplicatesInSet'>
+            <attribute column='numReplicatesInSet' column_internal="numReplicatesInSet" uri='urn:numReplicatesInSet'
+                       group='Data' defined_by='urn:numReplicatesInSet'>
             </attribute>
-            <attribute column='photoURL' uri='urn:photoURL' group='Data' defined_by='urn:photoURL'>
+            <attribute column='photoURL' column_internal="photoUrl" uri='urn:photoURL' group='Data'
+                       defined_by='urn:photoURL'>
             </attribute>
-            <attribute column='intended RecoveryDate' uri='urn:intendedRecoveryDate' group='deploymentTime' defined_by='urn:intendedRecoveryDate'>
+            <attribute column='intendedRecoveryDate' column_internal="intendedRecoveryDate"
+                       uri='urn:intendedRecoveryDate' group='deploymentTime' defined_by='urn:intendedRecoveryDate'>
             </attribute>
-            <attribute column='intendedDeploymentDate' uri='urn:intendedDeploymentDate' group='deploymentTime' defined_by='urn:intendedDeploymentDate'>
+            <attribute column='intendedDeploymentDate' column_internal="intendedDeploymentDate"
+                       uri='urn:intendedDeploymentDate' group='deploymentTime' defined_by='urn:intendedDeploymentDate'>
             </attribute>
-            <attribute column='intendedSoakTimeInYears' uri='urn:intendedSoakTimeInYears' group='deploymentTime' defined_by='urn:intendedSoakTimeInYears'>
+            <attribute column='intendedSoakTimeInYears' column_internal="intendedSoakTimeInYears"
+                       uri='urn:intendedSoakTimeInYears' group='deploymentTime' defined_by='urn:intendedSoakTimeInYears'>
             </attribute>
-            <attribute column='actualDeploymentDate' uri='urn:actualDeploymentDate' group='deploymentTime' defined_by='urn:actualDeploymentDate'>
+            <attribute column='actualDeploymentDate' column_internal="actualDeploymentDate"
+                       uri='urn:actualDeploymentDate' group='deploymentTime' defined_by='urn:actualDeploymentDate'>
             </attribute>
-            <attribute column='actualRecoveryDate' uri='urn:actualRecoveryDate' group='deploymentTime' defined_by='urn:actualRecoveryDate'>
+            <attribute column='actualRecoveryDate' column_internal="actualRecoveryDate"
+                       uri='urn:actualRecoveryDate' group='deploymentTime' defined_by='urn:actualRecoveryDate'>
             </attribute>
-            <attribute column='actualRecoveryTimeOfDay' uri='urn:actualRecoveryTimeOfDay' group='deploymentTime' defined_by='urn:actualRecoveryTimeOfDay'>
+            <attribute column='actualRecoveryTimeOfDay' column_internal="actualRecoveryTimeOfDay"
+                       uri='urn:actualRecoveryTimeOfDay' group='deploymentTime' defined_by='urn:actualRecoveryTimeOfDay'>
             </attribute>
-            <attribute column='actualDeploymentTimeOfDay' uri='urn:actualDeploymentTimeOfDay' group='deploymentTime' defined_by='urn:actualDeploymentTimeOfDay'>
+            <attribute column='actualDeploymentTimeOfDay' column_internal="actualDeploymentTimeOfDay"
+                       uri='urn:actualDeploymentTimeOfDay' group='deploymentTime' defined_by='urn:actualDeploymentTimeOfDay'>
             </attribute>
             <attribute column='continentOcean' uri='urn:continentOcean' group='location' defined_by='urn:continentOcean'>
             </attribute>
-            <attribute column='country' uri='urn:country' group='location' defined_by='urn:country'>
+            <attribute column='country' column_internal="country" uri='urn:country' group='location' defined_by='http://rs.tdwg.org/dwc/terms/country'>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
-            <attribute column='decimalLatitude' uri='urn:decimalLatitude' group='location' defined_by='http://rs.tdwg.org/dwc/terms/#decimalLatitude'>
+            <attribute column='decimalLatitude' column_internal="decimalLatitude" uri='urn:decimalLatitude'
+                       group='location' defined_by='http://rs.tdwg.org/dwc/terms/#decimalLatitude'>
                 <dataFormat><![CDATA[>=-90 <=90]]></dataFormat>
             </attribute>
-            <attribute column='decimalLongitude' uri='urn:decimalLongitude' group='location' defined_by='urn:decimalLongitude'>
+            <attribute column='decimalLongitude' column_internal="decimalLongitude" uri='urn:decimalLongitude'
+                       group='location' defined_by='urn:decimalLongitude'>
                 <dataFormat><![CDATA[>=-180 <=180]]></dataFormat>
             </attribute>
-            <attribute column='depthInMeters' uri='urn:depthInMeters' group='location' defined_by='urn:depthInMeters'>
+            <attribute column='depthInMeters' column_internal="depthInMeters" uri='urn:depthInMeters'
+                       group='location' defined_by='urn:depthInMeters'>
             </attribute>
-            <attribute column='stationID' uri='urn:stationID' group='location' defined_by='urn:stationID'>
+            <attribute column='stationID' column_internal="stationId" uri='urn:stationID' group='location'
+                       defined_by='urn:stationID'>
             </attribute>
-            <attribute column='county' uri='urn:county' group='location' defined_by='urn:county'>
+            <attribute column='county' column_internal="county" uri='urn:county' group='location' defined_by='http://rs.tdwg.org/dwc/terms/county'>
             </attribute>
-            <attribute column='error radius' uri='urn:errorRadius' group='location' defined_by='urn:errorRadius'>
+            <attribute column='errorRadius' column_internal="errorRadius" uri='urn:errorRadius' group='location'
+                       defined_by='urn:errorRadius'>
             </attribute>
-            <attribute column='habitat (NOAA deploymentZone)' uri='urn:habitat' group='location' defined_by='urn:habitat'>
+            <attribute column='habitat (NOAA deploymentZone)' column_internal="habitat" uri='urn:habitat' group='location'
+                       defined_by='urn:habitat'>
             </attribute>
-            <attribute column='substrateType' uri='urn:substrateType' group='location' defined_by='urn:substrateType'>
+            <attribute column='substrateType' column_internal="substrateType" uri='urn:substrateType' group='location'
+                       defined_by='urn:substrateType'>
             </attribute>
-            <attribute column='horizontalDatum' uri='urn:horizontalDatum' group='location' defined_by='urn:horizontalDatum'>
+            <attribute column='horizontalDatum' column_internal="horizontalDatum" uri='urn:horizontalDatum' group='location'
+                       defined_by='urn:horizontalDatum'>
             </attribute>
-            <attribute column='island' uri='urn:island' group='location' defined_by='urn:island'>
+            <attribute column='island' column_internal="island" uri='urn:island' group='location' defined_by='http://rs.tdwg.org/dwc/terms/island'>
             </attribute>
-            <attribute column='islandGroup' uri='urn:islandGroup' group='location' defined_by='urn:islandGroup'>
+            <attribute column='islandGroup' column_internal="islandGroup" uri='urn:islandGroup' group='location'
+                       defined_by='http://rs.tdwg.org/dwc/terms/islandGroup'>
             </attribute>
-            <attribute column='region/Location' uri='urn:region/Location' group='location' defined_by='urn:region/Location'>
+            <attribute column='region/Location' column_internal="region" uri='urn:region/Location' group='location'
+                       defined_by='http://purl.org/dc/terms/Location'>
             </attribute>
-            <attribute column='locality' uri='urn:locality' group='location' defined_by='urn:locality'>
+            <attribute column='locality' column_internal="locality" uri='urn:locality' group='location' defined_by='http://rs.tdwg.org/dwc/terms/locality'>
             </attribute>
-            <attribute column='depthOfBottomMeters' uri='urn:depthOfBottomMeters' group='location' defined_by='urn:depthOfBottomMeters'>
+            <attribute column='depthOfBottomMeters' column_internal="depthOfBottomMeters" uri='urn:depthOfBottomMeters'
+                       group='location' defined_by='urn:depthOfBottomMeters'>
             </attribute>
-            <attribute column='stateProvince' uri='urn:stateProvince' group='location' defined_by='urn:stateProvince'>
+            <attribute column='stateProvince' column_internal="stateProvince" uri='urn:stateProvince' group='location'
+                       defined_by='http://rs.tdwg.org/dwc/terms/stateProvince'>
             </attribute>
-            <attribute column='deploymentPersonInCharge' uri='urn:deploymentPersonInCharge' group='ARMS Process' defined_by='urn:deploymentPersonInCharge'>
+            <attribute column='deploymentPersonInCharge' column_internal="deploymentPersonInCharge"
+                       uri='urn:deploymentPersonInCharge' group='ARMS Process' defined_by='urn:deploymentPersonInCharge'>
             </attribute>
-            <attribute column='recoveryPersonInCharge' uri='urn:recoveryPersonInCharge' group='ARMS Process' defined_by='urn:recoveryPersonInCharge'>
+            <attribute column='recoveryPersonInCharge' column_internal="recoveryPersonInCharge"
+                       uri='urn:recoveryPersonInCharge' group='ARMS Process' defined_by='urn:recoveryPersonInCharge'>
             </attribute>
-            <attribute column='processingPersonInCharge' uri='urn:processingPersonInCharge' group='ARMS Process' defined_by='urn:processingPersonInCharge'>
+            <attribute column='processingPersonInCharge' column_internal="processingPersonInCharge"
+                       uri='urn:processingPersonInCharge' group='ARMS Process' defined_by='urn:processingPersonInCharge'>
             </attribute>
-            <attribute column='dataEntryPersonInCharge' uri='urn:dataEntryPersonInCharge' group='ARMS Process' defined_by='urn:dataEntryPersonInCharge'>
+            <attribute column='dataEntryPersonInCharge' column_internal="dataEntryPersonInCharge"
+                       uri='urn:dataEntryPersonInCharge' group='ARMS Process' defined_by='urn:dataEntryPersonInCharge'>
             </attribute>
-            <attribute column='durationToProcessing' uri='urn:durationToProcessing' group='ARMS Process' defined_by='urn:durationToProcessing'>
+            <attribute column='durationToProcessing' column_internal="durationToProcessing"
+                       uri='urn:durationToProcessing' group='ARMS Process' defined_by='urn:durationToProcessing'>
             </attribute>
-            <attribute column='notes' uri='urn:notes' group='ARMS Process' defined_by='urn:notes'>
+            <attribute column='notes' column_internal="notes" uri='urn:notes' group='ARMS Process' defined_by='urn:notes'>
             </attribute>
-            <attribute column='removal protocol' uri='urn:removalProtocol' group='ARMS Process' defined_by='urn:removalProtocol'>
+            <attribute column='removalProtocol' column_internal="removalProtocal" uri='urn:removalProtocol'
+                       group='ARMS Process' defined_by='urn:removalProtocol'>
             </attribute>
-            <attribute column='permitInformationURL' uri='urn:permitInformationURL' group='' defined_by='urn:permitInformationURL'>
-            </attribute>
+            <!--<attribute column='permitInformationURL' uri='urn:permitInformationURL' group='' defined_by='urn:permitInformationURL'>-->
+            <!--</attribute>-->
         </entity>
     </mapping>
     <validation>
@@ -115,7 +151,7 @@
             <rule type='duplicateColumnNames' level='error'/>
             <rule type='RequiredColumns' column='RequiredColumns' level='error'>
                 <field>numLayers</field>
-                <field>ARMS Model</field>
+                <field>armsModel</field>
                 <field>deploymentID</field>
                 <field>laminates</field>
                 <field>new/reused</field>
@@ -125,7 +161,7 @@
                 <field>intentToCollectOtherDatatypes</field>
                 <field>intentToPhotographPlates</field>
                 <field>intentToPhotographSpecimens</field>
-                <field>intended RecoveryDate</field>
+                <field>intendedRecoveryDate</field>
                 <field>intendedDeploymentDate</field>
                 <field>intendedSoakTimeInYears</field>
                 <field>continentOcean</field>
@@ -134,7 +170,7 @@
                 <field>actualDeploymentDate</field>
                 <field>decimalLatitude</field>
                 <field>decimalLongitude</field>
-                <field>decimalLongitude</field>
+                <field>depthInMeters</field>
                 <field>stationID</field>
                 <field>actualRecoveryDate</field>
             </rule>
@@ -143,15 +179,15 @@
                 <field>deploymentPersonInCharge</field>
                 <field>recoveryPersonInCharge</field>
                 <field>processingPersonInCharge</field>
-                <field>dataEntryPersonInCharge</field>
+                <field>durationToProcessing</field>
                 <field>dataEntryPersonInCharge</field>
                 <field>notes</field>
-                <field>removal protocol</field>
+                <field>removalProtocol</field>
                 <field>numReplicatesInSet</field>
                 <field>photoURL</field>
                 <field>actualRecoveryTimeOfDay</field>
                 <field>county</field>
-                <field>error radius</field>
+                <field>errorRadius</field>
                 <field>habitat (NOAA deploymentZone)</field>
                 <field>substrateType</field>
                 <field>horizontalDatum</field>
@@ -166,12 +202,25 @@
             </rule>
             <rule type="datasetContainsExtraColumns" level="warning" />
             <rule type='uniqueValue' column='deploymentID' level='error'/>
-            <rule type='controlledVocabulary' column='country' list='country' level='warning'/>
-            <rule type='validateNumeric' column='decimalLatitude' level='error' value='%3E%3D-90+and+%3C%3D90'/>
-            <rule type='validateNumeric' column='decimalLongitude' level='error' value='%3E%3D-180+and+%3C%3D180'/>
+            <rule type='controlledVocabulary' column='country' list='country' level='error'/>
+            <rule type="latLngChecker" decimalLatitude="decimalLatitude" decimalLongitude="decimalLongitude" level="error"/>
             <rule type='validateNumeric' column='depthInMeters' level='warning' value='%3E%3D0'/>
             <rule type='validateNumeric' column='depthOfBottomMeters' level='warning' value='%3E%3D0'/>
-            <rule type='validateNumeric' column='error radius' level='warning' value='%3E%3D0'/>
+            <rule type='validateNumeric' column='errorRadius' level='warning' value='%3E%3D0'/>
+            <rule type='checkInXMLFields' column='hasScrubbieLayer' list="yesNo" level="error"/>
+            <rule type='checkInXMLFields' column='laminates' list="yesNo" level="error"/>
+            <rule type='checkInXMLFields' column='weightsAttached' list="yesNo" level="error"/>
+            <rule type='checkInXMLFields' column='new/reused' list="newUsed" level="error"/>
+            <rule type='checkInXMLFields' column='continentOcean' list="continentOcean" level="error"/>
+            <rule type='checkInXMLFields' column='intentToBarcode' list="intent" level="error"/>
+            <rule type='checkInXMLFields' column='intentToCollectOtherDatatypes' list="intent" level="error"/>
+            <rule type='checkInXMLFields' column='intentToMetabarcode' list="intent" level="error"/>
+            <rule type='checkInXMLFields' column='intentToPhotographPlates' list="intent" level="error"/>
+            <rule type='checkInXMLFields' column='intentToPhotographSpecimens' list="intent" level="error"/>
+            <rule type="isInteger" column="numLayers" level="error"/>
+            <rule type="isInteger" column="numReplicatesInSet" level="error"/>
+            <rule type="isInteger" column="intendedSoakTimeInYears" level="error"/>
+            <rule type="isValidUrl" column="photoURL" level="warning"/>
         </worksheet>
         <lists>
             <list alias='intent' caseInsensitive='true'>
@@ -435,6 +484,33 @@
                 <field>Yemen</field>
                 <field>Zambia</field>
                 <field>Zimbabwe</field>
+            </list>
+            <list alias='continentOcean' caseInsensitive='true'>
+                <field>Africa</field>
+                <field>Andaman Sea</field>
+                <field>Antarctica</field>
+                <field>Arctic Ocean</field>
+                <field>Asia</field>
+                <field>Atlantic Ocean</field>
+                <field>Australia</field>
+                <field>Baltic Sea</field>
+                <field>Bering Sea</field>
+                <field>Caribbean Sea</field>
+                <field>East China Sea</field>
+                <field>Europe</field>
+                <field>Gulf of Mexico</field>
+                <field>Hudson Bay</field>
+                <field>Indian Ocean</field>
+                <field>Japan Sea</field>
+                <field>Mediterranean Sea</field>
+                <field>North America</field>
+                <field>North Sea</field>
+                <field>Okhotsk Sea</field>
+                <field>Pacific Ocean</field>
+                <field>Red Sea</field>
+                <field>South America</field>
+                <field>South China Sea</field>
+                <field>Southern Ocean</field>
             </list>
         </lists>
     </validation>
