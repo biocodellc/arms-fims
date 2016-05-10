@@ -8,7 +8,6 @@ var app = angular.module('armsApp', [
     'fims.projects',
     'fims.users',
     'fims.lookup',
-    'fims.creator',
     'utils.autofocus'
 ]);
 

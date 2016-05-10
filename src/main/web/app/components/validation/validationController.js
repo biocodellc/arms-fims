@@ -1,7 +1,7 @@
-angular.module('fims.validation', ['fims.users', 'fims.modals'])
+angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
 
-    .controller('ValidationCtrl', ['$rootScope', '$scope', '$location', 'AuthFactory', 'PROJECT_ID', 'ExpeditionFactory', 'FailModalFactory',
-        function ($rootScope, $scope, $location, AuthFactory, PROJECT_ID, ExpeditionFactory, FailModalFactory) {
+    .controller('ValidationCtrl', ['$location', 'AuthFactory', 'PROJECT_ID', 'ExpeditionFactory', 'FailModalFactory', '$uibModal',
+        function ($location, AuthFactory, PROJECT_ID, ExpeditionFactory, FailModalFactory, $uibModal) {
             // TODO fix the confusing variable names. armsProjects are biocode Expeditions
             var vm = this;
             vm.projectId = PROJECT_ID;
@@ -10,11 +10,35 @@ angular.module('fims.validation', ['fims.users', 'fims.modals'])
             vm.armsProjects = [];
             vm.isPublicProject = false;
             vm.updateIsPublicProject = updateIsPublicProject();
-            
-            function getArmsProjects() {
+            vm.createExpedition = createExpedition;
+
+            function createExpedition() {
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'app/components/validation/createArmsProjectModal.html',
+                    controller: 'CreateArmsProjectModalCtrl',
+                    controllerAs: 'vm',
+                    size: 'lg',
+                    // resolve: {
+                    //     items: function () {
+                    //         return $scope.items;
+                    //     }
+                    // }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    // pass in the projectCode to select the project
+                    getArmsProjects();
+                    $scope.selected = selectedItem;
+                }, function () {
+                });
+
+            }
+
+            function getArmsProjects(projectCode) {
                 ExpeditionFactory.getExpeditions(vm.projectId)
                     .then(function(response) {
                         angular.extend(vm.armsProjects, response.data);
+                        vm.expeditionCode = projectCode;
                     }, function (response, status) {
                         FailModalFactory.open("Failed to load expeditions", response.data.usrMessage);
                     })
@@ -66,4 +90,27 @@ angular.module('fims.validation', ['fims.users', 'fims.modals'])
                 }
             });
 
-        }]);
+        }])
+
+.controller("CreateArmsProjectModalCtrl", ['$scope', '$uibModalInstance',
+    function($scope, $uibModalInstance) {
+        this.project = {
+            principalInvestigator: null,
+            contactName: null,
+            contactEmail: null,
+            fundingSource: null,
+            envisionedDuration: null,
+            geographicScope: null,
+            goals: null,
+            leadOrganization: null
+        };
+
+        this.create = function (form) {
+            $uibModalInstance.close($scope.project);
+        };
+
+        this.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+    }]);

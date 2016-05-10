@@ -1,0 +1,43 @@
+<form name="armsProjectCreateForm" novalidate ng-submit="vm.create(armsProjectCreateForm)">
+    <div class="modal-header">
+        <h3 class="modal-title">Arms Project Creation!</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="principalInvestigator" class="control-label">Principal Investigator</label>
+            <input type="text" class="form-control" id="principalInvestigator" name="principalInvestigator" ng-modal="vm.project.principalInvestigator" />
+        </div>
+        <div class="form-group">
+            <label for="contactName" class="control-label">Contact Name</label>
+            <input type="text" class="form-control" id="contactName" name="contactName" ng-modal="vm.project.contactName" />
+        </div>
+        <div class="form-group">
+            <label for="contactEmail" class="control-label">Contact Email</label>
+            <input type="email" class="form-control" id=contactEmail name="contactEmail" ng-modal="vm.project.contactEmail" />
+        </div>
+        <div class="form-group">
+            <label for=fundingSource class="control-label">Funding Source</label>
+            <input type="text" class="form-control" id=fundingSource name="fundingSource" ng-modal="vm.project.fundingSource" />
+        </div>
+        <div class="form-group">
+            <label for=envisionedDuration class="control-label">Envisioned Duration</label>
+            <input type="number" class="form-control" id=envisionedDuration name="envisionedDuration" ng-modal="vm.project.envisionedDuration" min="0"/>
+        </div>
+        <div class="form-group">
+            <label for=geographicScope class="control-label">Geographic Scope</label>
+            <input type="text" class="form-control" id=geographicScope name="geographicScope" ng-modal="vm.project.geographicScope" />
+        </div>
+        <div class="form-group">
+            <label for=goals class="control-label">Goals</label>
+            <input type="text" class="form-control" id=goals name="goals" ng-modal="vm.project.goals" />
+        </div>
+        <div class="form-group">
+            <label for=leadOrganization class="control-label">Lead Organization</label>
+            <input type="text" class="form-control" id=leadOrganization name="leadOrganization" ng-modal="vm.project.leadOrganization" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">Create</button>
+        <button class="btn btn-warning" type="button" ng-click="vm.cancel()">Cancel</button>
+    </div>
+</form>
