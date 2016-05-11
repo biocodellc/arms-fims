@@ -1,39 +1,39 @@
-<form name="armsProjectCreateForm" novalidate ng-submit="vm.create(armsProjectCreateForm)">
+<form name="armsExpeditionCreateForm" novalidate ng-submit="vm.create(armsExpeditionCreateForm)">
     <div class="modal-header">
         <h3 class="modal-title">Arms Project Creation!</h3>
     </div>
     <div class="modal-body">
         <div class="form-group">
             <label for="principalInvestigator" class="control-label">Principal Investigator</label>
-            <input type="text" class="form-control" id="principalInvestigator" name="principalInvestigator" ng-modal="vm.project.principalInvestigator" />
+            <input type="text" class="form-control" id="principalInvestigator" name="principalInvestigator" ng-modal="vm.expedition.principalInvestigator" />
         </div>
         <div class="form-group">
             <label for="contactName" class="control-label">Contact Name</label>
-            <input type="text" class="form-control" id="contactName" name="contactName" ng-modal="vm.project.contactName" />
+            <input type="text" class="form-control" id="contactName" name="contactName" ng-modal="vm.expedition.contactName" />
         </div>
         <div class="form-group">
             <label for="contactEmail" class="control-label">Contact Email</label>
-            <input type="email" class="form-control" id=contactEmail name="contactEmail" ng-modal="vm.project.contactEmail" />
+            <input type="email" class="form-control" id=contactEmail name="contactEmail" ng-modal="vm.expedition.contactEmail" />
         </div>
         <div class="form-group">
             <label for=fundingSource class="control-label">Funding Source</label>
-            <input type="text" class="form-control" id=fundingSource name="fundingSource" ng-modal="vm.project.fundingSource" />
+            <input type="text" class="form-control" id=fundingSource name="fundingSource" ng-modal="vm.expedition.fundingSource" />
         </div>
         <div class="form-group">
             <label for=envisionedDuration class="control-label">Envisioned Duration</label>
-            <input type="number" class="form-control" id=envisionedDuration name="envisionedDuration" ng-modal="vm.project.envisionedDuration" min="0"/>
+            <input type="number" class="form-control" id=envisionedDuration name="envisionedDuration" ng-modal="vm.expedition.envisionedDuration" min="0"/>
         </div>
         <div class="form-group">
             <label for=geographicScope class="control-label">Geographic Scope</label>
-            <input type="text" class="form-control" id=geographicScope name="geographicScope" ng-modal="vm.project.geographicScope" />
+            <input type="text" class="form-control" id=geographicScope name="geographicScope" ng-modal="vm.expedition.geographicScope" />
         </div>
         <div class="form-group">
             <label for=goals class="control-label">Goals</label>
-            <input type="text" class="form-control" id=goals name="goals" ng-modal="vm.project.goals" />
+            <input type="text" class="form-control" id=goals name="goals" ng-modal="vm.expedition.goals" />
         </div>
         <div class="form-group">
             <label for=leadOrganization class="control-label">Lead Organization</label>
-            <input type="text" class="form-control" id=leadOrganization name="leadOrganization" ng-modal="vm.project.leadOrganization" />
+            <input type="text" class="form-control" id=leadOrganization name="leadOrganization" ng-modal="vm.expedition.leadOrganization" />
         </div>
     </div>
     <div class="modal-footer">

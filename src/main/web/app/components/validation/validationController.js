@@ -2,20 +2,19 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
 
     .controller('ValidationCtrl', ['$location', 'AuthFactory', 'PROJECT_ID', 'ExpeditionFactory', 'FailModalFactory', '$uibModal',
         function ($location, AuthFactory, PROJECT_ID, ExpeditionFactory, FailModalFactory, $uibModal) {
-            // TODO fix the confusing variable names. armsProjects are biocode Expeditions
             var vm = this;
             vm.projectId = PROJECT_ID;
             vm.isAuthenticated = AuthFactory.isAuthenticated;
             vm.expeditionCode = "0";
-            vm.armsProjects = [];
-            vm.isPublicProject = false;
-            vm.updateIsPublicProject = updateIsPublicProject();
+            vm.armsExpeditions = [];
+            vm.isPublicExpedition = false;
+            vm.updateIsPublicExpedition = updateIsPublicExpedition();
             vm.createExpedition = createExpedition;
 
             function createExpedition() {
                 var modalInstance = $uibModal.open({
-                    templateUrl: 'app/components/validation/createArmsProjectModal.html',
-                    controller: 'CreateArmsProjectModalCtrl',
+                    templateUrl: 'app/components/validation/createArmsExpeditionModal.html',
+                    controller: 'CreateArmsExpeditionsModalCtrl',
                     controllerAs: 'vm',
                     size: 'lg',
                     // resolve: {
@@ -26,29 +25,29 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
                 });
 
                 modalInstance.result.then(function (selectedItem) {
-                    // pass in the projectCode to select the project
-                    getArmsProjects();
+                    // pass in the expeditionCode to select the expedition 
+                    getArmsExpeditions();
                     $scope.selected = selectedItem;
                 }, function () {
                 });
 
             }
 
-            function getArmsProjects(projectCode) {
+            function getArmsExpeditions(expeditionCode) {
                 ExpeditionFactory.getExpeditions(vm.projectId)
                     .then(function(response) {
-                        angular.extend(vm.armsProjects, response.data);
-                        vm.expeditionCode = projectCode;
+                        angular.extend(vm.armsExpeditions, response.data);
+                        vm.expeditionCode = expeditionCode;
                     }, function (response, status) {
-                        FailModalFactory.open("Failed to load expeditions", response.data.usrMessage);
+                        FailModalFactory.open("Failed to load ARMS projects", response.data.usrMessage);
                     })
             }
             
-            function updateIsPublicProject() {
+            function updateIsPublicExpedition() {
                 if (vm.expeditionCode != 0) {
-                    for (expedition in armsProjects) {
+                    for (expedition in armsExpeditions) {
                         if (expedition.expeditionCode == vm.expeditionCode) {
-                            vm.isPublicProject = expedition.public;
+                            vm.isPublicExpedition = expedition.public;
                             break;
                         }
                     }
@@ -60,7 +59,7 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
                 fimsBrowserCheck($('#warning'));
 
                 if (vm.isAuthenticated)
-                    getArmsProjects();
+                    getArmsExpeditions();
 
                 validationFormToggle();
 
@@ -92,9 +91,9 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
 
         }])
 
-.controller("CreateArmsProjectModalCtrl", ['$scope', '$uibModalInstance',
+.controller("CreateArmsExpeditionsModalCtrl", ['$scope', '$uibModalInstance',
     function($scope, $uibModalInstance) {
-        this.project = {
+        this.expedition = {
             principalInvestigator: null,
             contactName: null,
             contactEmail: null,
@@ -106,7 +105,7 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
         };
 
         this.create = function (form) {
-            $uibModalInstance.close($scope.project);
+            $uibModalInstance.close($scope.expedition);
         };
 
         this.cancel = function () {

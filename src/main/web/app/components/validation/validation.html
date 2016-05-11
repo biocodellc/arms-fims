@@ -28,11 +28,12 @@
 
 
                         <tr class="toggle-content-upload toggle-content" id="expeditionCode_toggle">
+                            <!--Arms Project is equivalent to biocode Expeditions-->
                             <td align="right">Arms Project&nbsp;&nbsp;</td>
                             <td colspan=2>
                                 <select id="expeditionCode" name="expeditionCode" ng-model="vm.expeditionCode" ng-change="vm.updateIsPublicExpedition" style="width:300px">
                                     <option value="0">Select a project</option>
-                                    <option ng-repeat="expedition in vm.armsProjects"
+                                    <option ng-repeat="expedition in vm.armsExpeditions"
                                             value="{{ expedition.expeditionCode}}">
                                         {{ expedition.expeditionCode }} ({{ expedition.expeditionTitle }})
                                     </option>
