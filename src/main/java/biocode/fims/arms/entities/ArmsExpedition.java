@@ -29,7 +29,7 @@ public class ArmsExpedition {
     private Expedition expedition;
     private Set<Deployment> deployments;
 
-    class ArmsExpeditionBuilder {
+    public static class ArmsExpeditionBuilder {
         private String principalInvestigator;
 //        private URI identifier;
         private Expedition expedition;
@@ -106,7 +106,7 @@ public class ArmsExpedition {
     private ArmsExpedition() {}
 
     public ArmsExpedition(ArmsExpeditionBuilder builder) {
-        this.expeditionId = builder.expedition.getExpeditionId();
+//        this.expeditionId = builder.expedition.getExpeditionId();
         this.principalInvestigator = builder.principalInvestigator;
 //        this.identifier = builder.identifier;
         this.expedition = builder.expedition;
@@ -124,8 +124,9 @@ public class ArmsExpedition {
         return expeditionId;
     }
 
-    private void setExpeditionId(int id) {
-        this.expeditionId = id;
+    public void setExpeditionId(int id) {
+        if (expeditionId == 0)
+            this.expeditionId = id;
     }
 
     public String getPrincipalInvestigator() {
@@ -206,8 +207,9 @@ public class ArmsExpedition {
         return expedition;
     }
 
-    private void setExpedition(Expedition expedition) {
-        this.expedition = expedition;
+    public void setExpedition(Expedition expedition) {
+        if (expedition == null)
+            this.expedition = expedition;
     }
 
     @OneToMany(targetEntity = Deployment.class,
@@ -220,5 +222,53 @@ public class ArmsExpedition {
 
     private void setDeployments(Set<Deployment> deployments) {
         this.deployments = deployments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ArmsExpedition that = (ArmsExpedition) o;
+
+        if (getExpeditionId() != that.getExpeditionId()) return false;
+        if (getEnvisionedDuration() != that.getEnvisionedDuration()) return false;
+        if (!getPrincipalInvestigator().equals(that.getPrincipalInvestigator())) return false;
+        if (!getContactName().equals(that.getContactName())) return false;
+        if (!getContactEmail().equals(that.getContactEmail())) return false;
+        if (!getFundingSource().equals(that.getFundingSource())) return false;
+        if (!getGeographicScope().equals(that.getGeographicScope())) return false;
+        if (!getGoals().equals(that.getGoals())) return false;
+        return getLeadOrganization().equals(that.getLeadOrganization());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getExpeditionId();
+        result = 31 * result + getPrincipalInvestigator().hashCode();
+        result = 31 * result + getContactName().hashCode();
+        result = 31 * result + getContactEmail().hashCode();
+        result = 31 * result + getFundingSource().hashCode();
+        result = 31 * result + getEnvisionedDuration();
+        result = 31 * result + getGeographicScope().hashCode();
+        result = 31 * result + getGoals().hashCode();
+        result = 31 * result + getLeadOrganization().hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ArmsExpedition{" +
+                "leadOrganization='" + leadOrganization + '\'' +
+                ", principalInvestigator='" + principalInvestigator + '\'' +
+                ", contactName='" + contactName + '\'' +
+                ", contactEmail='" + contactEmail + '\'' +
+                ", fundingSource='" + fundingSource + '\'' +
+                ", envisionedDuration=" + envisionedDuration +
+                ", geographicScope='" + geographicScope + '\'' +
+                ", goals='" + goals + '\'' +
+                ", expedition=" + expedition +
+                '}';
     }
 }
