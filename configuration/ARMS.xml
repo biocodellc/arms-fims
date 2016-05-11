@@ -11,7 +11,7 @@
                        defined_by='urn:armsModel'>
             </attribute>
             <attribute column='deploymentID' column_internal="deploymentId" uri='urn:deploymentID' group='ARMS Details'
-                       defined_by='urn:deploymentID'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/eventID'>
             </attribute>
             <attribute column='laminates' column_internal="laminates" uri='urn:laminates' group='ARMS Details'
                        defined_by='urn:laminates'>
@@ -90,21 +90,21 @@
                        group='location' defined_by='urn:depthInMeters'>
             </attribute>
             <attribute column='stationID' column_internal="stationId" uri='urn:stationID' group='location'
-                       defined_by='urn:stationID'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/locationID'>
             </attribute>
             <attribute column='county' column_internal="county" uri='urn:county' group='location' defined_by='http://rs.tdwg.org/dwc/terms/county'>
             </attribute>
             <attribute column='errorRadius' column_internal="errorRadius" uri='urn:errorRadius' group='location'
-                       defined_by='urn:errorRadius'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters'>
             </attribute>
-            <attribute column='habitat (NOAA deploymentZone)' column_internal="habitat" uri='urn:habitat' group='location'
-                       defined_by='urn:habitat'>
+            <attribute column='habitat' column_internal="habitat" uri='urn:habitat' group='location'
+                       defined_by='http://rs.tdwg.org/dwc/terms/habitat'>
             </attribute>
             <attribute column='substrateType' column_internal="substrateType" uri='urn:substrateType' group='location'
                        defined_by='urn:substrateType'>
             </attribute>
             <attribute column='horizontalDatum' column_internal="horizontalDatum" uri='urn:horizontalDatum' group='location'
-                       defined_by='urn:horizontalDatum'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/geodeticDatum'>
             </attribute>
             <attribute column='island' column_internal="island" uri='urn:island' group='location' defined_by='http://rs.tdwg.org/dwc/terms/island'>
             </attribute>
@@ -123,7 +123,7 @@
                        defined_by='http://rs.tdwg.org/dwc/terms/stateProvince'>
             </attribute>
             <attribute column='deploymentPersonInCharge' column_internal="deploymentPersonInCharge"
-                       uri='urn:deploymentPersonInCharge' group='ARMS Process' defined_by='urn:deploymentPersonInCharge'>
+                       uri='urn:deploymentPersonInCharge' group='ARMS Process' defined_by='http://rs.tdwg.org/dwc/terms/recordedBy'>
             </attribute>
             <attribute column='recoveryPersonInCharge' column_internal="recoveryPersonInCharge"
                        uri='urn:recoveryPersonInCharge' group='ARMS Process' defined_by='urn:recoveryPersonInCharge'>
@@ -137,10 +137,10 @@
             <attribute column='durationToProcessing' column_internal="durationToProcessing"
                        uri='urn:durationToProcessing' group='ARMS Process' defined_by='urn:durationToProcessing'>
             </attribute>
-            <attribute column='notes' column_internal="notes" uri='urn:notes' group='ARMS Process' defined_by='urn:notes'>
+            <attribute column='notes' column_internal="notes" uri='urn:notes' group='ARMS Process' defined_by='http://rs.tdwg.org/dwc/terms/fieldNotes'>
             </attribute>
             <attribute column='removalProtocol' column_internal="removalProtocal" uri='urn:removalProtocol'
-                       group='ARMS Process' defined_by='urn:removalProtocol'>
+                       group='ARMS Process' defined_by='http://rs.tdwg.org/dwc/terms/samplingProtocol'>
             </attribute>
             <!--<attribute column='permitInformationURL' uri='urn:permitInformationURL' group='' defined_by='urn:permitInformationURL'>-->
             <!--</attribute>-->
@@ -188,7 +188,7 @@
                 <field>actualRecoveryTimeOfDay</field>
                 <field>county</field>
                 <field>errorRadius</field>
-                <field>habitat (NOAA deploymentZone)</field>
+                <field>habitat</field>
                 <field>substrateType</field>
                 <field>horizontalDatum</field>
                 <field>island</field>
@@ -217,6 +217,7 @@
             <rule type='checkInXMLFields' column='intentToMetabarcode' list="intent" level="error"/>
             <rule type='checkInXMLFields' column='intentToPhotographPlates' list="intent" level="error"/>
             <rule type='checkInXMLFields' column='intentToPhotographSpecimens' list="intent" level="error"/>
+            <rule type='checkInXMLFields' column='horizontalDatum' list="horizontalDatum" level="warning"/>
             <rule type="isInteger" column="numLayers" level="error"/>
             <rule type="isInteger" column="numReplicatesInSet" level="error"/>
             <rule type="isInteger" column="intendedSoakTimeInYears" level="error"/>
@@ -511,6 +512,9 @@
                 <field>South America</field>
                 <field>South China Sea</field>
                 <field>Southern Ocean</field>
+            </list>
+            <list alias="horizontalDatum" caseInsensitive="true">
+                <field>wgs84</field>
             </list>
         </lists>
     </validation>
