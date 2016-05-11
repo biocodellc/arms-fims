@@ -24,14 +24,12 @@ public class ArmsExpedition {
     private String geographicScope;
     private String goals;
     private String leadOrganization;
-//    private URI identifier;
 
     private Expedition expedition;
     private Set<Deployment> deployments;
 
     public static class ArmsExpeditionBuilder {
         private String principalInvestigator;
-//        private URI identifier;
         private Expedition expedition;
 
         private String contactName;
@@ -44,7 +42,6 @@ public class ArmsExpedition {
 
         public ArmsExpeditionBuilder(String principalInvestigator, Expedition expedition) {
             this.principalInvestigator = principalInvestigator;
-//            this.identifier = identifier;
             this.expedition = expedition;
         }
 
@@ -106,9 +103,7 @@ public class ArmsExpedition {
     private ArmsExpedition() {}
 
     public ArmsExpedition(ArmsExpeditionBuilder builder) {
-//        this.expeditionId = builder.expedition.getExpeditionId();
         this.principalInvestigator = builder.principalInvestigator;
-//        this.identifier = builder.identifier;
         this.expedition = builder.expedition;
         this.contactName = builder.contactName;
         this.contactEmail = builder.contactEmail;
@@ -120,6 +115,7 @@ public class ArmsExpedition {
     }
 
     @Id
+    @Column(nullable = false)
     public int getExpeditionId() {
         return expeditionId;
     }
@@ -129,6 +125,7 @@ public class ArmsExpedition {
             this.expeditionId = id;
     }
 
+    @Column(nullable = false)
     public String getPrincipalInvestigator() {
         return principalInvestigator;
     }
@@ -137,6 +134,7 @@ public class ArmsExpedition {
         this.principalInvestigator = principalInvestigator;
     }
 
+    @Column(nullable = false)
     public String getContactName() {
         return contactName;
     }
@@ -145,6 +143,7 @@ public class ArmsExpedition {
         this.contactName = contactName;
     }
 
+    @Column(nullable = false)
     public String getContactEmail() {
         return contactEmail;
     }
@@ -153,6 +152,7 @@ public class ArmsExpedition {
         this.contactEmail = contactEmail;
     }
 
+    @Column(nullable = false)
     public String getFundingSource() {
         return fundingSource;
     }
@@ -161,6 +161,7 @@ public class ArmsExpedition {
         this.fundingSource = fundingSource;
     }
 
+    @Column(nullable = false)
     public int getEnvisionedDuration() {
         return envisionedDuration;
     }
@@ -169,6 +170,7 @@ public class ArmsExpedition {
         this.envisionedDuration = envisionedDuration;
     }
 
+    @Column(nullable = false)
     public String getGeographicScope() {
         return geographicScope;
     }
@@ -177,6 +179,7 @@ public class ArmsExpedition {
         this.geographicScope = geographicScope;
     }
 
+    @Column(nullable = false)
     public String getGoals() {
         return goals;
     }
@@ -185,6 +188,7 @@ public class ArmsExpedition {
         this.goals = goals;
     }
 
+    @Column(nullable = false)
     public String getLeadOrganization() {
         return leadOrganization;
     }
@@ -192,15 +196,6 @@ public class ArmsExpedition {
     public void setLeadOrganization(String leadOrganization) {
         this.leadOrganization = leadOrganization;
     }
-
-//    public URI getIdentifier() {
-//        return identifier;
-//    }
-//
-//    private void setIdentifier(URI identifier) {
-//        // todo should this just be set when the expedition is passed in?
-//        this.identifier = identifier;
-//    }
 
     @Transient
     public Expedition getExpedition() {

@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * This repositories provides CRUD operations for {@link ArmsExpedition} objects
  */
-@Transactional
+@Transactional("armsTransactionManager")
 public interface ArmsExpeditionRepository extends Repository<ArmsExpedition, Integer> {
 
     @Modifying
@@ -18,7 +18,7 @@ public interface ArmsExpeditionRepository extends Repository<ArmsExpedition, Int
 
     void save(ArmsExpedition armsExpedition);
 
-    ArmsExpedition findByArmsExpeditionId(int armsExpeditionId);
+    ArmsExpedition findByExpeditionId(int armsExpeditionId);
 
     Set<ArmsExpedition> findAll();
 }

@@ -46,7 +46,9 @@
     <!-- Enables the Hibernate @Transactional programming model -->
     <tx:annotation-driven transaction-manager="armsTransactionManager" />
 
-    <bean id="armsTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>
+    <bean id="armsTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="armsEntityManagerFactory"/>
+    </bean>
 
     <bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
@@ -57,5 +59,7 @@
         <constructor-arg name="dataSource" ref="dataSource" />
     </bean>
 
-    <jpa:repositories base-package="biocode.fims.arms.repositories" entity-manager-factory-ref="armsEntityManagerFactory"/>
+    <jpa:repositories base-package="biocode.fims.arms.repositories"
+                      transaction-manager-ref="armsTransactionManager"
+                      entity-manager-factory-ref="armsEntityManagerFactory"/>
 </beans>

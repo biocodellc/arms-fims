@@ -50,7 +50,6 @@ public class ArmsExpeditionRestService extends FimsService {
                            @FormParam("public") boolean isPublic) {
 
         Project project = projectService.getProject(Integer.parseInt(settingsManager.retrieveValue("projectId")));
-        // TODO how to assign an expeditionCode?
         Expedition expedition = new Expedition.ExpeditionBuilder(expeditionCode, user, project)
                 .isPublic(isPublic)
                 .build();

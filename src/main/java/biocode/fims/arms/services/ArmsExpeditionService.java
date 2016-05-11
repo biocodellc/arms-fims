@@ -14,7 +14,7 @@ import java.util.Set;
  * Service class for handling {@link biocode.fims.arms.entities.ArmsExpedition} persistence
  */
 @Service
-@Transactional
+@Transactional("armsTransactionManager")
 public class ArmsExpeditionService {
     private final ExpeditionService expeditionService;
     private final ArmsExpeditionRepository armsExpeditionRepository;
@@ -35,7 +35,8 @@ public class ArmsExpeditionService {
 
         // now that the Expedition's id has been set
         armsExpedition.setExpeditionId(armsExpedition.getExpedition().getExpeditionId());
-        armsExpedition.getExpedition().setExpeditionTitle("ARMS Project " + armsExpedition.getExpeditionId());
+        armsExpedition.getExpedition().setExpeditionTitle(
+                "(" + armsExpedition.getExpedition().getExpeditionCode() + ") ARMS ProjectId: " + armsExpedition.getExpeditionId());
 
         armsExpeditionRepository.save(armsExpedition);
     }
@@ -49,7 +50,7 @@ public class ArmsExpeditionService {
     public ArmsExpedition getArmsExpedition(int armsExpeditionId) {
         Expedition expedition = expeditionService.getExpedition(armsExpeditionId);
 
-        ArmsExpedition armsExpedition = armsExpeditionRepository.findByArmsExpeditionId(armsExpeditionId);
+        ArmsExpedition armsExpedition = armsExpeditionRepository.findByExpeditionId(armsExpeditionId);
         armsExpedition.setExpedition(expedition);
 
         return armsExpedition;
