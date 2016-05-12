@@ -4,7 +4,6 @@ import biocode.fims.entities.Expedition;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 
 import javax.persistence.*;
-import java.net.URI;
 import java.util.Set;
 
 /**
@@ -12,7 +11,7 @@ import java.util.Set;
  * a biocode-fims {@link Expedition}.
  */
 @Entity
-@Table(name = "armsExpedition")
+@Table(name = "armsExpeditions")
 public class ArmsExpedition {
 
     private int expeditionId;
@@ -179,7 +178,7 @@ public class ArmsExpedition {
         this.geographicScope = geographicScope;
     }
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "text not null")
     public String getGoals() {
         return goals;
     }

@@ -218,6 +218,7 @@
             <rule type='checkInXMLFields' column='intentToPhotographPlates' list="intent" level="error"/>
             <rule type='checkInXMLFields' column='intentToPhotographSpecimens' list="intent" level="error"/>
             <rule type='checkInXMLFields' column='horizontalDatum' list="horizontalDatum" level="warning"/>
+            <rule type='checkInXMLFields' column='substrateType' list="substrateType" level="warning"/>
             <rule type="isInteger" column="numLayers" level="error"/>
             <rule type="isInteger" column="numReplicatesInSet" level="error"/>
             <rule type="isInteger" column="intendedSoakTimeInYears" level="error"/>
@@ -515,6 +516,10 @@
             </list>
             <list alias="horizontalDatum" caseInsensitive="true">
                 <field>wgs84</field>
+            </list>
+            <list alias="substrateType" caseInsensitive="true">
+                <field>hard</field>
+                <field>soft</field>
             </list>
         </lists>
     </validation>

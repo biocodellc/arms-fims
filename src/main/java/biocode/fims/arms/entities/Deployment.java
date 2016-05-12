@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "deployments")
 public class Deployment {
+    private int id;
 
     // ARMS Details
     private String armsModel;
@@ -69,6 +70,16 @@ public class Deployment {
 
     private ArmsExpedition armsExpedition;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Column(nullable = false)
     public String getArmsModel() {
         return armsModel;
@@ -86,7 +97,6 @@ public class Deployment {
         this.attachmentMethod = attachmentMethod;
     }
 
-    @Id
     @Column(nullable = false)
     public String getDeploymentId() {
         return deploymentId;
@@ -165,6 +175,7 @@ public class Deployment {
         this.durationToProcessing = durationToProcessing;
     }
 
+    @Column(columnDefinition = "text null")
     public String getNotes() {
         return notes;
     }
