@@ -1,7 +1,7 @@
 angular.module('fims.auth')
 
-.factory('AuthFactory', ['$http', '$rootScope', '$window', 'oAuth', 'REST_ROOT',
-    function ($http, $rootScope, $window, oAuth, REST_ROOT) {
+.factory('AuthFactory', ['$http', '$window', '$location', 'oAuth', 'REST_ROOT', 'APP_ROOT',
+    function ($http, $window, $location, oAuth, REST_ROOT, APP_ROOT) {
         var triedToRefresh = false;
 
         var authFactory = {
@@ -49,7 +49,8 @@ angular.module('fims.auth')
                     password: password
                 }),
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'referer': $location.protocol() + "://" + $location.host() + "/" + APP_ROOT
                 }
             };
 
@@ -57,8 +58,6 @@ angular.module('fims.auth')
                 .success(function(data, status, headers, config) {
                     setOAuthTokens(data.access_token, data.refresh_token);
                     authFactory.isAuthenticated = true;
-
-                    $rootScope.$broadcast('authChanged');
                 })
                 .error(function (data, status, headers, config) {
                     authFactory.logout();

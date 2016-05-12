@@ -14,9 +14,9 @@ import javax.ws.rs.core.Response;
  * arms-Fims utility services
  */
 @Path("utils/")
-public class Utils extends FimsService {
+public class ArmsUtils extends FimsService {
 
-    Utils(UserService userService, SettingsManager settingsManager) {
+    ArmsUtils(UserService userService, SettingsManager settingsManager) {
         super(userService, settingsManager);
     }
 
