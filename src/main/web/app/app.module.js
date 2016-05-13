@@ -3,7 +3,6 @@ var app = angular.module('armsApp', [
     'fims.query',
     'fims.auth',
     'fims.templates',
-    'fims.expeditions',
     'fims.validation',
     'fims.projects',
     'fims.users',
@@ -85,4 +84,24 @@ app.controller('NavCtrl', ['$rootScope', '$scope', '$location', '$state', 'AuthF
                 vm.isAdmin = newVal;
             }
         )
+    }]);
+
+// register an interceptor to convert objects to a form-data like string for $http data attributes and
+// set the appropriate header
+app.factory('postInterceptor', ['$injector', '$httpParamSerializerJQLike',
+    function ($injector, $httpParamSerializerJQLike) {
+        return {
+            request: function (config) {
+                if (config.method == "POST") {
+                    config.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+                    if (config.data instanceof Object)
+                        config.data = $httpParamSerializerJQLike(config.data);
+                }
+                return config;
+            }
+        };
+    }])
+
+    .config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.interceptors.push('postInterceptor');
     }]);

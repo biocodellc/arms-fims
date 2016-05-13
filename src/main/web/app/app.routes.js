@@ -62,12 +62,6 @@ angular.module('armsApp')
                 controller: "ProjectCtrl as vm",
                 loginRequired: true
             })
-            .state('expeditionManager', {
-                url: "/secure/expeditions",
-                templateUrl: "app/components/expeditions/expeditions.html",
-                controller: "ExpeditionCtrl as vm",
-                loginRequired: true
-            })
             .state('resourceTypes', {
                 url: "/resourceTypes",
                 templateUrl: "app/components/creator/resourceTypes.jsp",
