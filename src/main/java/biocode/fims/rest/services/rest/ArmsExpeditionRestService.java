@@ -4,18 +4,16 @@ import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.services.ArmsExpeditionService;
 import biocode.fims.entities.Expedition;
 import biocode.fims.entities.Project;
+import biocode.fims.fimsExceptions.*;
 import biocode.fims.rest.FimsService;
 import biocode.fims.rest.filters.Authenticated;
-import biocode.fims.service.ExpeditionService;
 import biocode.fims.service.ProjectService;
 import biocode.fims.service.UserService;
 import biocode.fims.settings.SettingsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -69,6 +67,7 @@ public class ArmsExpeditionRestService extends FimsService {
     }
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Response list() {
         return Response.ok(armsExpeditionService.findAll()).build();
     }

@@ -37,14 +37,16 @@ public class ArmsExpeditionService {
         armsExpedition.setExpeditionId(armsExpedition.getExpedition().getExpeditionId());
         armsExpedition.getExpedition().setExpeditionTitle(
                 "(" + armsExpedition.getExpedition().getExpeditionCode() + ") ARMS ProjectId: " + armsExpedition.getExpeditionId());
+        // need to manually call update as expedition and armsExpedition are in different entityManagers/databases
+        expeditionService.update(armsExpedition.getExpedition());
 
         armsExpeditionRepository.save(armsExpedition);
     }
 
 
     public void update(ArmsExpedition armsExpedition) {
-        // TODO do I need to manually update the expedition? Or is it cascaded?
         armsExpeditionRepository.save(armsExpedition);
+        expeditionService.update(armsExpedition.getExpedition());
     }
 
     public ArmsExpedition getArmsExpedition(int armsExpeditionId) {
@@ -60,7 +62,7 @@ public class ArmsExpeditionService {
         Set<ArmsExpedition> armsExpeditions = armsExpeditionRepository.findAll();
 
         for (ArmsExpedition armsExpedition: armsExpeditions) {
-            armsExpedition.setExpedition(expeditionService.getExpedition((armsExpedition.getExpeditionId())));
+            armsExpedition.setExpedition(expeditionService.getExpedition(armsExpedition.getExpeditionId()));
         }
 
         return armsExpeditions;

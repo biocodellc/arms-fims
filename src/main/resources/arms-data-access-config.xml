@@ -16,7 +16,7 @@
 
     <context:property-placeholder location="classpath:arms-fims-database.properties" ignore-unresolvable="true"/>
 
-    <bean id="dataSource"
+    <bean id="armsDataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${armsClass}" />
         <property name="url" value="${armsUrl}" />
@@ -28,7 +28,7 @@
     </bean>
 
     <bean id="armsEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="armsDataSource"/>
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
         <property name="packagesToScan" value="biocode.fims.arms.entities"/>
         <property name="jpaProperties">
@@ -48,6 +48,7 @@
 
     <bean id="armsTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="armsEntityManagerFactory"/>
+        <qualifier value="armsTransactionManager"/>
     </bean>
 
     <bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>

@@ -33,9 +33,9 @@
                             <td colspan=2>
                                 <select id="expeditionCode" name="expeditionCode" ng-model="vm.expeditionCode" ng-change="vm.updateIsPublicExpedition" style="width:300px">
                                     <option value="0">Select a project</option>
-                                    <option ng-repeat="expedition in vm.armsExpeditions"
-                                            value="{{ expedition.expeditionCode}}">
-                                        {{ expedition.expeditionCode }} ({{ expedition.expeditionTitle }})
+                                    <option ng-repeat="armsExpedition in vm.armsExpeditions"
+                                            value="{{ armsExpedition.expedition.expeditionCode}}">
+                                        {{ armsExpedition.expedition.expeditionTitle }}
                                     </option>
                                 </select>
                                 <button type="button" class="btn btn-default" ng-click="vm.createExpedition()">New Project</button>

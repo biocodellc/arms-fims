@@ -1,7 +1,9 @@
 package biocode.fims.arms.entities;
 
+import biocode.fims.arms.serializers.ArmsExpeditionSerializer;
 import biocode.fims.entities.Expedition;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -10,6 +12,7 @@ import java.util.Set;
  * ArmsExpedition domain object. An ArmsExpedition has a one-to-one unidirectional relationship to
  * a biocode-fims {@link Expedition}.
  */
+@JsonSerialize(using = ArmsExpeditionSerializer.class)
 @Entity
 @Table(name = "armsExpeditions")
 public class ArmsExpedition {
@@ -202,7 +205,7 @@ public class ArmsExpedition {
     }
 
     public void setExpedition(Expedition expedition) {
-        if (expedition == null)
+        if (this.expedition == null)
             this.expedition = expedition;
     }
 
