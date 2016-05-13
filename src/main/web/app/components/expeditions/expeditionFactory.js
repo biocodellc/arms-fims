@@ -2,12 +2,17 @@ angular.module('fims.expeditions')
 
 .factory('ExpeditionFactory', ['$http', 'REST_ROOT', function ($http, REST_ROOT) {
     var expeditionFactory = {
-        getExpeditions: getExpeditions
-    }
+        getExpeditions: getExpeditions,
+        createExpedition: createExpedition
+    };
 
     return expeditionFactory;
 
-    function getExpeditions(projectId) {
-        return $http.get(REST_ROOT + 'projects/' + projectId + '/expeditions');
+    function getExpeditions() {
+        return $http.get(REST_ROOT + 'arms/projects/');
+    }
+
+    function createExpedition(expedition) {
+        return $http.post(REST_ROOT + 'arms/projects', expedition);
     }
 }]);

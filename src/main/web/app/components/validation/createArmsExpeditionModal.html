@@ -3,37 +3,42 @@
         <h3 class="modal-title">Arms Project Creation!</h3>
     </div>
     <div class="modal-body">
+        <div class="col-sm-12 alert alert-error" role="alert" ng-show="vm.error"><strong>Error! </strong>{{ vm.error }}</div>
         <div class="form-group">
             <label for="principalInvestigator" class="control-label">Principal Investigator</label>
-            <input type="text" class="form-control" id="principalInvestigator" name="principalInvestigator" ng-modal="vm.expedition.principalInvestigator" />
+            <input type="text" class="form-control" id="principalInvestigator" name="principalInvestigator" ng-model="vm.expedition.principalInvestigator" autofocus required/>
         </div>
         <div class="form-group">
             <label for="contactName" class="control-label">Contact Name</label>
-            <input type="text" class="form-control" id="contactName" name="contactName" ng-modal="vm.expedition.contactName" />
+            <input type="text" class="form-control" id="contactName" name="contactName" ng-model="vm.expedition.contactName" required />
         </div>
         <div class="form-group">
             <label for="contactEmail" class="control-label">Contact Email</label>
-            <input type="email" class="form-control" id=contactEmail name="contactEmail" ng-modal="vm.expedition.contactEmail" />
+            <input type="email" class="form-control" id=contactEmail name="contactEmail" ng-model="vm.expedition.contactEmail" required />
         </div>
         <div class="form-group">
             <label for=fundingSource class="control-label">Funding Source</label>
-            <input type="text" class="form-control" id=fundingSource name="fundingSource" ng-modal="vm.expedition.fundingSource" />
+            <input type="text" class="form-control" id=fundingSource name="fundingSource" ng-model="vm.expedition.fundingSource" required />
         </div>
         <div class="form-group">
-            <label for=envisionedDuration class="control-label">Envisioned Duration</label>
-            <input type="number" class="form-control" id=envisionedDuration name="envisionedDuration" ng-modal="vm.expedition.envisionedDuration" min="0"/>
+            <label for=envisionedDuration class="control-label">Envisioned Duration (Years)</label>
+            <input type="number" class="form-control" id=envisionedDuration name="envisionedDuration" ng-model="vm.expedition.envisionedDuration" min="0" required />
         </div>
         <div class="form-group">
             <label for=geographicScope class="control-label">Geographic Scope</label>
-            <input type="text" class="form-control" id=geographicScope name="geographicScope" ng-modal="vm.expedition.geographicScope" />
+            <input type="text" class="form-control" id=geographicScope name="geographicScope" ng-model="vm.expedition.geographicScope" required />
         </div>
         <div class="form-group">
             <label for=goals class="control-label">Goals</label>
-            <input type="text" class="form-control" id=goals name="goals" ng-modal="vm.expedition.goals" />
+            <input type="text" class="form-control" id=goals name="goals" ng-model="vm.expedition.goals" required />
         </div>
         <div class="form-group">
             <label for=leadOrganization class="control-label">Lead Organization</label>
-            <input type="text" class="form-control" id=leadOrganization name="leadOrganization" ng-modal="vm.expedition.leadOrganization" />
+            <input type="text" class="form-control" id=leadOrganization name="leadOrganization" ng-model="vm.expedition.leadOrganization" required />
+        </div>
+        <div class="form-group">
+            <label for=expeditionCode class="control-label">Project Code</label>
+            <input type="text" class="form-control" id=expeditionCode name=expeditionCode ng-model="vm.expedition.expeditionCode" required />
         </div>
     </div>
     <div class="modal-footer">

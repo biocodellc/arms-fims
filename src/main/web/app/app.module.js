@@ -1,6 +1,5 @@
 var app = angular.module('armsApp', [
     'ui.router',
-    'fims.query',
     'fims.auth',
     'fims.templates',
     'fims.validation',

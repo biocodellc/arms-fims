@@ -1,9 +1,8 @@
-angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
+angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 'fims.expeditions'])
 
     .controller('ValidationCtrl', ['$location', 'AuthFactory', 'PROJECT_ID', 'ExpeditionFactory', 'FailModalFactory', '$uibModal',
         function ($location, AuthFactory, PROJECT_ID, ExpeditionFactory, FailModalFactory, $uibModal) {
             var vm = this;
-            vm.projectId = PROJECT_ID;
             vm.isAuthenticated = AuthFactory.isAuthenticated;
             vm.expeditionCode = "0";
             vm.armsExpeditions = [];
@@ -24,20 +23,20 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
                     // }
                 });
 
-                modalInstance.result.then(function (selectedItem) {
-                    // pass in the expeditionCode to select the expedition 
+                modalInstance.result.then(function (expeditionCode) {
                     getArmsExpeditions();
-                    $scope.selected = selectedItem;
+                    vm.expeditionCode = expeditionCode;
                 }, function () {
                 });
 
             }
 
             function getArmsExpeditions(expeditionCode) {
-                ExpeditionFactory.getExpeditions(vm.projectId)
+                ExpeditionFactory.getExpeditions()
                     .then(function(response) {
                         angular.extend(vm.armsExpeditions, response.data);
-                        vm.expeditionCode = expeditionCode;
+                        if (expeditionCode)
+                            vm.expeditionCode = expeditionCode;
                     }, function (response, status) {
                         FailModalFactory.open("Failed to load ARMS projects", response.data.usrMessage);
                     })
@@ -45,7 +44,7 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
             
             function updateIsPublicExpedition() {
                 if (vm.expeditionCode != 0) {
-                    for (expedition in armsExpeditions) {
+                    for (expedition in vm.armsExpeditions) {
                         if (expedition.expeditionCode == vm.expeditionCode) {
                             vm.isPublicExpedition = expedition.public;
                             break;
@@ -91,9 +90,11 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
 
         }])
 
-.controller("CreateArmsExpeditionsModalCtrl", ['$scope', '$uibModalInstance',
-    function($scope, $uibModalInstance) {
-        this.expedition = {
+.controller("CreateArmsExpeditionsModalCtrl", ['$scope', '$uibModalInstance', 'ExpeditionFactory',
+    function($scope, $uibModalInstance, ExpeditionFactory) {
+        var vm = this;
+        vm.error;
+        vm.expedition = {
             principalInvestigator: null,
             contactName: null,
             contactEmail: null,
@@ -101,14 +102,24 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap'])
             envisionedDuration: null,
             geographicScope: null,
             goals: null,
-            leadOrganization: null
+            leadOrganization: null,
+            expeditionCode: null
         };
 
-        this.create = function (form) {
-            $uibModalInstance.close($scope.expedition);
+        vm.create = function () {
+            ExpeditionFactory.createExpedition(vm.expedition)
+                .then(function() {
+                    // handle success response
+                    $uibModalInstance.close(vm.expedition.expeditionCode);
+                }, function(response) {
+                    if (response.data.usrMessage)
+                        vm.error = response.data.usrMessage;
+                    else
+                        vm.error = "Server Error! Status code: " + response.status;
+                });
         };
 
-        this.cancel = function () {
+        vm.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
 
