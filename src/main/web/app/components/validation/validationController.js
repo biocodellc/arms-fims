@@ -16,11 +16,6 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 
                     controller: 'CreateArmsExpeditionsModalCtrl',
                     controllerAs: 'vm',
                     size: 'lg',
-                    // resolve: {
-                    //     items: function () {
-                    //         return $scope.items;
-                    //     }
-                    // }
                 });
 
                 modalInstance.result.then(function (expeditionCode) {
@@ -107,6 +102,10 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 
         };
 
         vm.create = function () {
+            $scope.$broadcast('show-errors-check-validity');
+
+            if ($scope.expeditionForm.$invalid) { return; }
+
             ExpeditionFactory.createExpedition(vm.expedition)
                 .then(function() {
                     // handle success response

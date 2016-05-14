@@ -6,7 +6,8 @@ var app = angular.module('armsApp', [
     'fims.projects',
     'fims.users',
     'fims.lookup',
-    'utils.autofocus'
+    'utils.autofocus',
+    'ui.bootstrap.showErrors'
 ]);
 
 var currentUser = {};

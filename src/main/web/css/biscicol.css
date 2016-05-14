@@ -368,6 +368,15 @@ th {
     text-align: center;
 }
 
+/* Styles for angular showErrors directive */
+.form-group .help-block {
+    display: none;
+}
+
+.form-group.has-error .help-block {
+    display: block;
+}
+
 [ng\:cloak], [ng-cloak], .ng-cloak {
     display: none !important;
 }
