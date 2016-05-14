@@ -3,11 +3,12 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 
     .controller('ValidationCtrl', ['$location', 'AuthFactory', 'PROJECT_ID', 'ExpeditionFactory', 'FailModalFactory', '$uibModal',
         function ($location, AuthFactory, PROJECT_ID, ExpeditionFactory, FailModalFactory, $uibModal) {
             var vm = this;
+            vm.projectId = PROJECT_ID;
             vm.isAuthenticated = AuthFactory.isAuthenticated;
             vm.expeditionCode = "0";
             vm.armsExpeditions = [];
-            vm.isPublicExpedition = false;
-            vm.updateIsPublicExpedition = updateIsPublicExpedition();
+            // vm.isPublicExpedition = false;
+            // vm.updateIsPublicExpedition = updateIsPublicExpedition();
             vm.createExpedition = createExpedition;
 
             function createExpedition() {

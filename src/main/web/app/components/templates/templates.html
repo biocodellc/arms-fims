@@ -4,21 +4,19 @@
 <h2>Generate Template</h2>
 
     <div class="col-sm-12">
-        <form>
-            <div class="col-sm-8">
-                <table border=0 class="table">
-                    <input type="hidden" value="{{ vm.projectId }}" id="project">
+        <form class="form-inline">
+            <input type="hidden" value="{{ vm.projectId }}" id="project">
 
-                    <tr  class="toggle-content" id="config_toggle">
-                        <td align=right>&nbsp;&nbsp;Choose Template Config&nbsp;&nbsp;</td>
-                        <td align=left id="config_container">
-                            <select width=20 id="configs" onChange="updateCheckedBoxes();">
-                                <option value=0>Select a Project</option>
-                            </select>
-                            <a class="toggle-content" id="remove_config_toggle" href="#" onclick="removeConfig();">remove</a>
-                        </td>
-                    </tr>
-                </table>
+            <div class="form-group">
+                <label for="configs" class="col-sm-3 col-md-2 control-label">Choose Template Config:</label>
+                <div class="input-group col-sm-10 col-md-3">
+                    <select class="form-control" id="configs" onChange="updateCheckedBoxes();">
+                        <option value="0">Default</option>
+                    </select>
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="removeConfig" style="border-color:#fff"></button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
