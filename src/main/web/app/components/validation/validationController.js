@@ -71,7 +71,7 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 
                 });
 
                 // expand/contract messages -- use 'on' function and initially to 'body' since this is dynamically loaded
-                jQuery("body").on("click", "#groupMessage", function () {
+                jQuery("body").off().on("click", "#groupMessage", function () {
                     $(this).parent().siblings("dd").slideToggle();
                 });
 

@@ -2,19 +2,27 @@ package biocode.fims.rest.services.rest;
 
 import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.services.ArmsExpeditionService;
+import biocode.fims.config.ConfigurationFileFetcher;
+import biocode.fims.digester.Entity;
+import biocode.fims.digester.Mapping;
 import biocode.fims.entities.Expedition;
 import biocode.fims.entities.Project;
 import biocode.fims.fimsExceptions.*;
 import biocode.fims.rest.FimsService;
 import biocode.fims.rest.filters.Authenticated;
+import biocode.fims.service.BcidService;
 import biocode.fims.service.ProjectService;
 import biocode.fims.service.UserService;
 import biocode.fims.settings.SettingsManager;
+import org.apache.commons.digester3.Digester;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * ARMS specific expedition services
@@ -25,13 +33,15 @@ public class ArmsExpeditionRestService extends FimsService {
 
     private final ProjectService projectService;
     private final ArmsExpeditionService armsExpeditionService;
+    private final BcidService bcidService;
 
     @Autowired
-    ArmsExpeditionRestService(ProjectService projectService, ArmsExpeditionService armsExpeditionService,
+    ArmsExpeditionRestService(ProjectService projectService, ArmsExpeditionService armsExpeditionService, BcidService bcidService,
                               UserService userService, SettingsManager settingsManager) {
         super(userService, settingsManager);
         this.projectService = projectService;
         this.armsExpeditionService = armsExpeditionService;
+        this.bcidService = bcidService;
     }
 
     @POST
@@ -62,6 +72,29 @@ public class ArmsExpeditionRestService extends FimsService {
                 .build();
 
         armsExpeditionService.create(armsExpedition);
+
+        // TODO the following is temporary until the DeepRoots code is refactored
+        File configFile = new ConfigurationFileFetcher(project.getProjectId(), uploadPath(), false).getOutputFile();
+
+        Mapping mapping = new Mapping();
+        mapping.addMappingRules(new Digester(), configFile);
+
+        // Loop the mapping file and create a BCID for every entity that we specified there!
+        boolean ezidRequest = Boolean.parseBoolean(settingsManager.retrieveValue("ezidRequests"));
+        LinkedList<Entity> entities = mapping.getEntities();
+        Iterator it = entities.iterator();
+        while (it.hasNext()) {
+            Entity entity = (Entity) it.next();
+
+            biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(
+                    user, entity.getConceptURI())
+                    .expedition(expedition)
+                    .ezidRequest(ezidRequest)
+                    .title(entity.getConceptAlias())
+                    .build();
+
+            bcidService.create(bcid);
+        }
 
         return Response.ok(armsExpedition).build();
     }

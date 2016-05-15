@@ -54,10 +54,10 @@
     <bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
     <bean id="mySqlUploader" class="biocode.fims.mysql.MySqlUploader">
-        <constructor-arg name="dataSource" ref="dataSource" />
+        <constructor-arg name="dataSource" ref="armsDataSource" />
     </bean>
     <bean id="mySqlDatasetTableValidator" class="biocode.fims.mysql.MySqlDatasetTableValidator">
-        <constructor-arg name="dataSource" ref="dataSource" />
+        <constructor-arg name="dataSource" ref="armsDataSource" />
     </bean>
 
     <jpa:repositories base-package="biocode.fims.arms.repositories"

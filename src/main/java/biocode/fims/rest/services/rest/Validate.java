@@ -280,19 +280,19 @@ public class Validate extends FimsService {
             CsvTabularDataConverter csvTabularDataConverter = new CsvTabularDataConverter(
                     tdr, destination, outputPrefix);
 
-            tdr.closeFile();
-
             List<String> acceptableColumns = new LinkedList<>();
             for (Attribute attribute : processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName())) {
                 acceptableColumns.add(attribute.getColumn());
             }
-            csvTabularDataConverter.convert(acceptableColumns);
+            csvTabularDataConverter.convert(acceptableColumns, p.getMapping().getDefaultSheetName());
+
+            tdr.closeFile();
 
             //TODO this isn't the correct way to do this
             biocode.fims.entities.Bcid rootBcid = expeditionService.getRootBcid(
                     processController.getExpeditionCode(),
                     processController.getProject().getProjectId(),
-                    "Resource");
+                    "Event");
 
             // upload the dataset
             mySqlUploader.execute(rootBcid.getIdentifier(), acceptableColumns, csvTabularDataConverter.getCsvFile().getPath());

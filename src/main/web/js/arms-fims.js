@@ -1075,7 +1075,6 @@ function removeConfig() {
 
 /* ====== validation.html Functions ======= */
 var datasetId;
-var fastaId;
 
 // Function to display a list in a message
 function list(listName, columnName) {
@@ -1142,15 +1141,15 @@ function validForm(expeditionCode) {
     var dRE = /^[a-zA-Z0-9_-]{4,50}$/
 
 
-    if (!$("#" + datasetId).val() && !$("#" + fastaId).val()) {
-        message = "Please provide a dataset or fasta file";
+    if (!$("#" + datasetId).val()) {
+        message = "Please provide a dataset";
         error = true;
     } else if ($('#project').val() == 0) {
         message = "Please select a project.";
         error = true;
     } else if ($("#upload").is(":checked")) {
         // check if expeditionCode is a select and val = 0
-        if (!$("#" + datasetId).val() && $("#" + fastaId).val() &&
+        if (!$("#" + datasetId).val() && 
             $("#expeditionCode").is("select") && $("#expeditionCode").val() == 0) {
             message = "You must select an existing expedition.";
             error = true;
@@ -1159,10 +1158,6 @@ function validForm(expeditionCode) {
             message = "<b>Expedition Code</b> must contain only numbers, letters, or underscores and be 4 to 50 characters long";
             error = true;
         }
-    } else if ($("#" + fastaId).val().length > 1 && $("#" + datasetId).val().length < 1 && !$("#upload").is(":checked")) {
-        // only a fasta file is present, no dataset, and upload isn't selected
-        message = "You can only upload fasta files";
-        error = true;
     }
 
     if (error) {
@@ -1185,7 +1180,6 @@ function validatorSubmit() {
 
         // change the input names to the appropriate file type
         $("#" + datasetId).attr("name","dataset");
-        $("#" + fastaId).attr("name","fasta");
 
         submitForm().done(function(data) {
             validationResults(data);
@@ -1265,44 +1259,23 @@ function checkNAAN(spreadsheetNaan, naan) {
 // function to toggle the projectId and expeditionCode inputs of the validation form
 function validationFormToggle() {
     $("input[name=file]").change(function() {
-        var splitFileName = $(this).val().split('.');
-        var ext = splitFileName[splitFileName.length - 1];
-        var datasetExts = ["xls", "xlsx", "txt"];
-
         // Clear the resultsContainer
         $("#resultsContainer").empty();
 
-        if ($.inArray(ext, datasetExts) >= 0) {
+        // always need to set dataset and fasta id's
+        datasetId = this.id;
 
-            // always need to set dataset and fasta id's
-            datasetId = this.id;
-            if (this.id == "file1") {
-                fastaId = "file2";
-            } else {
-                fastaId = "file1";
+        // Check NAAN
+        $.when(parseSpreadsheet("~naan=[0-9]+~", "Instructions")).done(function(spreadsheetNaan) {
+            if (spreadsheetNaan > 0) {
+                $.getJSON(armsFimsRestRoot + "utils/getNAAN")
+                    .done(function(data) {
+                        checkNAAN(spreadsheetNaan, data.naan);
+                    });
             }
+        });
 
-            // Check NAAN
-            $.when(parseSpreadsheet("~naan=[0-9]+~", "Instructions")).done(function(spreadsheetNaan) {
-                if (spreadsheetNaan > 0) {
-                    $.getJSON(armsFimsRestRoot + "utils/getNAAN")
-                        .done(function(data) {
-                            checkNAAN(spreadsheetNaan, data.naan);
-                        });
-                }
-            });
-
-            generateMap('map', getProjectID());
-
-        } else if (ext.toLowerCase() == "fasta") {
-            // always need to set dataset and fasta id's
-            fastaId = this.id;
-            if (this.id == "file1") {
-                datasetId = "file2";
-            } else {
-                datasetId = "file1";
-            }
-        }
+        generateMap('map', getProjectID());
     });
 
     $('#upload').change(function() {
@@ -1469,7 +1442,7 @@ function writeResults(message) {
 // If the user wants to create a new expedition, get the expedition code
 function createExpedition() {
     var d = new $.Deferred();
-    if ($("#" + datasetId).val().length < 1 && $("#" + fastaId).val().length > 1 &&
+    if ($("#" + datasetId).val().length < 1 && 
         $("#expeditionCode").is("select") && $("#expeditionCode").val() == 0) {
         dialog("You must select an existing expedition code if you are not uploading a new dataset.", "Select an Expedition",
             {"OK":function() {d.reject();$(this).dialog("close");}});
