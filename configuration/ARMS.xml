@@ -73,7 +73,7 @@
             <attribute column='actualDeploymentTimeOfDay' column_internal="actualDeploymentTimeOfDay"
                        uri='urn:actualDeploymentTimeOfDay' group='deploymentTime' defined_by='urn:actualDeploymentTimeOfDay'>
             </attribute>
-            <attribute column='continentOcean' uri='urn:continentOcean' group='location' defined_by='urn:continentOcean'>
+            <attribute column='continentOcean' column_internal="continentOcean" uri='urn:continentOcean' group='location' defined_by='urn:continentOcean'>
             </attribute>
             <attribute column='country' column_internal="country" uri='urn:country' group='location' defined_by='http://rs.tdwg.org/dwc/terms/country'>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
@@ -139,7 +139,7 @@
             </attribute>
             <attribute column='notes' column_internal="notes" uri='urn:notes' group='ARMS Process' defined_by='http://rs.tdwg.org/dwc/terms/fieldNotes'>
             </attribute>
-            <attribute column='removalProtocol' column_internal="removalProtocal" uri='urn:removalProtocol'
+            <attribute column='removalProtocol' column_internal="removalProtocol" uri='urn:removalProtocol'
                        group='ARMS Process' defined_by='http://rs.tdwg.org/dwc/terms/samplingProtocol'>
             </attribute>
         </entity>
