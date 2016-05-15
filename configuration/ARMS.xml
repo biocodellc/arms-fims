@@ -79,11 +79,11 @@
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='decimalLatitude' column_internal="decimalLatitude" uri='urn:decimalLatitude'
-                       group='location' defined_by='http://rs.tdwg.org/dwc/terms/#decimalLatitude'>
+                       group='location' defined_by='http://rs.tdwg.org/dwc/terms/decimalLatitude'>
                 <dataFormat><![CDATA[>=-90 <=90]]></dataFormat>
             </attribute>
             <attribute column='decimalLongitude' column_internal="decimalLongitude" uri='urn:decimalLongitude'
-                       group='location' defined_by='urn:decimalLongitude'>
+                       group='location' defined_by='http://rs.tdwg.org/dwc/terms/decimalLongitude'>
                 <dataFormat><![CDATA[>=-180 <=180]]></dataFormat>
             </attribute>
             <attribute column='depthInMeters' column_internal="depthInMeters" uri='urn:depthInMeters'
@@ -142,8 +142,6 @@
             <attribute column='removalProtocol' column_internal="removalProtocal" uri='urn:removalProtocol'
                        group='ARMS Process' defined_by='http://rs.tdwg.org/dwc/terms/samplingProtocol'>
             </attribute>
-            <!--<attribute column='permitInformationURL' uri='urn:permitInformationURL' group='' defined_by='urn:permitInformationURL'>-->
-            <!--</attribute>-->
         </entity>
     </mapping>
     <validation>
@@ -197,7 +195,6 @@
                 <field>locality</field>
                 <field>depthOfBottomMeters</field>
                 <field>stateProvince</field>
-                <field>permitInformationURL</field>
                 <field>actualDeploymentTimeOfDay</field>
             </rule>
             <rule type="datasetContainsExtraColumns" level="warning" />
@@ -210,7 +207,7 @@
             <rule type='checkInXMLFields' column='hasScrubbieLayer' list="yesNo" level="error"/>
             <rule type='checkInXMLFields' column='laminates' list="yesNo" level="error"/>
             <rule type='checkInXMLFields' column='weightsAttached' list="yesNo" level="error"/>
-            <rule type='checkInXMLFields' column='new/reused' list="newUsed" level="error"/>
+            <rule type='checkInXMLFields' column='new/reused' list="newReused" level="error"/>
             <rule type='checkInXMLFields' column='continentOcean' list="continentOcean" level="error"/>
             <rule type='checkInXMLFields' column='intentToBarcode' list="intent" level="error"/>
             <rule type='checkInXMLFields' column='intentToCollectOtherDatatypes' list="intent" level="error"/>
@@ -234,9 +231,9 @@
                 <field><![CDATA[Yes]]></field>
                 <field><![CDATA[No]]></field>
             </list>
-            <list alias='newUsed' caseInsensitive='true'>
+            <list alias='newReused' caseInsensitive='true'>
                 <field><![CDATA[New]]></field>
-                <field><![CDATA[Used]]></field>
+                <field><![CDATA[Reused]]></field>
             </list>
             <list alias='country' caseInsensitive='true'>
                 <field>Afghanistan</field>
