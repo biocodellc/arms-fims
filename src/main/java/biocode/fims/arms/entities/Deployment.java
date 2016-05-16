@@ -16,29 +16,29 @@ public class Deployment {
     private String armsModel;
     private String attachmentMethod;
     private String deploymentId;
-    private boolean hasScrubbieLayer;
-    private boolean laminates;
+    private String hasScrubbieLayer;
+    private String laminates;
     private String newOrReused;
     private int numLayers;
-    private boolean weightsAttached;
+    private String weightsAttached;
 
     // ARMS Process
     private String dataEntryPersonInCharge;
     private String deploymentPersonInCharge;
-    private int durationToProcessing;
+    private Integer durationToProcessing;
     private String notes;
     private String processingPersonInCharge;
     private String recoveryPersonInCharge;
     private String removalProtocol;
 
     // Data
-    private boolean intentToBarcode;
-    private boolean intentToCollectOtherDatatypes;
-    private boolean intentToMetabarcode;
-    private boolean intentToPhotographPlates;
-    private boolean intentToPhotographSpecimens;
-    private int numReplicatesInSet;
-    private URI photoURL;
+    private String intentToBarcode;
+    private String intentToCollectOtherDatatypes;
+    private String intentToMetabarcode;
+    private String intentToPhotographPlates;
+    private String intentToPhotographSpecimens;
+    private Integer numReplicatesInSet;
+    private URI photoUrl;
 
     // Deployment Time
     private Date actualDeploymentDate;
@@ -47,17 +47,17 @@ public class Deployment {
     private Date actualRecoveryTimeOfDay;
     private Date intendedDeploymentDate;
     private Date intendedRecoveryDate;
-    private int intendedSoakTime;
+    private int intendedSoakTimeInYears;
 
     // Location
     private String continentOcean;
     private String country;
     private String county;
-    private float latitude;
-    private float longitude;
-    private int depth;
-    private int depthOfBottom;
-    private int errorRadius;
+    private float decimalLatitude;
+    private float decimalLongitude;
+    private int depthInMeters;
+    private Integer depthOfBottomMeters;
+    private Integer errorRadius;
     private String habitat;
     private String horizontalDatum;
     private String island;
@@ -107,20 +107,20 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public boolean hasScrubbieLayer() {
+    public String hasScrubbieLayer() {
         return hasScrubbieLayer;
     }
 
-    public void setHasScrubbieLayer(boolean hasScrubbieLayer) {
+    public void setHasScrubbieLayer(String hasScrubbieLayer) {
         this.hasScrubbieLayer = hasScrubbieLayer;
     }
 
     @Column(nullable = false)
-    public boolean hasLaminates() {
+    public String hasLaminates() {
         return laminates;
     }
 
-    public void setLaminates(boolean laminates) {
+    public void setLaminates(String laminates) {
         this.laminates = laminates;
     }
 
@@ -143,11 +143,11 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public boolean hasWeightsAttached() {
+    public String hasWeightsAttached() {
         return weightsAttached;
     }
 
-    public void setWeightsAttached(boolean weightsAttached) {
+    public void setWeightsAttached(String weightsAttached) {
         this.weightsAttached = weightsAttached;
     }
 
@@ -167,11 +167,11 @@ public class Deployment {
         this.deploymentPersonInCharge = deploymentPersonInCharge;
     }
 
-    public int getDurationToProcessing() {
+    public Integer getDurationToProcessing() {
         return durationToProcessing;
     }
 
-    public void setDurationToProcessing(int durationToProcessing) {
+    public void setDurationToProcessing(Integer durationToProcessing) {
         this.durationToProcessing = durationToProcessing;
     }
 
@@ -209,64 +209,65 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public boolean hasIntentToBarcode() {
+    public String hasIntentToBarcode() {
         return intentToBarcode;
     }
 
-    public void setIntentToBarcode(boolean intentToBarcode) {
+    public void setIntentToBarcode(String intentToBarcode) {
         this.intentToBarcode = intentToBarcode;
     }
 
     @Column(nullable = false)
-    public boolean hasIntentToCollectOtherDatatypes() {
+    public String hasIntentToCollectOtherDatatypes() {
         return intentToCollectOtherDatatypes;
     }
 
-    public void setIntentToCollectOtherDatatypes(boolean intentToCollectOtherDatatypes) {
+    public void setIntentToCollectOtherDatatypes(String intentToCollectOtherDatatypes) {
         this.intentToCollectOtherDatatypes = intentToCollectOtherDatatypes;
     }
 
     @Column(nullable = false)
-    public boolean hasIntentToMetabarcode() {
+    public String hasIntentToMetabarcode() {
         return intentToMetabarcode;
     }
 
-    public void setIntentToMetabarcode(boolean intentToMetabarcode) {
+    public void setIntentToMetabarcode(String intentToMetabarcode) {
         this.intentToMetabarcode = intentToMetabarcode;
     }
 
     @Column(nullable = false)
-    public boolean hasIntentToPhotographPlates() {
+    public String hasIntentToPhotographPlates() {
         return intentToPhotographPlates;
     }
 
-    public void setIntentToPhotographPlates(boolean intentToPhotographPlates) {
+    public void setIntentToPhotographPlates(String intentToPhotographPlates) {
         this.intentToPhotographPlates = intentToPhotographPlates;
     }
 
     @Column(nullable = false)
-    public boolean hasIntentToPhotographSpecimens() {
+    public String hasIntentToPhotographSpecimens() {
         return intentToPhotographSpecimens;
     }
 
-    public void setIntentToPhotographSpecimens(boolean intentToPhotographSpecimens) {
+    public void setIntentToPhotographSpecimens(String intentToPhotographSpecimens) {
         this.intentToPhotographSpecimens = intentToPhotographSpecimens;
     }
 
-    public int getNumReplicatesInSet() {
+    public Integer getNumReplicatesInSet() {
         return numReplicatesInSet;
     }
 
-    public void setNumReplicatesInSet(int numReplicatesInSet) {
+    public void setNumReplicatesInSet(Integer numReplicatesInSet) {
         this.numReplicatesInSet = numReplicatesInSet;
     }
 
-    public URI getPhotoURL() {
-        return photoURL;
+    @Column(columnDefinition = "varchar(2083)")
+    public URI getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setPhotoURL(URI photoURL) {
-        this.photoURL = photoURL;
+    public void setPhotoUrl(URI photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     @Column(nullable = false)
@@ -322,12 +323,12 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public int getIntendedSoakTime() {
-        return intendedSoakTime;
+    public int getIntendedSoakTimeInYears() {
+        return intendedSoakTimeInYears;
     }
 
-    public void setIntendedSoakTime(int intendedSoakTime) {
-        this.intendedSoakTime = intendedSoakTime;
+    public void setIntendedSoakTimeInYears(int intendedSoakTime) {
+        this.intendedSoakTimeInYears = intendedSoakTime;
     }
 
     @Column(nullable = false)
@@ -357,45 +358,45 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public float getLatitude() {
-        return latitude;
+    public float getDecimalLatitude() {
+        return decimalLatitude;
     }
 
     @Column(nullable = false)
-    public void setLatitude(float latitude) {
-        this.latitude = latitude;
+    public void setDecimalLatitude(float latitude) {
+        this.decimalLatitude = latitude;
     }
 
-    public float getLongitude() {
-        return longitude;
+    public float getDecimalLongitude() {
+        return decimalLongitude;
     }
 
-    public void setLongitude(float longitude) {
-        this.longitude = longitude;
+    public void setDecimalLongitude(float longitude) {
+        this.decimalLongitude = longitude;
     }
 
     @Column(nullable = false)
-    public int getDepth() {
-        return depth;
+    public int getDepthInMeters() {
+        return depthInMeters;
     }
 
-    public void setDepth(int depth) {
-        this.depth = depth;
+    public void setDepthInMeters(int depth) {
+        this.depthInMeters = depth;
     }
 
-    public int getDepthOfBottom() {
-        return depthOfBottom;
+    public Integer getDepthOfBottomMeters() {
+        return depthOfBottomMeters;
     }
 
-    public void setDepthOfBottom(int depthOfBottom) {
-        this.depthOfBottom = depthOfBottom;
+    public void setDepthOfBottomMeters(Integer depthOfBottom) {
+        this.depthOfBottomMeters = depthOfBottom;
     }
 
-    public int getErrorRadius() {
+    public Integer getErrorRadius() {
         return errorRadius;
     }
 
-    public void setErrorRadius(int errorRadius) {
+    public void setErrorRadius(Integer errorRadius) {
         this.errorRadius = errorRadius;
     }
 
@@ -473,6 +474,7 @@ public class Deployment {
     }
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "expeditionId")
     public ArmsExpedition getArmsExpedition() {
         return armsExpedition;
     }
@@ -488,22 +490,15 @@ public class Deployment {
 
         Deployment that = (Deployment) o;
 
-        if (hasScrubbieLayer != that.hasScrubbieLayer) return false;
-        if (laminates != that.laminates) return false;
+        if (getId() != that.getId()) return false;
         if (getNumLayers() != that.getNumLayers()) return false;
-        if (weightsAttached != that.weightsAttached) return false;
         if (getDurationToProcessing() != that.getDurationToProcessing()) return false;
-        if (intentToBarcode != that.intentToBarcode) return false;
-        if (intentToCollectOtherDatatypes != that.intentToCollectOtherDatatypes) return false;
-        if (intentToMetabarcode != that.intentToMetabarcode) return false;
-        if (intentToPhotographPlates != that.intentToPhotographPlates) return false;
-        if (intentToPhotographSpecimens != that.intentToPhotographSpecimens) return false;
         if (getNumReplicatesInSet() != that.getNumReplicatesInSet()) return false;
-        if (getIntendedSoakTime() != that.getIntendedSoakTime()) return false;
-        if (Float.compare(that.getLatitude(), getLatitude()) != 0) return false;
-        if (Float.compare(that.getLongitude(), getLongitude()) != 0) return false;
-        if (getDepth() != that.getDepth()) return false;
-        if (getDepthOfBottom() != that.getDepthOfBottom()) return false;
+        if (getIntendedSoakTimeInYears() != that.getIntendedSoakTimeInYears()) return false;
+        if (Float.compare(that.getDecimalLatitude(), getDecimalLatitude()) != 0) return false;
+        if (Float.compare(that.getDecimalLongitude(), getDecimalLongitude()) != 0) return false;
+        if (getDepthInMeters() != that.getDepthInMeters()) return false;
+        if (getDepthOfBottomMeters() != that.getDepthOfBottomMeters()) return false;
         if (getErrorRadius() != that.getErrorRadius()) return false;
         if (getArmsModel() != null ? !getArmsModel().equals(that.getArmsModel()) : that.getArmsModel() != null)
             return false;
@@ -511,7 +506,12 @@ public class Deployment {
             return false;
         if (getDeploymentId() != null ? !getDeploymentId().equals(that.getDeploymentId()) : that.getDeploymentId() != null)
             return false;
+        if (hasScrubbieLayer != null ? !hasScrubbieLayer.equals(that.hasScrubbieLayer) : that.hasScrubbieLayer != null)
+            return false;
+        if (laminates != null ? !laminates.equals(that.laminates) : that.laminates != null) return false;
         if (getNewOrReused() != null ? !getNewOrReused().equals(that.getNewOrReused()) : that.getNewOrReused() != null)
+            return false;
+        if (weightsAttached != null ? !weightsAttached.equals(that.weightsAttached) : that.weightsAttached != null)
             return false;
         if (getDataEntryPersonInCharge() != null ? !getDataEntryPersonInCharge().equals(that.getDataEntryPersonInCharge()) : that.getDataEntryPersonInCharge() != null)
             return false;
@@ -524,7 +524,17 @@ public class Deployment {
             return false;
         if (getRemovalProtocol() != null ? !getRemovalProtocol().equals(that.getRemovalProtocol()) : that.getRemovalProtocol() != null)
             return false;
-        if (getPhotoURL() != null ? !getPhotoURL().equals(that.getPhotoURL()) : that.getPhotoURL() != null)
+        if (intentToBarcode != null ? !intentToBarcode.equals(that.intentToBarcode) : that.intentToBarcode != null)
+            return false;
+        if (intentToCollectOtherDatatypes != null ? !intentToCollectOtherDatatypes.equals(that.intentToCollectOtherDatatypes) : that.intentToCollectOtherDatatypes != null)
+            return false;
+        if (intentToMetabarcode != null ? !intentToMetabarcode.equals(that.intentToMetabarcode) : that.intentToMetabarcode != null)
+            return false;
+        if (intentToPhotographPlates != null ? !intentToPhotographPlates.equals(that.intentToPhotographPlates) : that.intentToPhotographPlates != null)
+            return false;
+        if (intentToPhotographSpecimens != null ? !intentToPhotographSpecimens.equals(that.intentToPhotographSpecimens) : that.intentToPhotographSpecimens != null)
+            return false;
+        if (getPhotoUrl() != null ? !getPhotoUrl().equals(that.getPhotoUrl()) : that.getPhotoUrl() != null)
             return false;
         if (getActualDeploymentDate() != null ? !getActualDeploymentDate().equals(that.getActualDeploymentDate()) : that.getActualDeploymentDate() != null)
             return false;
@@ -553,23 +563,25 @@ public class Deployment {
         if (getRegion() != null ? !getRegion().equals(that.getRegion()) : that.getRegion() != null) return false;
         if (getStateProvince() != null ? !getStateProvince().equals(that.getStateProvince()) : that.getStateProvince() != null)
             return false;
-        if (!getStationId().equals(that.getStationId())) return false;
+        if (getStationId() != null ? !getStationId().equals(that.getStationId()) : that.getStationId() != null)
+            return false;
         if (getSubstrateType() != null ? !getSubstrateType().equals(that.getSubstrateType()) : that.getSubstrateType() != null)
             return false;
-        return getArmsExpedition() != null ? getArmsExpedition().equals(that.getArmsExpedition()) : that.getArmsExpedition() == null;
 
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = getArmsModel() != null ? getArmsModel().hashCode() : 0;
+        int result = getId();
+        result = 31 * result + (getArmsModel() != null ? getArmsModel().hashCode() : 0);
         result = 31 * result + (getAttachmentMethod() != null ? getAttachmentMethod().hashCode() : 0);
         result = 31 * result + (getDeploymentId() != null ? getDeploymentId().hashCode() : 0);
-        result = 31 * result + (hasScrubbieLayer ? 1 : 0);
-        result = 31 * result + (laminates ? 1 : 0);
+        result = 31 * result + (hasScrubbieLayer != null ? hasScrubbieLayer.hashCode() : 0);
+        result = 31 * result + (laminates != null ? laminates.hashCode() : 0);
         result = 31 * result + (getNewOrReused() != null ? getNewOrReused().hashCode() : 0);
         result = 31 * result + getNumLayers();
-        result = 31 * result + (weightsAttached ? 1 : 0);
+        result = 31 * result + (weightsAttached != null ? weightsAttached.hashCode() : 0);
         result = 31 * result + (getDataEntryPersonInCharge() != null ? getDataEntryPersonInCharge().hashCode() : 0);
         result = 31 * result + (getDeploymentPersonInCharge() != null ? getDeploymentPersonInCharge().hashCode() : 0);
         result = 31 * result + getDurationToProcessing();
@@ -577,27 +589,27 @@ public class Deployment {
         result = 31 * result + (getProcessingPersonInCharge() != null ? getProcessingPersonInCharge().hashCode() : 0);
         result = 31 * result + (getRecoveryPersonInCharge() != null ? getRecoveryPersonInCharge().hashCode() : 0);
         result = 31 * result + (getRemovalProtocol() != null ? getRemovalProtocol().hashCode() : 0);
-        result = 31 * result + (intentToBarcode ? 1 : 0);
-        result = 31 * result + (intentToCollectOtherDatatypes ? 1 : 0);
-        result = 31 * result + (intentToMetabarcode ? 1 : 0);
-        result = 31 * result + (intentToPhotographPlates ? 1 : 0);
-        result = 31 * result + (intentToPhotographSpecimens ? 1 : 0);
+        result = 31 * result + (intentToBarcode != null ? intentToBarcode.hashCode() : 0);
+        result = 31 * result + (intentToCollectOtherDatatypes != null ? intentToCollectOtherDatatypes.hashCode() : 0);
+        result = 31 * result + (intentToMetabarcode != null ? intentToMetabarcode.hashCode() : 0);
+        result = 31 * result + (intentToPhotographPlates != null ? intentToPhotographPlates.hashCode() : 0);
+        result = 31 * result + (intentToPhotographSpecimens != null ? intentToPhotographSpecimens.hashCode() : 0);
         result = 31 * result + getNumReplicatesInSet();
-        result = 31 * result + (getPhotoURL() != null ? getPhotoURL().hashCode() : 0);
+        result = 31 * result + (getPhotoUrl() != null ? getPhotoUrl().hashCode() : 0);
         result = 31 * result + (getActualDeploymentDate() != null ? getActualDeploymentDate().hashCode() : 0);
         result = 31 * result + (getActualDeploymentTimeOfDay() != null ? getActualDeploymentTimeOfDay().hashCode() : 0);
         result = 31 * result + (getActualRecoveryDate() != null ? getActualRecoveryDate().hashCode() : 0);
         result = 31 * result + (getActualRecoveryTimeOfDay() != null ? getActualRecoveryTimeOfDay().hashCode() : 0);
         result = 31 * result + (getIntendedDeploymentDate() != null ? getIntendedDeploymentDate().hashCode() : 0);
         result = 31 * result + (getIntendedRecoveryDate() != null ? getIntendedRecoveryDate().hashCode() : 0);
-        result = 31 * result + getIntendedSoakTime();
+        result = 31 * result + getIntendedSoakTimeInYears();
         result = 31 * result + (getContinentOcean() != null ? getContinentOcean().hashCode() : 0);
         result = 31 * result + (getCountry() != null ? getCountry().hashCode() : 0);
         result = 31 * result + (getCounty() != null ? getCounty().hashCode() : 0);
-        result = 31 * result + (getLatitude() != +0.0f ? Float.floatToIntBits(getLatitude()) : 0);
-        result = 31 * result + (getLongitude() != +0.0f ? Float.floatToIntBits(getLongitude()) : 0);
-        result = 31 * result + getDepth();
-        result = 31 * result + getDepthOfBottom();
+        result = 31 * result + (getDecimalLatitude() != +0.0f ? Float.floatToIntBits(getDecimalLatitude()) : 0);
+        result = 31 * result + (getDecimalLongitude() != +0.0f ? Float.floatToIntBits(getDecimalLongitude()) : 0);
+        result = 31 * result + getDepthInMeters();
+        result = 31 * result + getDepthOfBottomMeters();
         result = 31 * result + getErrorRadius();
         result = 31 * result + (getHabitat() != null ? getHabitat().hashCode() : 0);
         result = 31 * result + (getHorizontalDatum() != null ? getHorizontalDatum().hashCode() : 0);
@@ -606,9 +618,8 @@ public class Deployment {
         result = 31 * result + (getLocality() != null ? getLocality().hashCode() : 0);
         result = 31 * result + (getRegion() != null ? getRegion().hashCode() : 0);
         result = 31 * result + (getStateProvince() != null ? getStateProvince().hashCode() : 0);
-        result = 31 * result + getStationId().hashCode();
+        result = 31 * result + (getStationId() != null ? getStationId().hashCode() : 0);
         result = 31 * result + (getSubstrateType() != null ? getSubstrateType().hashCode() : 0);
-        result = 31 * result + (getArmsExpedition() != null ? getArmsExpedition().hashCode() : 0);
         return result;
     }
 
