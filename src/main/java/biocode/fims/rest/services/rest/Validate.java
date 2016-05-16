@@ -153,7 +153,8 @@ public class Validate extends FimsService {
             processController.appendStatus("Validating...<br>");
 
             p.runValidation();
-            if (mySqlDatasetTableValidator.validate(processController.getMapping())) {
+            if (!mySqlDatasetTableValidator.validate(processController.getMapping())) {
+                processController.setHasErrors(true);
                 processController.addMessage(processController.getMapping().getDefaultSheetName(),
                         new RowMessage("database and configuration file need to be synced", "System Error", Message.ERROR));
             }
@@ -214,122 +215,93 @@ public class Validate extends FimsService {
     /**
      * Service to upload a dataset to an expedition. The validate service must be called before this service.
      *
-     * @param createExpedition
-     *
      * @return
      */
     @GET
     @Path("/continue")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public String upload(@QueryParam("createExpedition") @DefaultValue("false") Boolean createExpedition) {
+    public String upload() {
         String successMessage;
         ProcessController processController = (ProcessController) session.getAttribute("processController");
 
         // we need to reattach the entities to the jpa session to avoid lazy-initialization exceptions
         EntityManager manager = managerFactory.createEntityManager();
-        Session hibernateSession = manager.unwrap(Session.class);
-        try {
-            hibernateSession.update(processController.getProject());
+        processController.setProject(manager.merge(processController.getProject()));
 
-            // if no processController is found, we can't do anything
-            if (processController == null) {
-                return "{\"error\": \"No process was detected.\"}";
-            }
-
-            // check if user is logged in
-            if (processController.getUser() == null) {
-                return "{\"error\": \"You must be logged in to upload.\"}";
-            }
-
-            // if the process controller was stored in the session, then the user wants to continue, set warning cleared
-            processController.setClearedOfWarnings(true);
-            processController.setValidated(true);
-
-            // Create the process object --- this is done each time to orient the application
-            Process p = new Process(
-                    uploadPath(),
-                    processController,
-                    expeditionService
-            );
-
-            String outputPrefix = processController.getExpeditionCode() + "_output";
-
-            // create this expedition if the user wants to
-            if (createExpedition) {
-                processController.setExpeditionTitle(processController.getExpeditionCode() + " spreadsheet");
-                p.runExpeditionCreate(bcidService);
-            }
-
-            if (!processController.isExpeditionAssignedToUserAndExists()) {
-                p.runExpeditionCheck();
-            }
-
-            if (processController.isExpeditionCreateRequired()) {
-                // ask the user if they want to create this expedition
-                return "{\"continue\": {\"message\": \"The expedition code \\\"" + JSONObject.escape(processController.getExpeditionCode()) +
-                        "\\\" does not exist.  " +
-                        "Do you wish to create it now?<br><br>" +
-                        "If you choose to continue, your data will be associated with this new expedition code.\"}}";
-            }
-
-            String destination = uploadPath();
-
-            TabularDataReader tdr = p.getTabularDataReader();
-
-            // convert the dataset to csv file for uploading
-            CsvTabularDataConverter csvTabularDataConverter = new CsvTabularDataConverter(
-                    tdr, destination, outputPrefix);
-
-            List<String> acceptableColumns = new LinkedList<>();
-            for (Attribute attribute : processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName())) {
-                acceptableColumns.add(attribute.getColumn());
-            }
-            csvTabularDataConverter.convert(acceptableColumns, p.getMapping().getDefaultSheetName());
-
-            tdr.closeFile();
-
-            //TODO this isn't the correct way to do this
-            biocode.fims.entities.Bcid rootBcid = expeditionService.getRootBcid(
-                    processController.getExpeditionCode(),
-                    processController.getProject().getProjectId(),
-                    "Event");
-
-            // upload the dataset
-            mySqlUploader.execute(rootBcid.getIdentifier(), acceptableColumns, csvTabularDataConverter.getCsvFile().getPath());
-
-            // fetch the Expedition
-            Expedition expedition = expeditionService.getExpedition(
-                    processController.getExpeditionCode(),
-                    processController.getProject().getProjectId()
-            );
-
-            // Mint the data group
-            biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(user, ResourceTypes.DATASET_RESOURCE_TYPE)
-                    .ezidRequest(Boolean.parseBoolean(settingsManager.retrieveValue("ezidRequests")))
-                    .title(processController.getExpeditionCode() + " Dataset")
-                    .finalCopy(processController.getFinalCopy())
-                    .expedition(expedition)
-                    .build();
-
-            bcidService.create(bcid);
-
-            successMessage = "Dataset Identifier: http://n2t.net/" + bcid.getIdentifier() +
-                    " (wait 15 minutes for resolution to become active)" +
-                    "<br>\t" + "Data Elements Root: " + expedition.getExpeditionCode();
-
-            // delete the temporary file now that it has been uploaded
-            new File(processController.getInputFilename()).delete();
-
-            successMessage += "<br><font color=#188B00>Successfully Uploaded!</font><br><br>";
-            processController.appendStatus(successMessage);
-
-            // remove the processController from the session
-            session.removeAttribute("processController");
-
-            return "{\"done\": {\"message\": \"" + JSONObject.escape(successMessage) + "\"}}";
-        } finally {
-            hibernateSession.close();
+        // if no processController is found, we can't do anything
+        if (processController == null) {
+            return "{\"error\": \"No process was detected.\"}";
         }
+
+        // check if user is logged in
+        if (processController.getUser() == null) {
+            return "{\"error\": \"You must be logged in to upload.\"}";
+        }
+
+        // if the process controller was stored in the session, then the user wants to continue, set warning cleared
+        processController.setClearedOfWarnings(true);
+        processController.setValidated(true);
+
+        // Create the process object --- this is done each time to orient the application
+        Process p = new Process(
+                uploadPath(),
+                processController,
+                expeditionService
+        );
+
+        String outputPrefix = processController.getExpeditionCode() + "_output";
+
+        Expedition expedition = p.runExpeditionCheck();
+
+        if (!processController.isExpeditionAssignedToUserAndExists()) {
+            throw new BadRequestException("Either the Arms Project doesn't exits, or you do not own the expedition.");
+        }
+
+        String destination = uploadPath();
+
+        TabularDataReader tdr = p.getTabularDataReader();
+
+        // convert the dataset to csv file for uploading
+        CsvTabularDataConverter csvTabularDataConverter = new CsvTabularDataConverter(
+                tdr, destination, outputPrefix);
+
+        List<String> acceptableColumns = new LinkedList<>();
+        List<String> acceptableColumnsInternal = new LinkedList<>();
+        for (Attribute attribute : processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName())) {
+            acceptableColumns.add(attribute.getColumn());
+            acceptableColumnsInternal.add(attribute.getColumn_internal());
+        }
+        csvTabularDataConverter.convert(acceptableColumns, p.getMapping().getDefaultSheetName());
+
+        tdr.closeFile();
+
+        // upload the dataset
+        mySqlUploader.execute(expedition.getExpeditionId(), acceptableColumnsInternal, csvTabularDataConverter.getCsvFile().getPath());
+
+        // Mint the data group
+        biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(user, ResourceTypes.DATASET_RESOURCE_TYPE)
+                .ezidRequest(Boolean.parseBoolean(settingsManager.retrieveValue("ezidRequests")))
+                .title(processController.getExpeditionCode() + " Dataset")
+                .finalCopy(processController.getFinalCopy())
+                .expedition(expedition)
+                .build();
+
+        bcidService.create(bcid);
+
+        successMessage = "Dataset Identifier: http://n2t.net/" + bcid.getIdentifier() +
+                " (wait 15 minutes for resolution to become active)" +
+                "<br>\t" + "Data Elements Root: " + expedition.getExpeditionCode();
+
+        // delete the temporary file now that it has been uploaded
+        new File(processController.getInputFilename()).delete();
+
+        successMessage += "<br><font color=#188B00>Successfully Uploaded!</font><br><br>";
+        processController.appendStatus(successMessage);
+
+        // remove the processController from the session
+        session.removeAttribute("processController");
+
+        return "{\"done\": {\"message\": \"" + JSONObject.escape(successMessage) + "\"}}";
     }
 
     /**

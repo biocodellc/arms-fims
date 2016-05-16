@@ -1,11 +1,13 @@
 package biocode.fims.mysql;
 
+import biocode.fims.arms.services.DeploymentService;
 import biocode.fims.bcid.Database;
 import biocode.fims.fimsExceptions.ServerErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.net.URI;
@@ -22,14 +24,17 @@ import java.util.List;
 public class MySqlUploader {
 
     private final DataSource dataSource;
+    private final DeploymentService deploymentService;
 
     @Autowired
-    public MySqlUploader(DataSource dataSource) {
+    public MySqlUploader(DataSource dataSource, DeploymentService deploymentService) {
         this.dataSource = dataSource;
+        this.deploymentService = deploymentService;
     }
 
-    public void execute(URI identifier, List<String> columnNames, String csvFilepath) {
-        deleteExistingDataset(identifier);
+    @Transactional
+    public void execute(int expeditionId, List<String> columnNames, String csvFilepath) {
+        deploymentService.deleteAll(expeditionId);
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -39,37 +44,27 @@ public class MySqlUploader {
             conn = dataSource.getConnection();
             sql.append("LOAD DATA INFILE ? INTO TABLE deployments FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n' (");
             int col = 0;
+            StringBuilder setColumnStatements = new StringBuilder();
             for (String colname : columnNames) {
                 if (col > 0)
                     sql.append(", ");
-                sql.append("`" + colname + "`");
+                // use variable to convert '' to NULL
+                sql.append("@v" + colname + "");
+                // build the set statements
+                setColumnStatements.append(colname);
+                setColumnStatements.append(" = NULLIF(@v");
+                setColumnStatements.append(colname);
+                setColumnStatements.append(", ''),");
                 col++;
             }
             sql.append(") ");
-            sql.append("set identifier=?");
+            sql.append("SET ");
+            sql.append(setColumnStatements);
+            sql.append("expeditionId=?");
 
             stmt = conn.prepareStatement(sql.toString());
             stmt.setString(1, csvFilepath);
-            stmt.setString(2, String.valueOf(identifier));
-
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new ServerErrorException(e);
-        } finally {
-            Database.close(conn, stmt, null);
-        }
-    }
-
-    private void deleteExistingDataset(URI identifier) {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-
-        try {
-            conn = dataSource.getConnection();
-            String sql = "DELETE FROM dataset WHERE BINARY identifier = ?";
-
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, String.valueOf(identifier));
+            stmt.setInt(2, expeditionId);
 
             stmt.execute();
         } catch (SQLException e) {
