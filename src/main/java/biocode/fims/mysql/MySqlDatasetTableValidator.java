@@ -37,11 +37,11 @@ public class MySqlDatasetTableValidator {
         List<String> definedColumns = new ArrayList<>();
         List<Attribute> attributes = mapping.getAllAttributes(mapping.getDefaultSheetName());
         for (Attribute attribute: attributes) {
-            definedColumns.add(attribute.getColumn());
+            definedColumns.add(attribute.getColumn_internal());
         }
 
         // table should always have an identifier column to map the data to a bcid
-        definedColumns.add("identifier");
+        definedColumns.add("expeditionId");
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -63,8 +63,12 @@ public class MySqlDatasetTableValidator {
             Database.close(conn, stmt, rs);
         }
 
-        return tableColumns.equals(definedColumns);
-
+        boolean matches = true;
+        for (String col: definedColumns) {
+            if (!tableColumns.contains(col))
+                matches = false;
+        }
+        return matches;
     }
 
 }
