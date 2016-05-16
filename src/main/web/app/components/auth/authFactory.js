@@ -67,7 +67,8 @@ angular.module('fims.auth')
 
         function logout() {
             $window.sessionStorage.arms = JSON.stringify({});
-            authFactory.isAuthenticated = false;
+            if (authFactory)
+                authFactory.isAuthenticated = false;
         }
 
         function refreshAccessToken() {
