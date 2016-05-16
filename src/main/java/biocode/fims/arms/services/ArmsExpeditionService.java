@@ -30,8 +30,8 @@ public class ArmsExpeditionService {
      * the ArmsExpedition.expeditionId field. Then persisting the {@link ArmsExpedition}
      * @param armsExpedition
      */
-    public void create(ArmsExpedition armsExpedition) {
-        expeditionService.create(armsExpedition.getExpedition(), null);
+    public void create(ArmsExpedition armsExpedition, int userId, int projectId) {
+        expeditionService.create(armsExpedition.getExpedition(), userId, projectId, null);
 
         // now that the Expedition's id has been set
         armsExpedition.setExpeditionId(armsExpedition.getExpedition().getExpeditionId());

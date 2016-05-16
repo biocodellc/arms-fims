@@ -90,9 +90,8 @@ public class Validate extends FimsService {
 
         }
 
-        Project project = projectService.getProject(projectId);
         // create a new processController
-        ProcessController processController = new ProcessController(project, expeditionCode);
+        ProcessController processController = new ProcessController(projectId, expeditionCode);
 
         // place the processController in the session here so that we can track the status of the validation process
         // by calling rest/validate/status
@@ -167,11 +166,11 @@ public class Validate extends FimsService {
 
             } else if (upload != null && upload.equals("on")) {
 
-                if (username == null) {
+                if (user == null) {
                     throw new UnauthorizedRequestException("You must be logged in to upload.");
                 }
 
-                processController.setUser(user);
+                processController.setUserId(user.getUserId());
 
                 // set public status to true in processController if user wants it on
                 if (publicStatus != null && publicStatus.equals("on")) {
@@ -224,17 +223,13 @@ public class Validate extends FimsService {
         String successMessage;
         ProcessController processController = (ProcessController) session.getAttribute("processController");
 
-        // we need to reattach the entities to the jpa session to avoid lazy-initialization exceptions
-        EntityManager manager = managerFactory.createEntityManager();
-        processController.setProject(manager.merge(processController.getProject()));
-
         // if no processController is found, we can't do anything
         if (processController == null) {
             return "{\"error\": \"No process was detected.\"}";
         }
 
         // check if user is logged in
-        if (processController.getUser() == null) {
+        if (processController.getUserId() == 0) {
             return "{\"error\": \"You must be logged in to upload.\"}";
         }
 
@@ -279,14 +274,15 @@ public class Validate extends FimsService {
         mySqlUploader.execute(expedition.getExpeditionId(), acceptableColumnsInternal, csvTabularDataConverter.getCsvFile().getPath());
 
         // Mint the data group
-        biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(user, ResourceTypes.DATASET_RESOURCE_TYPE)
+        biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(ResourceTypes.DATASET_RESOURCE_TYPE)
                 .ezidRequest(Boolean.parseBoolean(settingsManager.retrieveValue("ezidRequests")))
                 .title(processController.getExpeditionCode() + " Dataset")
                 .finalCopy(processController.getFinalCopy())
-                .expedition(expedition)
                 .build();
 
-        bcidService.create(bcid);
+        bcidService.create(bcid, user.getUserId());
+
+        bcidService.attachBcidToExpedition(bcid, expedition.getExpeditionId());
 
         successMessage = "Dataset Identifier: http://n2t.net/" + bcid.getIdentifier() +
                 " (wait 15 minutes for resolution to become active)" +

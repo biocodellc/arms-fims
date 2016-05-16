@@ -57,8 +57,8 @@ public class ArmsExpeditionRestService extends FimsService {
                            @FormParam("expeditionCode") String expeditionCode,
                            @FormParam("public") boolean isPublic) {
 
-        Project project = projectService.getProject(Integer.parseInt(settingsManager.retrieveValue("projectId")));
-        Expedition expedition = new Expedition.ExpeditionBuilder(expeditionCode, user, project)
+        int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
+        Expedition expedition = new Expedition.ExpeditionBuilder(expeditionCode)
                 .isPublic(isPublic)
                 .build();
         ArmsExpedition armsExpedition = new ArmsExpedition.ArmsExpeditionBuilder(principalInvestigator, expedition)
@@ -71,10 +71,10 @@ public class ArmsExpeditionRestService extends FimsService {
                 .leadOrganization(leadOrganization)
                 .build();
 
-        armsExpeditionService.create(armsExpedition);
+        armsExpeditionService.create(armsExpedition, user.getUserId(), projectId);
 
         // TODO the following is temporary until the DeepRoots code is refactored
-        File configFile = new ConfigurationFileFetcher(project.getProjectId(), uploadPath(), false).getOutputFile();
+        File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
 
         Mapping mapping = new Mapping();
         mapping.addMappingRules(new Digester(), configFile);
@@ -86,14 +86,13 @@ public class ArmsExpeditionRestService extends FimsService {
         while (it.hasNext()) {
             Entity entity = (Entity) it.next();
 
-            biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(
-                    user, entity.getConceptURI())
-                    .expedition(expedition)
+            biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(entity.getConceptURI())
                     .ezidRequest(ezidRequest)
                     .title(entity.getConceptAlias())
                     .build();
 
-            bcidService.create(bcid);
+            bcidService.create(bcid, user.getUserId());
+            bcidService.attachBcidToExpedition(bcid, expedition.getExpeditionId());
         }
 
         return Response.ok(armsExpedition).build();
