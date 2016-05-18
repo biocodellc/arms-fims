@@ -14,6 +14,7 @@ import biocode.fims.service.BcidService;
 import biocode.fims.service.ProjectService;
 import biocode.fims.service.UserService;
 import biocode.fims.settings.SettingsManager;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.digester3.Digester;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -102,5 +103,16 @@ public class ArmsExpeditionRestService extends FimsService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response list() {
         return Response.ok(armsExpeditionService.findAll()).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView(ArmsExpedition.withDeploymentsView.class)
+    @Path("{expeditionId}/")
+    public Response getExpedition(@PathParam("expeditionId") int expeditionId) {
+        ArmsExpedition armsExpedition = armsExpeditionService.getArmsExpedition(expeditionId);
+        if (armsExpedition != null)
+            return Response.ok(armsExpedition).build();
+        return Response.noContent().build();
     }
 }

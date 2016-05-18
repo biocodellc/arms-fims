@@ -1,5 +1,7 @@
 package biocode.fims.arms.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.net.URI;
 import java.util.Date;
@@ -475,6 +477,7 @@ public class Deployment {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "expeditionId")
+    @JsonBackReference
     public ArmsExpedition getArmsExpedition() {
         return armsExpedition;
     }
@@ -486,20 +489,18 @@ public class Deployment {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Deployment)) return false;
 
         Deployment that = (Deployment) o;
 
-        if (getId() != that.getId()) return false;
+        if (this.getId() != 0 && that.getId() != 0)
+            return this.getId() == that.getId();
+
         if (getNumLayers() != that.getNumLayers()) return false;
-        if (getDurationToProcessing() != that.getDurationToProcessing()) return false;
-        if (getNumReplicatesInSet() != that.getNumReplicatesInSet()) return false;
         if (getIntendedSoakTimeInYears() != that.getIntendedSoakTimeInYears()) return false;
         if (Float.compare(that.getDecimalLatitude(), getDecimalLatitude()) != 0) return false;
         if (Float.compare(that.getDecimalLongitude(), getDecimalLongitude()) != 0) return false;
         if (getDepthInMeters() != that.getDepthInMeters()) return false;
-        if (getDepthOfBottomMeters() != that.getDepthOfBottomMeters()) return false;
-        if (getErrorRadius() != that.getErrorRadius()) return false;
         if (getArmsModel() != null ? !getArmsModel().equals(that.getArmsModel()) : that.getArmsModel() != null)
             return false;
         if (getAttachmentMethod() != null ? !getAttachmentMethod().equals(that.getAttachmentMethod()) : that.getAttachmentMethod() != null)
@@ -517,6 +518,8 @@ public class Deployment {
             return false;
         if (getDeploymentPersonInCharge() != null ? !getDeploymentPersonInCharge().equals(that.getDeploymentPersonInCharge()) : that.getDeploymentPersonInCharge() != null)
             return false;
+        if (getDurationToProcessing() != null ? !getDurationToProcessing().equals(that.getDurationToProcessing()) : that.getDurationToProcessing() != null)
+            return false;
         if (getNotes() != null ? !getNotes().equals(that.getNotes()) : that.getNotes() != null) return false;
         if (getProcessingPersonInCharge() != null ? !getProcessingPersonInCharge().equals(that.getProcessingPersonInCharge()) : that.getProcessingPersonInCharge() != null)
             return false;
@@ -533,6 +536,8 @@ public class Deployment {
         if (intentToPhotographPlates != null ? !intentToPhotographPlates.equals(that.intentToPhotographPlates) : that.intentToPhotographPlates != null)
             return false;
         if (intentToPhotographSpecimens != null ? !intentToPhotographSpecimens.equals(that.intentToPhotographSpecimens) : that.intentToPhotographSpecimens != null)
+            return false;
+        if (getNumReplicatesInSet() != null ? !getNumReplicatesInSet().equals(that.getNumReplicatesInSet()) : that.getNumReplicatesInSet() != null)
             return false;
         if (getPhotoUrl() != null ? !getPhotoUrl().equals(that.getPhotoUrl()) : that.getPhotoUrl() != null)
             return false;
@@ -552,6 +557,10 @@ public class Deployment {
             return false;
         if (getCountry() != null ? !getCountry().equals(that.getCountry()) : that.getCountry() != null) return false;
         if (getCounty() != null ? !getCounty().equals(that.getCounty()) : that.getCounty() != null) return false;
+        if (getDepthOfBottomMeters() != null ? !getDepthOfBottomMeters().equals(that.getDepthOfBottomMeters()) : that.getDepthOfBottomMeters() != null)
+            return false;
+        if (getErrorRadius() != null ? !getErrorRadius().equals(that.getErrorRadius()) : that.getErrorRadius() != null)
+            return false;
         if (getHabitat() != null ? !getHabitat().equals(that.getHabitat()) : that.getHabitat() != null) return false;
         if (getHorizontalDatum() != null ? !getHorizontalDatum().equals(that.getHorizontalDatum()) : that.getHorizontalDatum() != null)
             return false;
@@ -567,14 +576,13 @@ public class Deployment {
             return false;
         if (getSubstrateType() != null ? !getSubstrateType().equals(that.getSubstrateType()) : that.getSubstrateType() != null)
             return false;
+        return getArmsExpedition() != null ? getArmsExpedition().equals(that.getArmsExpedition()) : that.getArmsExpedition() == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = getId();
-        result = 31 * result + (getArmsModel() != null ? getArmsModel().hashCode() : 0);
+        int result = getArmsModel() != null ? getArmsModel().hashCode() : 0;
         result = 31 * result + (getAttachmentMethod() != null ? getAttachmentMethod().hashCode() : 0);
         result = 31 * result + (getDeploymentId() != null ? getDeploymentId().hashCode() : 0);
         result = 31 * result + (hasScrubbieLayer != null ? hasScrubbieLayer.hashCode() : 0);
@@ -584,7 +592,7 @@ public class Deployment {
         result = 31 * result + (weightsAttached != null ? weightsAttached.hashCode() : 0);
         result = 31 * result + (getDataEntryPersonInCharge() != null ? getDataEntryPersonInCharge().hashCode() : 0);
         result = 31 * result + (getDeploymentPersonInCharge() != null ? getDeploymentPersonInCharge().hashCode() : 0);
-        result = 31 * result + getDurationToProcessing();
+        result = 31 * result + (getDurationToProcessing() != null ? getDurationToProcessing().hashCode() : 0);
         result = 31 * result + (getNotes() != null ? getNotes().hashCode() : 0);
         result = 31 * result + (getProcessingPersonInCharge() != null ? getProcessingPersonInCharge().hashCode() : 0);
         result = 31 * result + (getRecoveryPersonInCharge() != null ? getRecoveryPersonInCharge().hashCode() : 0);
@@ -594,7 +602,7 @@ public class Deployment {
         result = 31 * result + (intentToMetabarcode != null ? intentToMetabarcode.hashCode() : 0);
         result = 31 * result + (intentToPhotographPlates != null ? intentToPhotographPlates.hashCode() : 0);
         result = 31 * result + (intentToPhotographSpecimens != null ? intentToPhotographSpecimens.hashCode() : 0);
-        result = 31 * result + getNumReplicatesInSet();
+        result = 31 * result + (getNumReplicatesInSet() != null ? getNumReplicatesInSet().hashCode() : 0);
         result = 31 * result + (getPhotoUrl() != null ? getPhotoUrl().hashCode() : 0);
         result = 31 * result + (getActualDeploymentDate() != null ? getActualDeploymentDate().hashCode() : 0);
         result = 31 * result + (getActualDeploymentTimeOfDay() != null ? getActualDeploymentTimeOfDay().hashCode() : 0);
@@ -609,8 +617,8 @@ public class Deployment {
         result = 31 * result + (getDecimalLatitude() != +0.0f ? Float.floatToIntBits(getDecimalLatitude()) : 0);
         result = 31 * result + (getDecimalLongitude() != +0.0f ? Float.floatToIntBits(getDecimalLongitude()) : 0);
         result = 31 * result + getDepthInMeters();
-        result = 31 * result + getDepthOfBottomMeters();
-        result = 31 * result + getErrorRadius();
+        result = 31 * result + (getDepthOfBottomMeters() != null ? getDepthOfBottomMeters().hashCode() : 0);
+        result = 31 * result + (getErrorRadius() != null ? getErrorRadius().hashCode() : 0);
         result = 31 * result + (getHabitat() != null ? getHabitat().hashCode() : 0);
         result = 31 * result + (getHorizontalDatum() != null ? getHorizontalDatum().hashCode() : 0);
         result = 31 * result + (getIsland() != null ? getIsland().hashCode() : 0);
@@ -620,6 +628,7 @@ public class Deployment {
         result = 31 * result + (getStateProvince() != null ? getStateProvince().hashCode() : 0);
         result = 31 * result + (getStationId() != null ? getStationId().hashCode() : 0);
         result = 31 * result + (getSubstrateType() != null ? getSubstrateType().hashCode() : 0);
+        result = 31 * result + (getArmsExpedition() != null ? getArmsExpedition().hashCode() : 0);
         return result;
     }
 

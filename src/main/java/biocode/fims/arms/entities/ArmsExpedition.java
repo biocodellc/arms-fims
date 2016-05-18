@@ -3,6 +3,8 @@ package biocode.fims.arms.entities;
 import biocode.fims.arms.serializers.ArmsExpeditionSerializer;
 import biocode.fims.entities.Expedition;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
@@ -12,10 +14,14 @@ import java.util.Set;
  * ArmsExpedition domain object. An ArmsExpedition has a one-to-one unidirectional relationship to
  * a biocode-fims {@link Expedition}.
  */
-@JsonSerialize(using = ArmsExpeditionSerializer.class)
+//@JsonSerialize(using = ArmsExpeditionSerializer.class)
 @Entity
 @Table(name = "armsExpeditions")
+@NamedEntityGraph(name = "withDeployments",
+        attributeNodes = @NamedAttributeNode("deployments"))
 public class ArmsExpedition {
+
+    public interface withDeploymentsView {}
 
     private int expeditionId;
     private String principalInvestigator;
@@ -102,7 +108,7 @@ public class ArmsExpedition {
     }
 
     // needed for hibernate
-    private ArmsExpedition() {}
+    ArmsExpedition() {}
 
     public ArmsExpedition(ArmsExpeditionBuilder builder) {
         this.principalInvestigator = builder.principalInvestigator;
@@ -209,6 +215,8 @@ public class ArmsExpedition {
             this.expedition = expedition;
     }
 
+    @JsonView(withDeploymentsView.class)
+    @JsonManagedReference
     @OneToMany(targetEntity = Deployment.class,
             mappedBy = "armsExpedition",
             fetch = FetchType.LAZY
@@ -224,11 +232,13 @@ public class ArmsExpedition {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ArmsExpedition)) return false;
 
         ArmsExpedition that = (ArmsExpedition) o;
 
-        if (getExpeditionId() != that.getExpeditionId()) return false;
+        if (this.getExpeditionId() != 0 && that.getExpeditionId() != 0)
+            return this.getExpeditionId() == that.getExpeditionId();
+
         if (getEnvisionedDuration() != that.getEnvisionedDuration()) return false;
         if (!getPrincipalInvestigator().equals(that.getPrincipalInvestigator())) return false;
         if (!getContactName().equals(that.getContactName())) return false;
@@ -236,14 +246,14 @@ public class ArmsExpedition {
         if (!getFundingSource().equals(that.getFundingSource())) return false;
         if (!getGeographicScope().equals(that.getGeographicScope())) return false;
         if (!getGoals().equals(that.getGoals())) return false;
-        return getLeadOrganization().equals(that.getLeadOrganization());
+        if (!getLeadOrganization().equals(that.getLeadOrganization())) return false;
+        return getExpedition() != null ? getExpedition().equals(that.getExpedition()) : that.getExpedition() == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = getExpeditionId();
-        result = 31 * result + getPrincipalInvestigator().hashCode();
+        int result = getPrincipalInvestigator().hashCode();
         result = 31 * result + getContactName().hashCode();
         result = 31 * result + getContactEmail().hashCode();
         result = 31 * result + getFundingSource().hashCode();
@@ -251,6 +261,7 @@ public class ArmsExpedition {
         result = 31 * result + getGeographicScope().hashCode();
         result = 31 * result + getGoals().hashCode();
         result = 31 * result + getLeadOrganization().hashCode();
+        result = 31 * result + (getExpedition() != null ? getExpedition().hashCode() : 0);
         return result;
     }
 

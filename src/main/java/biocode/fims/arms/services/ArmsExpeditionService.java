@@ -33,14 +33,19 @@ public class ArmsExpeditionService {
     public void create(ArmsExpedition armsExpedition, int userId, int projectId) {
         expeditionService.create(armsExpedition.getExpedition(), userId, projectId, null);
 
-        // now that the Expedition's id has been set
-        armsExpedition.setExpeditionId(armsExpedition.getExpedition().getExpeditionId());
-        armsExpedition.getExpedition().setExpeditionTitle(
-                "(" + armsExpedition.getExpedition().getExpeditionCode() + ") ARMS ProjectId: " + armsExpedition.getExpeditionId());
-        // need to manually call update as expedition and armsExpedition are in different entityManagers/databases
-        expeditionService.update(armsExpedition.getExpedition());
+        try {
+            // now that the Expedition's id has been set
+            armsExpedition.setExpeditionId(armsExpedition.getExpedition().getExpeditionId());
+            armsExpedition.getExpedition().setExpeditionTitle(
+                    "(" + armsExpedition.getExpedition().getExpeditionCode() + ") ARMS ProjectId: " + armsExpedition.getExpeditionId());
+            // need to manually call update as expedition and armsExpedition are in different entityManagers/databases
+            expeditionService.update(armsExpedition.getExpedition());
 
-        armsExpeditionRepository.save(armsExpedition);
+            armsExpeditionRepository.save(armsExpedition);
+        } catch (Exception e) {
+            // on any exception, delete the expedition
+            expeditionService.delete(armsExpedition.getExpeditionId());
+        }
     }
 
 

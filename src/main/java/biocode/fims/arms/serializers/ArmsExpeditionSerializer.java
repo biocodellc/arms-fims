@@ -1,10 +1,15 @@
 package biocode.fims.arms.serializers;
 
 import biocode.fims.arms.entities.ArmsExpedition;
+import biocode.fims.arms.entities.Deployment;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 
 /**
@@ -25,6 +30,12 @@ public class ArmsExpeditionSerializer extends JsonSerializer<ArmsExpedition> {
         jgen.writeStringField("goald", armsExpedition.getGoals());
         jgen.writeStringField("leadOrganization", armsExpedition.getLeadOrganization());
         jgen.writeObjectField("expedition", armsExpedition.getExpedition());
+        jgen.writeArrayFieldStart("deployments");
+        for (Deployment deployment : armsExpedition.getDeployments()) {
+            jgen.writeObject(deployment);
+            jgen.writeEndObject();
+        }
+        jgen.writeEndArray();
         jgen.writeEndObject();
     }
 }
