@@ -24,7 +24,7 @@ angular.element(document).ready(function() {
     var armsSessionStorage = JSON.parse(window.sessionStorage.arms);
     var accessToken = armsSessionStorage.accessToken;
     if (!isTokenExpired() && accessToken) {
-        $.get('/arms-fims/rest/users/profile?access_token=' + accessToken, function (data) {
+        $.get('/arms/rest/users/profile?access_token=' + accessToken, function (data) {
             currentUser = data;
             angular.bootstrap(document, ['armsApp']);
         }).fail(function() {
