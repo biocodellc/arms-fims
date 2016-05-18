@@ -32,8 +32,6 @@ dependencies {
 webAppDirName = "src/main/web"
 libsDirName = "../dist"
 
-project.ext.environment = defaultEnvironment
-
 clean {
     delete libsDir
 }
@@ -103,13 +101,7 @@ setProductionEnv.mustRunAfter compileJava
 setDevelopmentEnv.mustRunAfter compileJava
 setLocalEnv.mustRunAfter compileJava
 
-task restartJettyLocal(type:Exec) {
-    workingDir localJettyWorkingDir
-    executable localJettyCmd
-    args 'restart'
-}
-
-task copyFimsLocal  {
+task deployFimsLocal  {
     description = 'local fims deployment'
 
     dependsOn setLocalEnv
@@ -122,9 +114,4 @@ task copyFimsLocal  {
             include war.archiveName
         }
     }
-}
-
-task deployFimsLocal {
-    dependsOn copyFimsLocal
-//    dependsOn restartJettyLocal
 }
