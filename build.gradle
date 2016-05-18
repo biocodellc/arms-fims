@@ -1,3 +1,5 @@
+project.ext.environment = defaultEnvironment
+
 buildscript {
     repositories {
         mavenCentral()
@@ -5,6 +7,7 @@ buildscript {
     }
     dependencies {
         classpath "com.github.marceloemanoel:gradle-environments-plugin:0.1"
+        classpath "org.hidetake:gradle-ssh-plugin:2.0.0"
     }
 }
 
@@ -14,6 +17,7 @@ apply plugin: "java"
 apply plugin: "war"
 apply plugin: "idea"
 apply plugin: "environments"
+apply plugin: "org.hidetake.ssh"
 
 targetCompatibility = 1.7
 sourceCompatibility = 1.7
@@ -101,6 +105,58 @@ setProductionEnv.mustRunAfter compileJava
 setDevelopmentEnv.mustRunAfter compileJava
 setLocalEnv.mustRunAfter compileJava
 
+// jetty ssh plugin
+remotes {
+    biscicol {
+        host = 'biscicol.org'
+        user = biscicolUser
+        password = biscicolPassword
+        // TODO: adding this line means stasks will fail, even though it is specified, for now, password specified above.
+        //file("${System.getProperty('user.home')}/.ssh/id_rsa")
+    }
+}
+
+allprojects {
+    task verifyMasterBranch << {
+        ext.repo = Grgit.open(project.file('.'))
+        if (ext.repo.branch.current.name != "master")
+            throw new GradleScriptException(project.name + ' is not on the master branch', null)
+    }
+}
+
+task deployFims {
+    group = 'biscicol.org'
+    description = 'verify that all subprojects are on the master branch. Then build and copy war to biscicol.org production jetty webApp directory'
+
+    dependsOn verifyMasterBranch
+    dependsOn setProductionEnv
+    dependsOn war
+
+    doLast {
+        ssh.run {
+            session(remotes.biscicol) {
+                put from: war.archivePath.path, into: remoteWarDirectory + "/arms.war"
+            }
+        }
+    }
+}
+
+
+task deployFimsDev {
+    group = 'biscicol.org'
+    description = 'build and copy war to biscicol.org development jetty webApp directory'
+
+    dependsOn setDevelopmentEnv
+    dependsOn war
+
+    doLast {
+        ssh.run {
+            session(remotes.biscicol) {
+                put from: war.archivePath.path, into: remoteWarDevDirectory + "/arms.war"
+            }
+        }
+    }
+}
 task deployFimsLocal  {
     description = 'local fims deployment'
 
@@ -112,6 +168,7 @@ task deployFimsLocal  {
             from war.destinationDir
             into localWarDirectory
             include war.archiveName
+            rename war.archiveName, "arms.war"
         }
     }
 }
