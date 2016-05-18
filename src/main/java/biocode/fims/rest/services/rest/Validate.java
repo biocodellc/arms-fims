@@ -276,7 +276,7 @@ public class Validate extends FimsService {
         // delete the temporary file now that it has been uploaded
         new File(processController.getInputFilename()).delete();
 
-        successMessage += "<br><font color=#188B00>Successfully Uploaded!</font><br><br>";
+        successMessage = "<br><font color=#188B00>Successfully Uploaded!</font><br><br>";
         processController.appendStatus(successMessage);
 
         // remove the processController from the session
