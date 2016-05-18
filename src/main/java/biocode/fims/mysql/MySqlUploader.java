@@ -42,7 +42,7 @@ public class MySqlUploader {
 
         try {
             conn = dataSource.getConnection();
-            sql.append("LOAD DATA INFILE ? INTO TABLE deployments FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n' (");
+            sql.append("LOAD DATA LOCAL INFILE ? INTO TABLE deployments FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n' (");
             int col = 0;
             StringBuilder setColumnStatements = new StringBuilder();
             for (String colname : columnNames) {
