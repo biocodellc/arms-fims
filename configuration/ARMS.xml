@@ -28,7 +28,7 @@
             <attribute column='weightsAttached' column_internal="weightsAttached" uri='urn:weightsAttached'
                        group='ARMS Details' defined_by='urn:weightsAttached'>
             </attribute>
-            <attribute column='attachment method' column_internal="attachmentMethod" uri='urn:attachmentMethod'
+            <attribute column='attachmentMethod' column_internal="attachmentMethod" uri='urn:attachmentMethod'
                        group='ARMS Details' defined_by='urn:attachmentMethod'>
             </attribute>
             <attribute column='intentToBarcode' column_internal="intentToBarcode" uri='urn:intentToBarcode'
@@ -173,7 +173,7 @@
                 <field>actualRecoveryDate</field>
             </rule>
             <rule type='RequiredColumns' column='RequiredColumns' level='warning'>
-                <field>attachment method</field>
+                <field>attachmentMethod</field>
                 <field>deploymentPersonInCharge</field>
                 <field>recoveryPersonInCharge</field>
                 <field>processingPersonInCharge</field>

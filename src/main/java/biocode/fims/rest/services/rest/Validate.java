@@ -273,21 +273,6 @@ public class Validate extends FimsService {
         // upload the dataset
         mySqlUploader.execute(expedition.getExpeditionId(), acceptableColumnsInternal, csvTabularDataConverter.getCsvFile().getPath());
 
-        // Mint the data group
-        biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(ResourceTypes.DATASET_RESOURCE_TYPE)
-                .ezidRequest(Boolean.parseBoolean(settingsManager.retrieveValue("ezidRequests")))
-                .title(processController.getExpeditionCode() + " Dataset")
-                .finalCopy(processController.getFinalCopy())
-                .build();
-
-        bcidService.create(bcid, user.getUserId());
-
-        bcidService.attachBcidToExpedition(bcid, expedition.getExpeditionId());
-
-        successMessage = "Dataset Identifier: http://n2t.net/" + bcid.getIdentifier() +
-                " (wait 15 minutes for resolution to become active)" +
-                "<br>\t" + "Data Elements Root: " + expedition.getExpeditionCode();
-
         // delete the temporary file now that it has been uploaded
         new File(processController.getInputFilename()).delete();
 
