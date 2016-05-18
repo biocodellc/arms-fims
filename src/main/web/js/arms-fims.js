@@ -1,6 +1,6 @@
 /* ====== General Utility Functions ======= */
-var appRoot = "/arms-fims/";
-var armsFimsRestRoot = "/arms-fims/rest/";
+var appRoot = "/arms/";
+var armsFimsRestRoot = "/arms/rest/";
 
 $.ajaxSetup({
     beforeSend: function(jqxhr, config) {
