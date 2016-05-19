@@ -1,4 +1,13 @@
-name: Module name
+name: arms-fims
+description: 'provides an interface for browsing and querying arms fims data'
+package: Biocode-Fims
+
 type: module
-description: 'A description of what your module does.'
 core: 8.x
+
+dependencies:
+  - node
+  - block
+  - drupal:views
+
+hidden: false

@@ -1,0 +1,7 @@
+arms.expeditions:
+  path: 'projects'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsExpeditionController::listProjects'
+    _title: 'ARMS Projects'
+  requirements:
+    _permission: 'access content'

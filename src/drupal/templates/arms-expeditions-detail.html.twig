@@ -1,0 +1,68 @@
+{#
+/**
+ * @file
+ * Default theme implementation to print Lorem ipsum text.
+ *
+ * Available variables:
+ *   - source_text
+ *
+ * @see template_preprocess_loremipsum()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if expedition %}
+    <div class="panel panel-default">
+        <div class="panel-heading">My Arms Project</div>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Project ID: </td>
+                    <td>{{ expedition.expedition.expeditionId }}</td>
+                </tr>
+                <tr>
+                    <td>Principal Investigator: </td>
+                    <td>{{ expedition.principalInvestigator }}</td>
+                </tr>
+                <tr>
+                    <td>Contact Name/Email: </td>
+                    <td>{{ expedition.contactName }} / {{  expedition.contactEmail }}</td>
+                </tr>
+                <tr>
+                    <td>Funding Source: </td>
+                    <td>{{ expedition.fundingSource }}</td>
+                </tr>
+                <tr>
+                    <td>Envisioned Duration: </td>
+                    <td>{{ expedition.envisionedDuration }} years</td>
+                </tr>
+                <tr>
+                    <td>Geographic Scope: </td>
+                    <td>{{ expedition.geographicScope }}</td>
+                </tr>
+                <tr>
+                    <td>Goals: </td>
+                    <td>{{ expedition.goals }}</td>
+                </tr>
+                <tr>
+                    <td>Lead Organization: </td>
+                    <td>{{ expedition.leadOrganization }}</td>
+                </tr>
+                <tr>
+                    <td>Project Identifier: </td>
+                    <td>{{ expedition.expedition.expeditionBcid }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Deployments</div>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>{{  expedition.deployments[0].armsModel }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endif %}
