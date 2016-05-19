@@ -10,7 +10,7 @@ arms.deployment:
   path: '/deployments/{project_id}/{deployment_id}'
   defaults:
     _controller: '\Drupal\arms\Controller\ArmsController::deploymentDetail'
-#    _title: 'ARMS Deployment'
+    _title: 'ARMS Deployment'
   requirements:
     _permission: 'access content'
     project_id: ^[0-9]+

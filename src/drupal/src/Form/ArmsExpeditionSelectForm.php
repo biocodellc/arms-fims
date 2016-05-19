@@ -46,11 +46,16 @@ class ArmsExpeditionSelectForm extends ConfigFormBase {
       $rest_root = $arms_config->get("arms_rest_uri");
 
       $client = \Drupal::service('http_client');
-      $result = $client->get(
-        $rest_root . 'arms/projects/' . $form['expeditions']['#value'],
-        ['Accept' => 'application/json']
-      );
-      $expedition = json_decode($result->getBody());
+      try {
+        $result = $client->get(
+          $rest_root . 'arms/projects/' . $form['expeditions']['#value'],
+          ['Accept' => 'application/json']
+        );
+        $expedition = json_decode($result->getBody());
+      } catch(RequestException $e) {
+        watchdog_exception('arms', $e);
+        drupal_set_message('Error fetching project.', 'error');
+      }
     }
 
 
