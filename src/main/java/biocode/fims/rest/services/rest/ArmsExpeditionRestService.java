@@ -56,7 +56,7 @@ public class ArmsExpeditionRestService extends FimsService {
                            @FormParam("goals") String goals,
                            @FormParam("leadOrganization") String leadOrganization,
                            @FormParam("expeditionCode") String expeditionCode,
-                           @FormParam("public") boolean isPublic) {
+                           @FormParam("public") @DefaultValue("true") boolean isPublic) {
 
         int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
         Expedition expedition = new Expedition.ExpeditionBuilder(expeditionCode)
