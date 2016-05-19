@@ -27,4 +27,7 @@ public class DeploymentService {
         deploymentRepository.deleteByArmsExpeditionExpeditionId(expeditionId);
     }
 
+    public Deployment getDeployment(int expeditionId, String deploymentId) {
+        return deploymentRepository.findOneByArmsExpeditionExpeditionIdAndDeploymentId(expeditionId, deploymentId);
+    }
 }

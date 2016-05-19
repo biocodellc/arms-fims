@@ -3,8 +3,7 @@ package biocode.fims.arms.entities;
 import biocode.fims.arms.serializers.ArmsExpeditionSerializer;
 import biocode.fims.entities.Expedition;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
@@ -215,8 +214,11 @@ public class ArmsExpedition {
             this.expedition = expedition;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonView(withDeploymentsView.class)
     @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="deploymentId")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(targetEntity = Deployment.class,
             mappedBy = "armsExpedition",
             fetch = FetchType.LAZY

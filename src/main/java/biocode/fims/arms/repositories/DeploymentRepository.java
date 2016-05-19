@@ -14,4 +14,6 @@ public interface DeploymentRepository extends Repository<Deployment, Integer> {
 
     @Modifying
     void deleteByArmsExpeditionExpeditionId(int expeditionId);
+
+    Deployment findOneByArmsExpeditionExpeditionIdAndDeploymentId(int expeditionId, String deploymentId);
 }
