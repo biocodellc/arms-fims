@@ -1,0 +1,7 @@
+arms.settings:
+  type: config_object
+  label: 'Custom ARMS Settings'
+  mapping:
+    arms_rest_uri:
+      type: string
+      label: 'http://biscicol.org/arms/rest/'

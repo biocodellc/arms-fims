@@ -1,14 +1,6 @@
 {#
 /**
  * @file
- * Default theme implementation to print Lorem ipsum text.
- *
- * Available variables:
- *   - source_text
- *
- * @see template_preprocess_loremipsum()
- *
- * @ingroup themeable
  */
 #}
 {% if expedition %}
@@ -59,9 +51,11 @@
         <div class="panel-heading">Deployments</div>
         <table class="table">
             <tbody>
-            <tr>
-                <td>{{  expedition.deployments[0].armsModel }}</td>
-            </tr>
+            {%  for deploymentId in expedition.deployments %}
+                <tr>
+                    <td><a href="{{ path('arms.deployment', {'project_id': expedition.expedition.expeditionId, 'deployment_id': deploymentId}) }}">{{ deploymentId }}</a></td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>

@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ */
+#}
+{% if deployment %}
+    <h2 class="h2">Deployment Detail Page for {{ deploymentId }}</h2>
+    <div class="panel panel-default">
+        <div class="panel-heading">Deployment Metadata:</div>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Deployment Event ID: </td>
+                    <td>{{ deploymentId }}</td>
+                </tr>
+                <tr>
+                    <td>Project ID: </td>
+                    <td>{{ projectId }}</td>
+                </tr>
+                <tr>
+                    <td>Estimated Deployment Date: </td>
+                    <td>{{ deployment.intendedDeploymentDate | date("m/d/Y") }}</td>
+                </tr>
+                <tr>
+                    <td>Estimated Retrieval Date: </td>
+                    <td>{{ deployment.indentedRecoveryDate | date("m/d/Y") }}</td>
+                </tr>
+                <tr>
+                    <td>Actual Deployment Date: </td>
+                    <td>{{ deployment.actualDeploymentDate | date("m/d/Y") }}</td>
+                </tr>
+                <tr>
+                    <td>Actual Retrieval Date: </td>
+                    <td>{{ deployment.actualRetrievalDate | date("m/d/Y") }}</td>
+                </tr>
+                <tr>
+                    <td>Lat/Lng: </td>
+                    <td>{{ deployment.decimalLatitude }}/{{ deployment.decimalLongitude }}</td>
+                </tr>
+                <tr>
+                    <td>Depth: </td>
+                    <td>{{ deployment.depthInMeters }} meters</td>
+                </tr>
+                <tr>
+                    <td>Habitat Type: </td>
+                    <td>{{ deployment.habitat }}</td>
+                </tr>
+                <tr>
+                    <td>Station ID: </td>
+                    <td>{{ deployment.stationId }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endif %}

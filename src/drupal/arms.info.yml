@@ -6,8 +6,5 @@ type: module
 core: 8.x
 
 dependencies:
-  - node
-  - block
-  - drupal:views
 
 hidden: false

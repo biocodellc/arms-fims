@@ -1,0 +1,6 @@
+arms.admin:
+  title: 'Arms module settings'
+  description: 'Configure ARMS REST services'
+  parent: system.admin_config_development
+  route_name: arms.settings
+  weight: 100

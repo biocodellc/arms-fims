@@ -1,4 +1,6 @@
 <?php
+use Drupal\Core\Routing\RouteMatchInterface;
+
 /**
  * @file
  * A description of what your module does.
@@ -14,6 +16,13 @@ function arms_theme($existing, $type, $theme, $path) {
     'arms_expeditions_detail' => array(
       'variables' => array(
         'expedition' => NULL,
+      ),
+    ),
+    'arms_deployment_detail' => array(
+      'variables' => array(
+        'deployment' => NULL,
+        'deploymentId' => NULL,
+        'projectId' => NULL,
       ),
     ),
   );

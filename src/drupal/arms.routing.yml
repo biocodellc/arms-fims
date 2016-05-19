@@ -1,7 +1,24 @@
 arms.expeditions:
   path: 'projects'
   defaults:
-    _controller: '\Drupal\arms\Controller\ArmsExpeditionController::listProjects'
+    _controller: '\Drupal\arms\Controller\ArmsController::listProjects'
     _title: 'ARMS Projects'
   requirements:
     _permission: 'access content'
+
+arms.deployment:
+  path: '/deployments/{project_id}/{deployment_id}'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsController::deploymentDetail'
+#    _title: 'ARMS Deployment'
+  requirements:
+    _permission: 'access content'
+    project_id: ^[0-9]+
+#    deployment_id:
+
+arms.settings:
+  path: '/admin/config/arms/configuration'
+  defaults:
+    _form: '\Drupal\arms\Form\ArmsSettingsForm'
+  requirements:
+    _permission: 'Administer site configuration'
