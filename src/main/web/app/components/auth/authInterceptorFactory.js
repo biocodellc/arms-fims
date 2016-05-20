@@ -17,7 +17,7 @@ angular.module('fims.auth')
                 }
                 return config;
             },
-            'responseError': function (response, a, b, c) {
+            'responseError': function (response) {
                 if (!triedToRefresh && 
                     (response.status === 401 || (response.status === 400 && response.data.usrMessage == 'invalid_grant' ))) {
                     var AuthFactory = $injector.get('AuthFactory');
@@ -45,5 +45,4 @@ angular.module('fims.auth')
 .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
 }]);
-
 

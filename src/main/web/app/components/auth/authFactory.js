@@ -43,14 +43,13 @@ angular.module('fims.auth')
                 url: REST_ROOT + 'authenticationService/oauth/accessToken',
                 data: {
                     client_id: client_id,
-                    redirect_uri: 'localhost:8080/oauth',
+                    redirect_uri: APP_ROOT + '/oauth',
                     grant_type: 'password',
                     username: username,
                     password: password
                 },
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'projectUrl': $location.protocol() + "://" + $location.host() + $location.port() + APP_ROOT
                 }
             };
 
