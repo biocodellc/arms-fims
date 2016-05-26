@@ -400,7 +400,10 @@ function listExpeditions(divId) {
                 + '\t <img src="' + appRoot + 'images/right-arrow.png" id="arrow" class="img-arrow">{text}'
                 + '</a>\n';
             $.each(data, function(index, e) {
-                var expedition = e.expeditionTitle.replace(new RegExp('[#. ()]', 'g'), '_') + '_' + e.expeditionId;
+                var expedition = e.expeditionTitle.replace(new RegExp('[#. ():]', 'g'), '_') + '_' + e.expeditionId;
+                while (!expedition.match(/^[a-zA-Z](.)*$/)) {
+                    expedition = expedition.substring(1);
+                }
 
                 html += expandTemplate.replace('{text}', e.expeditionTitle).replace('-{section}', '');
                 html += '<div id="{expedition}" class="toggle-content">';
@@ -421,7 +424,10 @@ function listExpeditions(divId) {
             }
             $(divId).html(html);
             $.each(data, function(index, e) {
-                var expedition = e.expeditionTitle.replace(new RegExp('[#. ()]', 'g'), '_') + '_' + e.expeditionId;
+                var expedition = e.expeditionTitle.replace(new RegExp('[#. ():]', 'g'), '_') + '_' + e.expeditionId;
+                while (!expedition.match(/^[a-zA-Z](.)*$/)) {
+                    expedition = expedition.substring(1);
+                }
 
                 $('div#' + expedition +'-configuration').data('expeditionId', e.expeditionId);
                 $('div#' + expedition +'-resources').data('expeditionId', e.expeditionId);
