@@ -1,10 +1,8 @@
 package biocode.fims.rest.services.rest;
 
-import biocode.fims.bcid.*;
 import biocode.fims.config.ConfigurationFileTester;
 import biocode.fims.digester.Attribute;
 import biocode.fims.entities.Expedition;
-import biocode.fims.entities.Project;
 import biocode.fims.fimsExceptions.*;
 import biocode.fims.fimsExceptions.BadRequestException;
 import biocode.fims.mysql.MySqlDatasetTableValidator;
@@ -16,19 +14,13 @@ import biocode.fims.renderers.RowMessage;
 import biocode.fims.rest.FimsService;
 import biocode.fims.run.Process;
 import biocode.fims.run.ProcessController;
-import biocode.fims.service.BcidService;
-import biocode.fims.service.ExpeditionService;
-import biocode.fims.service.ProjectService;
-import biocode.fims.service.UserService;
+import biocode.fims.service.*;
 import biocode.fims.settings.SettingsManager;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.hibernate.Session;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
@@ -44,22 +36,15 @@ public class Validate extends FimsService {
     private final MySqlUploader mySqlUploader;
     private final MySqlDatasetTableValidator mySqlDatasetTableValidator;
     private final ExpeditionService expeditionService;
-    private final BcidService bcidService;
-    private final ProjectService projectService;
-    private final EntityManagerFactory managerFactory;
 
     @Autowired
     public Validate(MySqlUploader mySqlUploader, MySqlDatasetTableValidator mySqlDatasetTableValidator,
-                    ProjectService projectService, EntityManagerFactory entityManagerFactory,
-                    ExpeditionService expeditionService, BcidService bcidService,
-                    UserService userService, SettingsManager settingsManager) {
-        super(userService, settingsManager);
+                    ExpeditionService expeditionService,
+                    OAuthProviderService providerService, SettingsManager settingsManager) {
+        super(providerService, settingsManager);
         this.mySqlUploader = mySqlUploader;
         this.mySqlDatasetTableValidator = mySqlDatasetTableValidator;
-        this.projectService = projectService;
-        managerFactory = entityManagerFactory;
         this.expeditionService = expeditionService;
-        this.bcidService = bcidService;
     }
     /**
      * service to validate a dataset against a project's rules

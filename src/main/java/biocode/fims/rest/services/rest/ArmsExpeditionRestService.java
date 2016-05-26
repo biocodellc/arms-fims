@@ -6,13 +6,11 @@ import biocode.fims.config.ConfigurationFileFetcher;
 import biocode.fims.digester.Entity;
 import biocode.fims.digester.Mapping;
 import biocode.fims.entities.Expedition;
-import biocode.fims.entities.Project;
-import biocode.fims.fimsExceptions.*;
 import biocode.fims.rest.FimsService;
 import biocode.fims.rest.filters.Authenticated;
 import biocode.fims.service.BcidService;
+import biocode.fims.service.OAuthProviderService;
 import biocode.fims.service.ProjectService;
-import biocode.fims.service.UserService;
 import biocode.fims.settings.SettingsManager;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.digester3.Digester;
@@ -38,8 +36,8 @@ public class ArmsExpeditionRestService extends FimsService {
 
     @Autowired
     ArmsExpeditionRestService(ProjectService projectService, ArmsExpeditionService armsExpeditionService, BcidService bcidService,
-                              UserService userService, SettingsManager settingsManager) {
-        super(userService, settingsManager);
+                              OAuthProviderService providerService, SettingsManager settingsManager) {
+        super(providerService, settingsManager);
         this.projectService = projectService;
         this.armsExpeditionService = armsExpeditionService;
         this.bcidService = bcidService;
@@ -59,6 +57,11 @@ public class ArmsExpeditionRestService extends FimsService {
                            @FormParam("public") @DefaultValue("true") boolean isPublic) {
 
         int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
+
+        File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
+        Mapping mapping = new Mapping();
+        mapping.addMappingRules(new Digester(), configFile);
+
         Expedition expedition = new Expedition.ExpeditionBuilder(expeditionCode)
                 .isPublic(isPublic)
                 .build();
@@ -72,29 +75,7 @@ public class ArmsExpeditionRestService extends FimsService {
                 .leadOrganization(leadOrganization)
                 .build();
 
-        armsExpeditionService.create(armsExpedition, user.getUserId(), projectId);
-
-        // TODO the following is temporary until the DeepRoots code is refactored
-        File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
-
-        Mapping mapping = new Mapping();
-        mapping.addMappingRules(new Digester(), configFile);
-
-        // Loop the mapping file and create a BCID for every entity that we specified there!
-        boolean ezidRequest = Boolean.parseBoolean(settingsManager.retrieveValue("ezidRequests"));
-        LinkedList<Entity> entities = mapping.getEntities();
-        Iterator it = entities.iterator();
-        while (it.hasNext()) {
-            Entity entity = (Entity) it.next();
-
-            biocode.fims.entities.Bcid bcid = new biocode.fims.entities.Bcid.BcidBuilder(entity.getConceptURI())
-                    .ezidRequest(ezidRequest)
-                    .title(entity.getConceptAlias())
-                    .build();
-
-            bcidService.create(bcid, user.getUserId());
-            bcidService.attachBcidToExpedition(bcid, expedition.getExpeditionId());
-        }
+        armsExpeditionService.create(armsExpedition, user.getUserId(), projectId, mapping);
 
         return Response.ok(armsExpedition).build();
     }

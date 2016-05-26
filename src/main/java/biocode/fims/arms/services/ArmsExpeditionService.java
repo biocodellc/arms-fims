@@ -2,6 +2,7 @@ package biocode.fims.arms.services;
 
 import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.repositories.ArmsExpeditionRepository;
+import biocode.fims.digester.Mapping;
 import biocode.fims.entities.Expedition;
 import biocode.fims.service.ExpeditionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class ArmsExpeditionService {
      * the ArmsExpedition.expeditionId field. Then persisting the {@link ArmsExpedition}
      * @param armsExpedition
      */
-    public void create(ArmsExpedition armsExpedition, int userId, int projectId) {
-        expeditionService.create(armsExpedition.getExpedition(), userId, projectId, null);
+    public void create(ArmsExpedition armsExpedition, int userId, int projectId, Mapping mapping) {
+        expeditionService.create(armsExpedition.getExpedition(), userId, projectId, null, mapping);
 
         try {
             // now that the Expedition's id has been set
