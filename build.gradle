@@ -1,11 +1,13 @@
-project.ext.environment = defaultEnvironment
-
 buildscript {
     repositories {
         mavenCentral()
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
+        classpath "org.ajoberstar:gradle-git:1.4.2"
         classpath "com.github.marceloemanoel:gradle-environments-plugin:0.1"
         classpath "org.hidetake:gradle-ssh-plugin:2.0.0"
     }
@@ -26,8 +28,41 @@ repositories {
     mavenCentral()
 }
 
+//noinspection GroovyAssignabilityCheck
+configurations {
+    server
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.server]
+    }
+}
+
+//noinspection GroovyAssignabilityCheck
+sourceSets {
+    main {
+        compileClasspath += [configurations.server]
+    }
+    test {
+        compileClasspath += [configurations.server]
+        runtimeClasspath += [configurations.server]
+    }
+}
+
 dependencies {
-    compile 'org.glassfish.jersey.media:jersey-media-multipart:2.22.2'
+    server 'org.glassfish.jersey.media:jersey-media-multipart:2.22.2'
+
+    server 'org.glassfish.jersey.ext:jersey-spring3:2.22.2'
+    server 'javax.servlet:servlet-api:2.4'
+    server 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.6.0'
+    server 'com.googlecode.json-simple:json-simple:1.1.1'
+    server 'org.springframework.data:spring-data-jpa:1.10.1.RELEASE'
+    server group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.0.Final'
+    server 'org.slf4j:slf4j-log4j12:1.7.19'
+    server 'org.apache.commons:commons-digester3:3.2'
+    server 'commons-cli:commons-cli:1.2'
+
     compile project(":biocode-fims-commons")
 
     testCompile "junit:junit-dep:4.10"
@@ -36,9 +71,44 @@ dependencies {
 webAppDirName = "src/main/web"
 libsDirName = "../dist"
 
+project.ext.environment = defaultEnvironment
+
+//noinspection GroovyAssignabilityCheck
 clean {
     delete libsDir
 }
+
+// jetty ssh plugin
+remotes {
+    biscicol {
+        host = 'biscicol.org'
+        user = biscicolUser
+        password = biscicolPassword
+    }
+}
+
+allprojects {
+    task verifyMasterBranch << {
+        ext.repo = Grgit.open(project.file('.'))
+        if (ext.repo.branch.current.name != "master")
+            throw new GradleScriptException(project.name + ' is not on the master branch', null)
+    }
+}
+
+task setProductionEnv << {
+    project.ext.environment = "production"
+}
+task setDevelopmentEnv << {
+    project.ext.environment = "development"
+}
+task setLocalEnv << {
+    project.ext.environment = "local"
+}
+
+// if setProductionEnv or setDevelopmentEnv is run, make sure this is done before processResources
+setProductionEnv.mustRunAfter compileJava
+setDevelopmentEnv.mustRunAfter compileJava
+setLocalEnv.mustRunAfter compileJava
 
 /*
 Delete any resource files in src/main/resources if the file exists in a sub directory
@@ -90,37 +160,97 @@ task copyWebXml {
 
 processResources.dependsOn copyWebXml
 
-task setProductionEnv << {
-    project.ext.environment = "production"
-}
-task setDevelopmentEnv << {
-    project.ext.environment = "development"
-}
-task setLocalEnv << {
-    project.ext.environment = "local"
+/**
+ * add all dependencies of scope "server" to the compile scope
+ */
+task addDependenciesToWar << {
+    // work around from project.configurations.server as custom scopes aren't propagated to parent project
+    for (p in project.getSubprojects()) {
+        project.configurations.compile.dependencies.addAll(p.configurations.server.dependencies)
+    }
+    project.configurations.compile.dependencies.addAll(project.configurations.server.dependencies)
 }
 
-// if setProductionEnv or setDevelopmentEnv is run, make sure this is done before processResources
-setProductionEnv.mustRunAfter compileJava
-setDevelopmentEnv.mustRunAfter compileJava
-setLocalEnv.mustRunAfter compileJava
 
-// jetty ssh plugin
-remotes {
-    biscicol {
-        host = 'biscicol.org'
-        user = biscicolUser
-        password = biscicolPassword
-        // TODO: adding this line means stasks will fail, even though it is specified, for now, password specified above.
-        //file("${System.getProperty('user.home')}/.ssh/id_rsa")
+ext.getDependencyFiles = {
+    def subProjectJars = []
+    def dependencyFiles = []
+
+    // get a list of the sub project jars to exclude as subProjects should be built at the same time as this project.
+    for (p in project.getSubprojects()) {
+        subProjectJars.add(p.jar.archiveName)
+    }
+
+    // work around from project.configurations.server.incoming.getFiles() as custom scopes aren't propagated to parent
+    // project
+    for (p in project.getSubprojects()) {
+        for (dependency in p.configurations.server.incoming.getFiles()) {
+            if (!subProjectJars.contains(dependency.getName()) &&
+                    !dependencyFiles.contains(dependency.absoluteFile)) {
+                dependencyFiles.add(dependency.absoluteFile)
+            }
+        }
+    }
+    for (dependency in project.configurations.server.incoming.getFiles()) {
+        if (!subProjectJars.contains(dependency.getName())) {
+            dependencyFiles.add(dependency.absoluteFile)
+        }
+    }
+    return dependencyFiles
+}
+
+ext.updateRemoteDependencies = { location ->
+    def files = getDependencyFiles()
+
+    ssh.run {
+        session(remotes.biscicol) {
+            execute "/bin/rm -f " + location + "*"
+            put from: files, into: location
+        }
     }
 }
 
-allprojects {
-    task verifyMasterBranch << {
-        ext.repo = Grgit.open(project.file('.'))
-        if (ext.repo.branch.current.name != "master")
-            throw new GradleScriptException(project.name + ' is not on the master branch', null)
+task updateDependenciesDev {
+    group = "biscicol.org"
+    description = "update the jars located in " + remoteDevLibsDirectory
+
+    doLast {
+        updateRemoteDependencies(remoteDevLibsDirectory)
+    }
+}
+
+task updateDependencies {
+    group = "biscicol.org"
+    description = "update the jars located in " + remoteLibsDirectory
+
+    dependsOn verifyMasterBranch
+
+    doLast {
+        updateRemoteDependencies(remoteLibsDirectory)
+    }
+}
+
+ext.remoteDeploy = { workingDir, remoteLibsDir, remoteWarDir ->
+    ssh.run {
+        session(remotes.biscicol) {
+            // Cleanup to begin
+            execute "/bin/rm -rf " + workingDir
+            execute "/bin/mkdir " + workingDir
+            // Copy war file to server
+            put from: war.archivePath.path, into: workingDir
+            // Extract libs and copy from server
+            execute "/usr/bin/unzip -d " + workingDir + " " + workingDir + war.archiveName
+            execute "/bin/cp " + remoteLibsDir + "* " + workingDir + "WEB-INF/lib/"
+            // Remove the old war file
+            execute "/bin/rm " + workingDir + war.archiveName
+            // Need to remove the war file itself-- we instead just copy it into /tmp for safekeeping in case next step fails
+            execute "/bin/mv " + remoteWarDir + "arms.war" + " /tmp/arms.deployed.war.backup"
+            // Need to execute zip command from the working Directory in order to get relative paths correct
+            execute "cd " + workingDir + ";/usr/bin/zip -r " + remoteWarDir + "arms.war " + " ."
+            // Cleanup
+            execute "/bin/rm -rf " + workingDir
+            execute "/bin/rm /tmp/arms.deployed.war.backup"
+        }
     }
 }
 
@@ -133,11 +263,8 @@ task deployFims {
     dependsOn war
 
     doLast {
-        ssh.run {
-            session(remotes.biscicol) {
-                put from: war.archivePath.path, into: remoteWarDirectory + "/arms.war"
-            }
-        }
+        def workingDir = "/tmp/armsProd/"
+        remoteDeploy(workingDir, remoteLibsDirectory, remoteWarDirectory)
     }
 }
 
@@ -150,17 +277,17 @@ task deployFimsDev {
     dependsOn war
 
     doLast {
-        ssh.run {
-            session(remotes.biscicol) {
-                put from: war.archivePath.path, into: remoteWarDevDirectory + "/arms.war"
-            }
-        }
+        def workingDir = "/tmp/armsDev/"
+        remoteDeploy(workingDir, remoteDevLibsDirectory, remoteWarDevDirectory)
+
     }
 }
-task deployFimsLocal  {
+
+task deployFimsLocal {
     description = 'local fims deployment'
 
     dependsOn setLocalEnv
+    dependsOn addDependenciesToWar
     dependsOn war
 
     doLast {
