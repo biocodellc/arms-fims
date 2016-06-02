@@ -16,6 +16,14 @@ arms.deployment:
     project_id: ^[0-9]+
 #    deployment_id:
 
+arms.search:
+  path: '/deployments/search'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsController::search'
+    _title: 'ARMS Search'
+  requirements:
+    _permission: 'access content'
+
 arms.settings:
   path: '/admin/config/arms/configuration'
   defaults:

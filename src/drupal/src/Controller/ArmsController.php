@@ -21,6 +21,21 @@ class ArmsController extends ControllerBase {
   }
 
   public function listProjects() {
+    $options = $this->getExpeditions();
+
+    $select_form = \Drupal::formBuilder()
+      ->getForm('Drupal\arms\Form\ArmsExpeditionSelectForm', $options);
+
+    // Remove the submit button.
+    unset($select_form['actions']['submit']);
+
+    return [
+      '#theme' => 'arms_expeditions',
+      '#form' => $select_form,
+    ];
+  }
+  
+  private function getExpeditions() {
     $options = [];
     try {
       $result = $this->client->get($this->restRoot . 'arms/projects', ['Accept' => 'application/json']);
@@ -34,17 +49,7 @@ class ArmsController extends ControllerBase {
       watchdog_exception('arms', $e);
       drupal_set_message('Error fetching projects.', 'error');
     }
-
-    $select_form = \Drupal::formBuilder()
-      ->getForm('Drupal\arms\Form\ArmsExpeditionSelectForm', $options);
-
-    // Remove the submit button.
-    unset($select_form['actions']['submit']);
-
-    return [
-      '#theme' => 'arms_expeditions',
-      '#form' => $select_form,
-    ];
+    return $options;
   }
 
 
@@ -73,5 +78,20 @@ class ArmsController extends ControllerBase {
       '#projectId' => $project_id,
     ];
 
+  }
+  
+  public function search() {
+    $options = $this->getExpeditions();
+
+    $search_form = \Drupal::formBuilder()
+      ->getForm('Drupal\arms\Form\ArmsSearchForm', $options);
+
+    // Remove the submit button.
+    // unset($search_form['actions']['submit']);
+
+    return [
+      '#theme' => 'arms_search',
+      '#form' => $search_form,
+    ];
   }
 }

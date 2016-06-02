@@ -7,23 +7,28 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 
 function arms_theme($existing, $type, $theme, $path) {
-  return array(
-    'arms_expeditions' => array(
-      'variables' => array(
+  return [
+    'arms_expeditions' => [
+      'variables' => [
         'form' => NULL,
-      ),
-    ),
-    'arms_expeditions_detail' => array(
-      'variables' => array(
+      ],
+    ],
+    'arms_expeditions_detail' => [
+      'variables' => [
         'expedition' => NULL,
-      ),
-    ),
-    'arms_deployment_detail' => array(
-      'variables' => array(
+      ],
+    ],
+    'arms_deployment_detail' => [
+      'variables' => [
         'deployment' => NULL,
         'deploymentId' => NULL,
         'projectId' => NULL,
-      ),
-    ),
-  );
+      ],
+    ],
+    'arms_search' => [
+      'variables' => [
+        'form' => NULL,
+      ],
+    ],
+  ];
 }
