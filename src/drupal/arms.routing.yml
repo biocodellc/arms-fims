@@ -1,7 +1,7 @@
 arms.expeditions:
   path: 'projects'
   defaults:
-    _controller: '\Drupal\arms\Controller\ArmsController::listProjects'
+    _form: '\Drupal\arms\Form\ArmsExpeditionSelectForm'
     _title: 'ARMS Projects'
   requirements:
     _permission: 'access content'
@@ -14,12 +14,11 @@ arms.deployment:
   requirements:
     _permission: 'access content'
     project_id: ^[0-9]+
-#    deployment_id:
 
 arms.search:
   path: '/deployments/search'
   defaults:
-    _controller: '\Drupal\arms\Controller\ArmsController::search'
+    _form: '\Drupal\arms\Form\ArmsSearchForm'
     _title: 'ARMS Search'
   requirements:
     _permission: 'access content'

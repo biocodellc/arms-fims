@@ -7,12 +7,13 @@
 
 namespace Drupal\arms\Form;
 
-use Drupal\Core\Form\ConfigFormBase;
+use Drupal\arms\Controller\ArmsController;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 
-class ArmsExpeditionSelectForm extends ConfigFormBase {
+class ArmsExpeditionSelectForm extends FormBase {
   /**
    * {@inheritdoc}
    */
@@ -23,19 +24,28 @@ class ArmsExpeditionSelectForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $options = null) {
-    $form['expeditions'] = array(
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $arms_controller = new ArmsController();
+    $expeditions = $arms_controller->getExpeditions();
+    $form['expeditions'] = [
       '#type' => 'select',
       '#title' => $this->t('Choose Project'),
       '#empty_option' => $this->t('Select a project'),
       '#default_value' => '',
-      '#options' => $options,
+      '#options' => $expeditions,
       '#ajax' => [
-        'callback' => 'Drupal\arms\Form\ArmsSearchForm::expeditionDetail',
+        'callback' => '::expeditionDetail',
       ],
-    );
+    ];
 
-    return parent::buildForm($form, $form_state);
+    $form['expedition_detail'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'expedition-detail',
+      ],
+    ];
+
+    return $form;
   }
 
   public function expeditionDetail($form, $form_state) {
@@ -52,7 +62,8 @@ class ArmsExpeditionSelectForm extends ConfigFormBase {
           ['Accept' => 'application/json']
         );
         $expedition = json_decode($result->getBody());
-      } catch(RequestException $e) {
+      }
+      catch (RequestException $e) {
         watchdog_exception('arms', $e);
         drupal_set_message('Error fetching project.', 'error');
       }
@@ -60,25 +71,25 @@ class ArmsExpeditionSelectForm extends ConfigFormBase {
 
 
     $response->addCommand(new HtmlCommand(
-      '#expeditionDetail',
-      array(
+      '#expedition-detail',
+      [
         '#theme' => 'arms_expeditions_detail',
         '#expedition' => $expedition,
-      )
+      ]
     ));
 
     return $response;
   }
 
   /**
-   * Gets the configuration names that will be editable.
+   * Form submission handler.
    *
-   * @return array
-   *   An array of configuration object names that are editable if called in
-   *   conjunction with the trait's config() method.
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  protected function getEditableConfigNames() {
-    // TODO: Implement getEditableConfigNames() method.
-    return [];
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    // do nothing as this is ajax only, no submission
   }
 }

@@ -8,11 +8,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 
 function arms_theme($existing, $type, $theme, $path) {
   return [
-    'arms_expeditions' => [
-      'variables' => [
-        'form' => NULL,
-      ],
-    ],
     'arms_expeditions_detail' => [
       'variables' => [
         'expedition' => NULL,
@@ -23,11 +18,6 @@ function arms_theme($existing, $type, $theme, $path) {
         'deployment' => NULL,
         'deploymentId' => NULL,
         'projectId' => NULL,
-      ],
-    ],
-    'arms_search' => [
-      'variables' => [
-        'form' => NULL,
       ],
     ],
   ];
