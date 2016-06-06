@@ -31,11 +31,13 @@ repositories {
 //noinspection GroovyAssignabilityCheck
 configurations {
     server
+    querydslapt
 }
 
 idea {
     module {
         scopes.COMPILE.plus += [configurations.server]
+        sourceDirs += file('src/main/generated')
     }
 }
 
@@ -47,6 +49,11 @@ sourceSets {
     test {
         compileClasspath += [configurations.server]
         runtimeClasspath += [configurations.server]
+    }
+    generated {
+        java {
+            srcDirs = ['src/main/generated']
+        }
     }
 }
 
@@ -67,7 +74,33 @@ dependencies {
 
     compile project(":biocode-fims-commons")
 
+    server group: 'com.querydsl', name: 'querydsl-core', version: '4.1.2'
+    server group: 'com.querydsl', name: 'querydsl-jpa', version: '4.1.2'
+    querydslapt group: 'com.querydsl', name: 'querydsl-apt', version: '4.1.2'
+
     testCompile "junit:junit-dep:4.10"
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
+    source = sourceSets.main.java
+    classpath = configurations.compile + configurations.querydslapt + configurations.server
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor"
+    ]
+    destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
+}
+
+//noinspection GroovyAssignabilityCheck
+compileJava {
+    dependsOn generateQueryDSL
+    source generateQueryDSL.destinationDir
+}
+
+compileGeneratedJava {
+    dependsOn generateQueryDSL
+    options.warnings = false
+    classpath += sourceSets.main.runtimeClasspath
 }
 
 webAppDirName = "src/main/web"
@@ -78,6 +111,7 @@ project.ext.environment = defaultEnvironment
 //noinspection GroovyAssignabilityCheck
 clean {
     delete libsDir
+    delete sourceSets.generated.java.srcDirs
 }
 
 // jetty ssh plugin
