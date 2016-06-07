@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SearchCriteria {
     @JsonProperty private String key;
     @JsonProperty private Operator operator;
+    // if operator is IN, the value is a , separated string of values
     @JsonProperty private String value;
+    @JsonProperty private Condition condition;
 
     private SearchCriteria() {}
 
@@ -28,5 +30,9 @@ public class SearchCriteria {
 
     public String getValue() {
         return value;
+    }
+
+    public Condition getCondition() {
+        return condition;
     }
 }

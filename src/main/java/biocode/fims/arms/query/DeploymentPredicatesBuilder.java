@@ -1,11 +1,13 @@
 package biocode.fims.arms.query;
 
 
+import biocode.fims.fimsExceptions.FimsRuntimeException;
+import biocode.fims.mysql.query.Condition;
 import biocode.fims.mysql.query.SearchCriteria;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,19 +25,25 @@ public class DeploymentPredicatesBuilder {
             return null;
         }
 
-        final List<BooleanExpression> predicates = new ArrayList<>();
-        DeploymentPredicate predicate = new DeploymentPredicate();
-        for (final SearchCriteria param : criterion) {
-            final BooleanExpression exp = predicate.getPredicate(param);
-            if (exp != null) {
-                predicates.add(exp);
+        BooleanBuilder result = null;
+        for (final SearchCriteria criteria : criterion) {
+            final BooleanExpression exp = DeploymentPredicateFactory.getPredicate(criteria);
+            if (exp == null) {
+                throw new FimsRuntimeException("Invalid criteria provided. Make sure that the search " +
+                        "criteria 'key' is the column_internal value. To get a list of search criteria options visit " +
+                        "'biscicol.org/arms/projects/filterOptions'", 400);
+            }
+            if (result == null) {
+                result = new BooleanBuilder(exp);
+            } else {
+                if (criteria.getCondition().equals(Condition.AND)) {
+                    result.and(exp);
+                } else if (criteria.getCondition().equals(Condition.OR)) {
+                    result.or(exp);
+                }
             }
         }
 
-        BooleanExpression result = predicates.get(0);
-        for (int i = 1; i < predicates.size(); i++) {
-            result = result.and(predicates.get(i));
-        }
-        return result;
+        return result.getValue();
     }
 }

@@ -1,10 +1,14 @@
 package biocode.fims.arms.services;
 
 import biocode.fims.arms.entities.Deployment;
+import biocode.fims.arms.entities.QDeployment;
 import biocode.fims.arms.query.DeploymentPredicatesBuilder;
 import biocode.fims.arms.repositories.DeploymentRepository;
 import biocode.fims.mysql.query.Query;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.PathBuilder;
+import org.glassfish.hk2.api.IterableProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

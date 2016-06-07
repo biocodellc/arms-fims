@@ -5,6 +5,3 @@ arms.settings:
     arms_rest_uri:
       type: string
       label: 'http://biscicol.org/arms/rest/'
-    arms_project_id:
-      type: integer
-      label: 30

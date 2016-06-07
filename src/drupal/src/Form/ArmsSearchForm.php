@@ -9,15 +9,13 @@ namespace Drupal\arms\Form;
 
 use Drupal\arms\Controller\ArmsController;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use GuzzleHttp\Exception\RequestException;
 
 class ArmsSearchForm extends FormBase {
-  private static $filter_options_cache_id;
-  private static $filter_methods = ['equals', 'contains', 'begins with'];
+  private static $filter_keys_cache_id = 'arms_cache_filter_keys';
+  private static $filter_operators_cache_id = 'arms_cache_filter_operators';
 
   /**
    * {@inheritdoc}
@@ -30,6 +28,9 @@ class ArmsSearchForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $options = NULL) {
+    // Disable caching on this form.
+    $form_state->setCached(FALSE);
+
     $arms_controller = new ArmsController();
     $expeditions = $arms_controller->getExpeditions();
     $form['expeditions'] = [
@@ -39,67 +40,126 @@ class ArmsSearchForm extends FormBase {
       '#default_value' => '',
       '#options' => $expeditions,
       '#ajax' => [
-        'callback' => '::getDeployments',
-        // 'wrapper' => 'deployment-wrapper',
+        'callback' => '::showDeploymentsCallback',
+        'wrapper' => 'toggle',
       ],
     ];
 
-    // Disable caching on this form.
-    $form_state->setCached(FALSE);
-
-    $form['deployments'] = [
+    $form['toggle'] = [
       '#type' => 'container',
-      '#attributes' => ['id' => 'deployments'],
+      '#attributes' => ['id' => 'toggle'],
     ];
 
-    $form['filters'] = [
-      '#type' => 'container',
-      '#title' => $this->t('Filter'),
-      '#attributes' => [
-        'id' => "filters",
-        'class' => ['hidden', 'form-group-sm'],
-      ],
-    ];
+    if ($form_state->getValue("expeditions") != $form['expeditions']['#default_value']) {
+      $form['toggle']['deployments'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Choose Deployment(s)'),
+        '#options' => $this->getDeployments($form_state->getValue("expeditions")),
+        '#multiple' => TRUE,
+      ];
 
-    $form['filters']['filter1'] = [
-      '#type' => 'container',
-      '#prefix' => "<span class=\"span-label\">Filter</span>",
-      '#attributes' => [
-        'class' => ['form-inline'],
-      ],
-    ];
+      $form['toggle']['filters'] = [
+        '#tree' => TRUE,
+        '#type' => 'container',
+        '#id' => 'filters',
+        '#attributes' => [
+          'class' => ['form-group-sm'],
+        ],
+      ];
 
-    $form['filters']['filter1']['column'] = [
-      '#type' => 'select',
-      '#options' => $this->getFilterColumns(),
-    ];
+      $filter_count = $form_state->get('filter_count');
+      if (is_null($filter_count)) {
+        $filter_count = 1;
+        $form_state->set('filter_count', $filter_count);
+      }
 
-    $form['filters']['filter1']['method'] = [
-      '#type' => 'select',
-      '#options' => $this::$filter_methods,
-    ];
+      // Add elements that don't already exist
+      $filter_columns = $this->getFilterColumns();
+      $filter_operators = $this->getFilterOperators();
+      for ($delta = 0; $delta < $filter_count; $delta++) {
+        if (!isset($form['filters'][$delta])) {
+          if ($delta == 0) {
+            $label = "Filter";
+          }
+          else {
+            $label = "And";
+          }
+          $element = [
+            '#type' => 'container',
+            '#prefix' => "<span class=\"span-label\">" . $label . "</span>",
+            '#attributes' => [
+              'class' => ['form-inline'],
+            ],
+          ];
 
-    $form['filters']['filter1']['text'] = [
-      '#type' => 'textfield',
-    ];
+          $element_column = [
+            '#type' => 'select',
+            '#options' => $filter_columns,
+          ];
 
-    $form['filters']['filter1']['add'] = [
-      '#type' => 'button',
-      '#value' => '+',
-      '#ajax' => [
-        'callback' => '::addFilter',
-        'wrapper' => 'filters',
-        'method' => 'append',
-      ],
-    ];
+          $element_operator = [
+            '#type' => 'select',
+            '#options' => $filter_operators,
+          ];
 
+          $element_value = [
+            '#type' => 'textfield',
+          ];
+          $form['toggle']['filters'][$delta] = $element;
+          $form['toggle']['filters'][$delta]['column'] = $element_column;
+          $form['toggle']['filters'][$delta]['operator'] = $element_operator;
+          $form['toggle']['filters'][$delta]['value'] = $element_value;
+        }
+      }
+
+      if (!isset($form['toggle']['filters'][$filter_count - 1]['add'])) {
+        $form['toggle']['filters'][$filter_count - 1]['add'] = [
+          '#type' => 'submit',
+          '#value' => '+',
+          '#name' => 'addFilter',
+          '#submit' => ['::addFilter'],
+          '#ajax' => [
+            'callback' => '::addFilterCallback',
+            'wrapper' => 'filters',
+          ],
+        ];
+      }
+
+      $form['toggle']['buttons'] = [
+        '#type' => 'container',
+      ];
+
+      $form['toggle']['buttons']['table'] = [
+        '#type' => 'button',
+        '#value' => 'table',
+        '#name' => 'table',
+        '#id' => 'query-table',
+        '#ajax' => [
+          'callback' => '::query',
+          'wrapper' => 'query-results',
+          'method' => 'html',
+        ],
+      ];
+
+      $form['toggle']['buttons']['download'] = [
+        '#type' => 'submit',
+        '#value' => 'excel',
+        '#name' => 'download',
+        '#id' => 'download-query',
+        // '#submit' => ['download'],
+      ];
+
+      $form['toggle']['query_results'] = [
+        '#type' => 'container',
+        '#id' => 'query-results',
+      ];
+    }
 
     return $form;
   }
 
-  public function getDeployments(array &$form, FormStateInterface $form_state) {
-    $response = new AjaxResponse();
-    $expedition_id = $form_state->getValue('expeditions');
+  private function getDeployments($expedition_id) {
+    $options = [];
     if ($expedition_id != "") {
       $arms_config = \Drupal::config('arms.settings');
       $rest_root = $arms_config->get("arms_rest_uri");
@@ -111,6 +171,10 @@ class ArmsSearchForm extends FormBase {
           ['Accept' => 'application/json']
         );
         $expedition = json_decode($result->getBody());
+
+        foreach ($expedition->{'deployments'} as $deployment_id) {
+          $options[$deployment_id] = $deployment_id;
+        }
       }
       catch (RequestException $e) {
         watchdog_exception('arms', $e);
@@ -118,96 +182,142 @@ class ArmsSearchForm extends FormBase {
       }
     }
 
-    $options = [];
-
-    foreach ($expedition->{'deployments'} as $deployment_id) {
-      array_push($options, $deployment_id);
-    }
-
-    $form['deployments'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Choose Deployment(s)'),
-      '#attributes' => [
-        'multiple' => 'true',
-      ],
-      '#options' => $options,
-      '#multiple' => TRUE,
-    ];
-
-    $response->addCommand(new HtmlCommand(
-      '#deployments',
-      $form['deployments']
-    ));
-
-    $response->addCommand(new InvokeCommand(
-      '#filters',
-      'removeClass',
-      ['hidden']
-    ));
-
-    return $response;
+    return $options;
   }
 
-  public function addFilter(array $form, FormStateInterface $form_state) {
-    $filter_id = uniqid('filter');
+  public function showDeploymentsCallback(array &$form, FormStateInterface $form_state) {
+    return $form['toggle'];
+  }
 
-    $form['filters'][$filter_id] = [
-      '#type' => 'container',
-      '#field_prefix' => "<label for=edit-column class=control-label >And</label>",
-      '#attributes' => [
-        'class' => ['form-inline'],
-      ],
+  public function addFilter(array &$form, FormStateInterface &$form_state) {
+    $c = $form_state->get('filter_count') + 1;
+    $form_state->set('filter_count', $c);
+    $form_state->setRebuild(TRUE);
+  }
+
+  public function addFilterCallback(array &$form, FormStateInterface &$form_state) {
+    return $form['toggle']['filters'];
+  }
+
+  public function query(array $form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    $filters = [];
+
+    foreach ($form_state->getValue('filters') as $filter) {
+      if (!empty($filter['value'])) {
+        $criteria = [
+          'key' => $filter['column'],
+          'operator' => $filter['operator'],
+          'value' => $filter['value'],
+          'condition' => 'AND',
+        ];
+        array_push($filters, $criteria);
+      }
+    }
+
+    $deployment_id_list = [];
+    foreach ($form_state->getValue('deployments') as $deployment_id) {
+      array_push($deployment_id_list, $deployment_id);
+
+    }
+
+    $criteria = [
+      'key' => 'deploymentId',
+      'operator' => 'IN',
+      'value' => implode(",", $deployment_id_list),
+      'condition' => 'AND',
+    ];
+    array_push($filters, $criteria);
+
+    $arms_config = \Drupal::config('arms.settings');
+    $rest_root = $arms_config->get("arms_rest_uri");
+
+    $client = \Drupal::service('http_client');
+    try {
+      $result = $client->post(
+        $rest_root . 'deployments/query/json',
+        [
+          'accept' => 'application/json',
+          'json' => ['criterion' => $filters],
+        ]
+      );
+      $deployments = json_decode($result->getBody());
+    }
+
+    catch
+    (RequestException $e) {
+      watchdog_exception('arms', $e);
+      drupal_set_message('Error fetching query results.', 'error');
+    }
+
+    return [
+      '#theme' => 'arms_query_results',
+      '#deployments' => $deployments,
     ];
 
-    $form['filters'][$filter_id]['column'] = [
-      '#type' => 'select',
-      '#options' => $this->getFilterColumns(),
-    ];
+  }
 
-    $form['filters'][$filter_id]['method'] = [
-      '#type' => 'select',
-      '#options' => self::$filter_methods,
-    ];
-
-    $form['filters'][$filter_id]['text'] = [
-      '#type' => 'textfield',
-    ];
-
-    return $form['filters'][$filter_id];
+  public function download(array &$form, FormStateInterface $form_state) {
+    $f = 'test';
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state); // TODO: Change the autogenerated stub
   }
 
   private function getFilterColumns() {
-    $filter_options = [];
-    if ($cache = \Drupal::cache()->get($this::$filter_options_cache_id)) {
-#    deployment_id:
-      $filter_options = $cache->data;
+    $filter_keys = [];
+    if ($cache = \Drupal::cache()->get($this::$filter_keys_cache_id)) {
+      $filter_keys = $cache->data;
     }
     else {
-      $arms_config = \Drupal::config('arms.settings');
-      $rest_root = $arms_config->get("arms_rest_uri");
-
-      $client = \Drupal::service('http_client');
-      try {
-        $result = $client->get(
-          $rest_root . 'projects/' . $arms_config->get("arms_project_id") . '/filterOptions',
-          ['Accept' => 'application/json']
-        );
-        $data = json_decode($result->getBody());
-
-        foreach ($data as $option) {
-          $filter_options[$option->uri] = $this->t($option->column);
-        }
-        \Drupal::cache()->set($this::$filter_options_cache_id, $filter_options);
-      }
-      catch (RequestException $e) {
-        watchdog_exception('arms', $e);
-        drupal_set_message('Error fetching filter options.', 'error');
-      }
+      $this->setFilterOptions();
+      return $this->getFilterColumns();
     }
-    return $filter_options;
+    return $filter_keys;
+  }
+
+  private function getFilterOperators() {
+    if ($cache = \Drupal::cache()->get($this::$filter_operators_cache_id)) {
+      $filter_operators = $cache->data;
+    }
+    else {
+      $this->setFilterOptions();
+      return $this->getFilterOperators();
+    }
+    return $filter_operators;
+  }
+
+  private function setFilterOptions() {
+    $arms_config = \Drupal::config('arms.settings');
+    $rest_root = $arms_config->get("arms_rest_uri");
+
+    $client = \Drupal::service('http_client');
+    try {
+      $filter_keys = [];
+      $filter_operators = [];
+
+      $result = $client->get(
+        $rest_root . 'projects/filterOptions',
+        ['Accept' => 'application/json']
+      );
+      $data = json_decode($result->getBody());
+
+      foreach ($data->keys as $option) {
+        if ($option->column != 'deploymentID') {
+          $filter_keys[$option->column_internal] = $this->t($option->column);
+        }
+      }
+      foreach ($data->operators as $operator) {
+        $filter_operators[$operator] = $operator;
+      }
+
+      \Drupal::cache()->set($this::$filter_keys_cache_id, $filter_keys);
+      \Drupal::cache()
+        ->set($this::$filter_operators_cache_id, $filter_operators);
+    }
+    catch (RequestException $e) {
+      watchdog_exception('arms', $e);
+      drupal_set_message('Error fetching filter options.', 'error');
+    }
   }
 }

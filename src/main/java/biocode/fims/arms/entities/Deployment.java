@@ -1,6 +1,7 @@
 package biocode.fims.arms.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.net.URI;
@@ -72,6 +73,7 @@ public class Deployment {
 
     private ArmsExpedition armsExpedition;
 
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {

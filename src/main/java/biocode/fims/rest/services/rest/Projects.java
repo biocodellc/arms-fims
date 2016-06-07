@@ -8,6 +8,7 @@ import biocode.fims.entities.Project;
 import biocode.fims.entities.User;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 import biocode.fims.fimsExceptions.ForbiddenRequestException;
+import biocode.fims.mysql.query.Operator;
 import biocode.fims.rest.FimsService;
 import biocode.fims.rest.filters.Admin;
 import biocode.fims.rest.filters.Authenticated;
@@ -89,28 +90,38 @@ public class Projects extends FimsService {
     }
 
     @GET
-    @Path("/{projectId}/filterOptions")
+    @Path("/filterOptions")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFilterOptions(@PathParam("projectId") int projectId) {
+    public Response getFilterOptions() {
+        int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
         File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), true).getOutputFile();
 
         Mapping mapping = new Mapping();
         mapping.addMappingRules(new Digester(), configFile);
         ArrayList<Attribute> attributeArrayList = mapping.getAllAttributes(mapping.getDefaultSheetName());
 
-        JSONArray attributes = new JSONArray();
+        JSONObject response = new JSONObject();
+        JSONArray keys = new JSONArray();
 
         Iterator it = attributeArrayList.iterator();
         while (it.hasNext()) {
             Attribute a = (Attribute) it.next();
             JSONObject attribute = new JSONObject();
             attribute.put("column", a.getColumn());
-            attribute.put("uri", a.getUri());
+            attribute.put("column_internal", a.getColumn_internal());
 
-            attributes.add(attribute);
+            keys.add(attribute);
         }
 
-        return Response.ok(attributes.toJSONString()).build();
+        JSONArray operators = new JSONArray();
+        for (Operator op: Operator.values()) {
+            operators.add(op.name());
+        }
+
+        response.put("keys", keys);
+        response.put("operators", operators);
+
+        return Response.ok(response.toJSONString()).build();
     }
 
     @GET

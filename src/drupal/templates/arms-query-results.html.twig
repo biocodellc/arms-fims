@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ */
+#}
+<div class="panel panel-default">
+    <table class="table table-condensed">
+        <thead>
+        <th>Deployment Event ID</th>
+        <th>Estimated Deployment Date</th>
+        <th>Estimated Retrieval Date</th>
+        <th>Actual Deployment Date</th>
+        <th>Actual Retrieval Date</th>
+        <th>Lat/Lng</th>
+        <th>Depth</th>
+        <th>Habitat Type:</th>
+        <th>Station ID</th>
+        </thead>
+        <tbody>
+        {% for deployment in deployments %}
+            <tr>
+                <td>{{ deployment.deploymentId }}</td>
+                <td>{{ deployment.intendedDeploymentDate | date("m/d/Y") }}</td>
+                <td>{{ deployment.indentedRecoveryDate | date("m/d/Y") }}</td>
+                <td>{{ deployment.actualDeploymentDate | date("m/d/Y") }}</td>
+                <td>{{ deployment.actualRetrievalDate | date("m/d/Y") }}</td>
+                <td>{{ deployment.decimalLatitude }}/{{ deployment.decimalLongitude }}</td>
+                <td>{{ deployment.depthInMeters }} meters</td>
+                <td>{{ deployment.habitat }}</td>
+                <td>{{ deployment.stationId }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>

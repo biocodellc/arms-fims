@@ -20,5 +20,10 @@ function arms_theme($existing, $type, $theme, $path) {
         'projectId' => NULL,
       ],
     ],
+    'arms_query_results' => [
+      'variables' => [
+        'deployments' => NULL,
+      ],
+    ],
   ];
 }

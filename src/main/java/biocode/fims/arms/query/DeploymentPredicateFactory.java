@@ -12,8 +12,8 @@ import java.lang.reflect.Field;
 /**
  * Class to turn a {@link SearchCriteria} into a {@link com.querydsl.core.types.Predicate}
  */
-class DeploymentPredicate {
-    BooleanExpression getPredicate(SearchCriteria criteria) {
+class DeploymentPredicateFactory {
+    static BooleanExpression getPredicate(SearchCriteria criteria) {
         try {
             Field field = QDeployment.class.getDeclaredField(criteria.getKey());
             StringExpression path = null;
@@ -36,6 +36,8 @@ class DeploymentPredicate {
                     return path.endsWith(criteria.getValue());
                 } else if (criteria.getOperator().equals(Operator.STARTS_WITH)) {
                     return path.startsWith(criteria.getValue());
+                } else if (criteria.getOperator().equals(Operator.IN)) {
+                    return path.in(criteria.getValue().split(","));
                 }
             }
         } catch (IllegalAccessException|NoSuchFieldException ignored) {}

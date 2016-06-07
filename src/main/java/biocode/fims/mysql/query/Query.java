@@ -2,6 +2,7 @@ package biocode.fims.mysql.query;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * object containing mysql query information. Currently only holds list of {@link SearchCriteria} but can be expanded to
  * ORDER_BYs, etc
  */
+@XmlRootElement
 public class Query implements Serializable {
     @JsonProperty private List<SearchCriteria> criterion;
 
