@@ -9,8 +9,11 @@ namespace Drupal\arms\Form;
 
 use Drupal\arms\Controller\ArmsController;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\File\FileSystem;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use GuzzleHttp\Exception\RequestException;
 
 class ArmsSearchForm extends FormBase {
@@ -146,7 +149,6 @@ class ArmsSearchForm extends FormBase {
         '#value' => 'excel',
         '#name' => 'download',
         '#id' => 'download-query',
-        // '#submit' => ['download'],
       ];
 
       $form['toggle']['query_results'] = [
@@ -200,9 +202,78 @@ class ArmsSearchForm extends FormBase {
   }
 
   public function query(array $form, FormStateInterface $form_state) {
-    $response = new AjaxResponse();
-    $filters = [];
+    $arms_config = \Drupal::config('arms.settings');
+    $rest_root = $arms_config->get("arms_rest_uri");
 
+    $client = \Drupal::service('http_client');
+    try {
+      $result = $client->post(
+        $rest_root . 'deployments/query/json',
+        [
+          'accept' => 'application/json',
+          'json' => ['criterion' => $this->getFilterCriteria($form, $form_state)],
+        ]
+      );
+      $deployments = json_decode($result->getBody());
+    }
+    catch (RequestException $e) {
+      watchdog_exception('arms', $e);
+      drupal_set_message('Error fetching query results.', 'error');
+    }
+
+    return [
+      '#theme' => 'arms_query_results',
+      '#deployments' => $deployments,
+    ];
+  }
+
+
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $arms_config = \Drupal::config('arms.settings');
+    $rest_root = $arms_config->get("arms_rest_uri");
+
+    $client = \Drupal::service('http_client');
+
+    try {
+      $data = $client
+        ->post(
+          $rest_root . 'deployments/query/excel',
+          [
+            'accept' => 'application/octet-stream',
+            'json' => ['criterion' => $this->getFilterCriteria($form, $form_state)],
+          ]
+        )
+        ->getBody();
+    }
+    catch (RequestException $e) {
+      watchdog_exception('arms', $e);
+      drupal_set_message('Error fetching query results.', 'error');
+    }
+
+    header("Content-Disposition: attachment; filename=\"" . urlencode('arms-fims-output.xlsx') . "\"");
+    header("Content-length: " . $data->getSize());
+
+    echo $data;
+  }
+
+  private function getFilterColumns() {
+    if ($cache = \Drupal::cache()->get($this::$filter_keys_cache_id)) {
+      $filter_keys = $cache->data;
+    }
+    else {
+      $this->setFilterOptions();
+      return $this->getFilterColumns();
+    }
+    return $filter_keys;
+  }
+
+  /**
+   * create a Query json object from the form filter and deployments fields
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   */
+  private function getFilterCriteria(array &$form, FormStateInterface $form_state) {
+    $filters = [];
     foreach ($form_state->getValue('filters') as $filter) {
       if (!empty($filter['value'])) {
         $criteria = [
@@ -229,51 +300,7 @@ class ArmsSearchForm extends FormBase {
     ];
     array_push($filters, $criteria);
 
-    $arms_config = \Drupal::config('arms.settings');
-    $rest_root = $arms_config->get("arms_rest_uri");
-
-    $client = \Drupal::service('http_client');
-    try {
-      $result = $client->post(
-        $rest_root . 'deployments/query/json',
-        [
-          'accept' => 'application/json',
-          'json' => ['criterion' => $filters],
-        ]
-      );
-      $deployments = json_decode($result->getBody());
-    }
-
-    catch
-    (RequestException $e) {
-      watchdog_exception('arms', $e);
-      drupal_set_message('Error fetching query results.', 'error');
-    }
-
-    return [
-      '#theme' => 'arms_query_results',
-      '#deployments' => $deployments,
-    ];
-
-  }
-
-  public function download(array &$form, FormStateInterface $form_state) {
-    $f = 'test';
-  }
-
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-  }
-
-  private function getFilterColumns() {
-    $filter_keys = [];
-    if ($cache = \Drupal::cache()->get($this::$filter_keys_cache_id)) {
-      $filter_keys = $cache->data;
-    }
-    else {
-      $this->setFilterOptions();
-      return $this->getFilterColumns();
-    }
-    return $filter_keys;
+    return $filters;
   }
 
   private function getFilterOperators() {
