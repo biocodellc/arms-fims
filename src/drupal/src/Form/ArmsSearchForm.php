@@ -8,7 +8,11 @@
 namespace Drupal\arms\Form;
 
 use Drupal\arms\Controller\ArmsController;
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -151,6 +155,16 @@ class ArmsSearchForm extends FormBase {
         '#id' => 'download-query',
       ];
 
+      $form['toggle']['buttons']['map'] = [
+        '#type' => 'button',
+        '#value' => 'map',
+        '#name' => 'map',
+        '#id' => 'query-map',
+        '#ajax' => [
+          'callback' => '::map',
+        ],
+      ];
+
       $form['toggle']['query_results'] = [
         '#type' => 'container',
         '#id' => 'query-results',
@@ -227,6 +241,44 @@ class ArmsSearchForm extends FormBase {
     ];
   }
 
+  public function map(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    $arms_config = \Drupal::config('arms.settings');
+    $rest_root = $arms_config->get("arms_rest_uri");
+
+    $client = \Drupal::service('http_client');
+
+    try {
+      $data = $client
+        ->post(
+          $rest_root . 'deployments/query/tab',
+          [
+            'accept' => 'application/octet-stream',
+            'json' => ['criterion' => $this->getFilterCriteria($form, $form_state)],
+          ]
+        )
+        ->getBody();
+      $file = file_save_data($data);
+      $file->setTemporary();
+
+      $urltemplate = $arms_config->get("berkeley_mapper_template_uri");
+      $formatter = new FormattableMarkup(
+        $urltemplate,
+        [
+          '@configfile' => $arms_config->get('arms_berkeley_mapper_config_uri'),
+          '@tabfile' => file_create_url($file->getFileUri()),
+        ]
+      );
+      $url = (string) $formatter;
+      $response->addCommand(new RedirectCommand($url));
+    }
+    catch (RequestException $e) {
+      watchdog_exception('arms', $e);
+      drupal_set_message('Error fetching query results.', 'error');
+    }
+
+    return $response;
+  }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $arms_config = \Drupal::config('arms.settings');

@@ -5,3 +5,9 @@ arms.settings:
     arms_rest_uri:
       type: string
       label: 'http://biscicol.org/arms/rest/'
+    berkeley_mapper_template_uri:
+      type: string
+      label: 'http://berkeleymapper.berkeley.edu/?ViewResults=tab&maptype=Satellite&tabfile=@tabfile&configfile=@configfile'
+    arms_berekley_mapper_config_uri:
+      type: string
+      label: 'https://raw.githubusercontent.com/biocodellc/arms-fims/master/configuration/berkeleyMapperConfig.xml'

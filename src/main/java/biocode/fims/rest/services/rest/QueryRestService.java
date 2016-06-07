@@ -3,9 +3,7 @@ package biocode.fims.rest.services.rest;
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.services.DeploymentService;
 import biocode.fims.mysql.query.DeploymentsWriter;
-import biocode.fims.mysql.query.Operator;
 import biocode.fims.mysql.query.Query;
-import biocode.fims.mysql.query.SearchCriteria;
 import biocode.fims.rest.FimsService;
 import biocode.fims.service.OAuthProviderService;
 import biocode.fims.settings.SettingsManager;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
