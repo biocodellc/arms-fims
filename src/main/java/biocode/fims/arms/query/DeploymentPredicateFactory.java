@@ -37,7 +37,8 @@ class DeploymentPredicateFactory {
                 } else if (criteria.getOperator().equals(Operator.STARTS_WITH)) {
                     return path.startsWith(criteria.getValue());
                 } else if (criteria.getOperator().equals(Operator.IN)) {
-                    return path.in(criteria.getValue().split(","));
+                    // split string removing any whitespace
+                    return path.in(criteria.getValue().trim().split("\\s,\\s|,\\s|,"));
                 }
             }
         } catch (IllegalAccessException|NoSuchFieldException ignored) {}
