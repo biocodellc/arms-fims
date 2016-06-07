@@ -14,9 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -136,7 +134,7 @@ public class DeploymentsWriter {
      * write the list of {@link Deployment}s to an excel file
      * @return
      */
-    public String writeExcel() {
+    public File writeExcel() {
         String dataOutputPath = queryWriter.writeExcel(PathManager.createUniqueFile("output.xlsx", outputDirectory));
 
         // Here we attach the other components of the excel sheet found with
@@ -148,6 +146,14 @@ public class DeploymentsWriter {
         }
 
         TemplateProcessor t = new TemplateProcessor(projectId, outputDirectory, false, justData);
-        return t.createExcelFileFromExistingSources("Samples", outputDirectory).getAbsolutePath();
+        return new File(t.createExcelFileFromExistingSources("Samples", outputDirectory).getAbsolutePath());
+    }
+
+    /**
+     * write the list of {@link Deployment}s to a tab delimited text file.
+     * @return
+     */
+    public File writeTabDelimitedText() {
+        return new File(queryWriter.writeTAB(PathManager.createUniqueFile("output.txt", outputDirectory)));
     }
 }
