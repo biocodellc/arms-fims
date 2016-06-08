@@ -115,6 +115,8 @@
                        defined_by='http://purl.org/dc/terms/Location'>
             </attribute>
             <attribute column='locality' column_internal="locality" uri='urn:locality' group='location' defined_by='http://rs.tdwg.org/dwc/terms/locality'>
+            <attribute column='siteDetails' column_internal="siteDetails" uri='urn:siteDetails' group='location' defined_by='http://rs.tdwg.org/dwc/terms/locationRemarks'>
+            <attribute column='replicateLabel' column_internal="replicateLabel" uri='urn:replicateLabel' group='location' defined_by='urn:replicateLabel'>
             </attribute>
             <attribute column='depthOfBottomMeters' column_internal="depthOfBottomMeters" uri='urn:depthOfBottomMeters'
                        group='location' defined_by='urn:depthOfBottomMeters'>
