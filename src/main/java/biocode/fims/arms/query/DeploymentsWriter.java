@@ -1,4 +1,4 @@
-package biocode.fims.mysql.query;
+package biocode.fims.arms.query;
 
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.config.ConfigurationFileFetcher;
@@ -23,13 +23,11 @@ import java.util.List;
 public class DeploymentsWriter {
     private static final Logger logger = LoggerFactory.getLogger(DeploymentsWriter.class);
 
-    private final List<Deployment> deployments;
     private final String outputDirectory;
     private final int projectId;
     private final QueryWriter queryWriter;
 
     public DeploymentsWriter(List<Deployment> deployments, String outputDirectory, int projectId) {
-        this.deployments = deployments;
         this.outputDirectory = outputDirectory;
         this.projectId = projectId;
 
@@ -119,6 +117,8 @@ public class DeploymentsWriter {
         queryWriter.createCell(row, getColumn("stateProvince", attributes), deployment.getStateProvince());
         queryWriter.createCell(row, getColumn("stationId", attributes), deployment.getStationId());
         queryWriter.createCell(row, getColumn("substrateType", attributes), deployment.getSubstrateType());
+        queryWriter.createCell(row, getColumn("siteDetails", attributes), deployment.getSiteDetails());
+        queryWriter.createCell(row, getColumn("replicateLabel", attributes), deployment.getReplicateLabel());
     }
 
     private String getColumn(String columnInternal, List<Attribute> attributes) {

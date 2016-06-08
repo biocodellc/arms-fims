@@ -2,7 +2,7 @@ package biocode.fims.rest.services.rest;
 
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.services.DeploymentService;
-import biocode.fims.mysql.query.DeploymentsWriter;
+import biocode.fims.arms.query.DeploymentsWriter;
 import biocode.fims.mysql.query.Query;
 import biocode.fims.rest.FimsService;
 import biocode.fims.service.OAuthProviderService;

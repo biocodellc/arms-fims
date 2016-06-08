@@ -70,6 +70,8 @@ public class Deployment {
     private String stateProvince;
     private String stationId;
     private String substrateType;
+    private String replicateLabel;
+    private String siteDetails;
 
     private ArmsExpedition armsExpedition;
 
@@ -475,6 +477,22 @@ public class Deployment {
 
     public void setSubstrateType(String substrateType) {
         this.substrateType = substrateType;
+    }
+
+    public String getSiteDetails() {
+        return siteDetails;
+    }
+
+    public void setSiteDetails(String siteDetails) {
+        this.siteDetails = siteDetails;
+    }
+
+    public String getReplicateLabel() {
+        return replicateLabel;
+    }
+
+    public void setReplicateLabel(String replicateLabel) {
+        this.replicateLabel = replicateLabel;
     }
 
     @ManyToOne(optional = false)

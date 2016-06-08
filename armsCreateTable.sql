@@ -62,8 +62,11 @@ CREATE TABLE `deployments` (
 	  `intentToMetabarcode` varchar(9) NOT NULL DEFAULT '',
 	  `intentToPhotographPlates` varchar(9) NOT NULL DEFAULT '',
 	  `intentToPhotographSpecimens` varchar(9) NOT NULL DEFAULT '',
+	  `siteDetail` text,
+    `replicateLabel` varchar(10) DEFAULT NULL,
 	  PRIMARY KEY (`id`),
 	  KEY `FKk94yxos6l5qr88ur2eqxq1e2m` (`expeditionId`),
+    KEY `deployments_deploymentId_inx` (`deploymentId`),
 	  CONSTRAINT `FKk94yxos6l5qr88ur2eqxq1e2m` FOREIGN KEY (`expeditionId`) REFERENCES `armsExpeditions` (`expeditionId`),
 	  CONSTRAINT `deployments_ibfk_1` FOREIGN KEY (`expeditionId`) REFERENCES `armsExpeditions` (`expeditionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
