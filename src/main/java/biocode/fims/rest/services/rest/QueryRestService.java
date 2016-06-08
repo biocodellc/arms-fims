@@ -3,15 +3,21 @@ package biocode.fims.rest.services.rest;
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.services.DeploymentService;
 import biocode.fims.arms.query.DeploymentsWriter;
+import biocode.fims.arms.utils.BerkeleyMapperHelper;
+import biocode.fims.config.ConfigurationFileFetcher;
+import biocode.fims.digester.Mapping;
+import biocode.fims.digester.Validation;
 import biocode.fims.mysql.query.Query;
 import biocode.fims.rest.FimsService;
 import biocode.fims.service.OAuthProviderService;
 import biocode.fims.settings.SettingsManager;
+import org.apache.commons.digester3.Digester;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -44,9 +50,24 @@ public class QueryRestService extends FimsService {
         int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
         List<Deployment> deployments = (List<Deployment>) deploymentService.query(query);
 
-        DeploymentsWriter deploymentsWriter = new DeploymentsWriter(deployments, uploadPath(), projectId);
+        File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
+        Mapping mapping = new Mapping();
+        mapping.addMappingRules(new Digester(), configFile);
+
+        Validation validation = new Validation();
+        validation.addValidationRules(new Digester(), configFile, mapping);
+
+        String defaultSheetName = mapping.getDefaultSheetName();
+
+        DeploymentsWriter deploymentsWriter = new DeploymentsWriter(
+                deployments,
+                uploadPath(),
+                validation,
+                mapping.getAllAttributes(defaultSheetName),
+                defaultSheetName);
+
         return Response
-                .ok(deploymentsWriter.writeExcel())
+                .ok(deploymentsWriter.writeExcel(projectId))
                 .header("Content-Disposition", "attachment; filename=arms-fims-output.xlsx")
                 .build();
     }
@@ -55,11 +76,26 @@ public class QueryRestService extends FimsService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response queryTab(Query query) {
+    public Response queryTabForBerkeleyMapper(Query query) {
         int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
         List<Deployment> deployments = (List<Deployment>) deploymentService.query(query);
 
-        DeploymentsWriter deploymentsWriter = new DeploymentsWriter(deployments, uploadPath(), projectId);
+        File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
+        Mapping mapping = new Mapping();
+        mapping.addMappingRules(new Digester(), configFile);
+
+        Validation validation = new Validation();
+        validation.addValidationRules(new Digester(), configFile, mapping);
+
+        String defaultSheetName = mapping.getDefaultSheetName();
+
+        DeploymentsWriter deploymentsWriter = new DeploymentsWriter(
+                deployments,
+                uploadPath(),
+                validation,
+                BerkeleyMapperHelper.getAttributes(mapping.getAllAttributes(defaultSheetName)),
+                defaultSheetName);
+
         return Response
                 .ok(deploymentsWriter.writeTabDelimitedText())
                 .header("Content-Disposition", "attachment; filename=arms-fims-output.txt")

@@ -113,7 +113,7 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public String hasScrubbieLayer() {
+    public String getHasScrubbieLayer() {
         return hasScrubbieLayer;
     }
 
@@ -122,7 +122,7 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public String hasLaminates() {
+    public String getLaminates() {
         return laminates;
     }
 
@@ -149,7 +149,7 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public String hasWeightsAttached() {
+    public String getWeightsAttached() {
         return weightsAttached;
     }
 
@@ -215,7 +215,7 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public String hasIntentToBarcode() {
+    public String getIntentToBarcode() {
         return intentToBarcode;
     }
 
@@ -224,7 +224,7 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public String hasIntentToCollectOtherDatatypes() {
+    public String getIntentToCollectOtherDatatypes() {
         return intentToCollectOtherDatatypes;
     }
 
@@ -233,7 +233,7 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public String hasIntentToMetabarcode() {
+    public String getIntentToMetabarcode() {
         return intentToMetabarcode;
     }
 
@@ -242,7 +242,7 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public String hasIntentToPhotographPlates() {
+    public String getIntentToPhotographPlates() {
         return intentToPhotographPlates;
     }
 
@@ -251,7 +251,7 @@ public class Deployment {
     }
 
     @Column(nullable = false)
-    public String hasIntentToPhotographSpecimens() {
+    public String getIntentToPhotographSpecimens() {
         return intentToPhotographSpecimens;
     }
 

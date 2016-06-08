@@ -12,6 +12,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\Form\FormBase;
@@ -274,7 +275,10 @@ class ArmsSearchForm extends FormBase {
     }
     catch (RequestException $e) {
       watchdog_exception('arms', $e);
-      drupal_set_message('Error fetching query results.', 'error');
+      $response->addCommand(new PrependCommand(
+        '#query-results',
+        'Error fetching query results.'
+      ));
     }
 
     return $response;
@@ -296,16 +300,16 @@ class ArmsSearchForm extends FormBase {
           ]
         )
         ->getBody();
+
+      header("Content-Disposition: attachment; filename=\"" . urlencode('arms-fims-output.xlsx') . "\"");
+      header("Content-length: " . $data->getSize());
+
+      echo $data;
     }
     catch (RequestException $e) {
       watchdog_exception('arms', $e);
       drupal_set_message('Error fetching query results.', 'error');
     }
-
-    header("Content-Disposition: attachment; filename=\"" . urlencode('arms-fims-output.xlsx') . "\"");
-    header("Content-length: " . $data->getSize());
-
-    echo $data;
   }
 
   private function getFilterColumns() {
