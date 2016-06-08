@@ -479,6 +479,7 @@ public class Deployment {
         this.substrateType = substrateType;
     }
 
+    @Column(columnDefinition = "text null")
     public String getSiteDetails() {
         return siteDetails;
     }
