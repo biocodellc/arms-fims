@@ -168,29 +168,11 @@
         <worksheet sheetname='Samples'>
             <rule type='duplicateColumnNames' level='error'/>
             <rule type='RequiredColumns' column='RequiredColumns' level='error'>
-                <field>numLayers</field>
-                <field>armsModel</field>
                 <field>deploymentID</field>
-                <field>laminates</field>
-                <field>new/reused</field>
-                <field>hasScrubbieLayer</field>
-                <field>intentToBarcode</field>
-                <field>intentToMetabarcode</field>
-                <field>intentToCollectOtherDatatypes</field>
-                <field>intentToPhotographPlates</field>
-                <field>intentToPhotographSpecimens</field>
-                <field>intendedRecoveryDate</field>
-                <field>intendedDeploymentDate</field>
-                <field>intendedSoakTimeInYears</field>
-                <field>continentOcean</field>
-                <field>country</field>
-                <field>weightsAttached</field>
-                <field>actualDeploymentDate</field>
+                <field>stationID</field>
                 <field>decimalLatitude</field>
                 <field>decimalLongitude</field>
                 <field>depthInMeters</field>
-                <field>stationID</field>
-                <field>actualRecoveryDate</field>
             </rule>
             <rule type='RequiredColumns' column='RequiredColumns' level='warning'>
                 <field>attachmentMethod</field>
@@ -216,6 +198,24 @@
                 <field>depthOfBottomMeters</field>
                 <field>stateProvince</field>
                 <field>actualDeploymentTimeOfDay</field>
+                <field>numLayers</field>
+                <field>armsModel</field>
+                <field>laminates</field>
+                <field>new/reused</field>
+                <field>hasScrubbieLayer</field>
+                <field>intentToBarcode</field>
+                <field>intentToMetabarcode</field>
+                <field>intentToCollectOtherDatatypes</field>
+                <field>intentToPhotographPlates</field>
+                <field>intentToPhotographSpecimens</field>
+                <field>intendedRecoveryDate</field>
+                <field>intendedDeploymentDate</field>
+                <field>intendedSoakTimeInYears</field>
+                <field>continentOcean</field>
+                <field>country</field>
+                <field>weightsAttached</field>
+                <field>actualDeploymentDate</field>
+                <field>actualRecoveryDate</field>
             </rule>
             <rule type="datasetContainsExtraColumns" level="warning"/>
             <rule type='uniqueValue' column='deploymentID' level='error'/>
