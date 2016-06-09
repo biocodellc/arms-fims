@@ -990,10 +990,10 @@ function populateConfigs() {
 
             // if there are more then the default config, show the remove link
             if (data.length > 1) {
-                $("#removeConfig").replaceWith('<button class="btn btn-primary" id="removeConfig">Remove</button>');
+                $("#removeConfig").removeClass("hidden");
                 $("#removeConfig").click(removeConfig);
             } else {
-                $("#removeConfig").replaceWith('<button class="btn btn-default" id="removeConfig" style="border-color:#fff"></button>');
+                $("#removeConfig").addClass("hidden");
             }
 
         }).fail(function(jqXHR,textStatus) {

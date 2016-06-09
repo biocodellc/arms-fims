@@ -5,7 +5,6 @@ var app = angular.module('armsApp', [
     'fims.validation',
     'fims.projects',
     'fims.users',
-    'fims.lookup',
     'utils.autofocus',
     'ui.bootstrap.showErrors'
 ]);

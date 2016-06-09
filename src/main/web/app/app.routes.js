@@ -21,16 +21,6 @@ angular.module('armsApp')
                 templateUrl: "app/components/validation/validation.html",
                 controller: "ValidationCtrl as vm"
             })
-            .state('lookup', {
-                url: "/lookup?id",
-                templateUrl: "app/components/lookup/lookup.html",
-                controller: "LookupCtrl as vm"
-            })
-            .state('lookup.metadata', {
-                url: "/metadata/*ark",
-                templateUrl: "app/components/lookup/lookup.metadata.html",
-                controller: "LookupMetadataCtrl as vm"
-            })
             .state('resetPass', {
                 url: "/resetPass",
                 templateUrl: "app/components/users/resetPass.jsp",
