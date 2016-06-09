@@ -210,6 +210,7 @@ function populateDivFromService(url,elementID,failMessage)  {
             $(elementID).html(failMessage);
         });
 }
+
 function failError(jqxhr) {
     var buttons = {
         "OK": function(){
@@ -614,12 +615,8 @@ function confirmRemoveUserDialog(element) {
         "Yes": function() {
             projectRemoveUser(element);
             $(this).dialog("close");
-            $(this).dialog("destroy");
-            $('#confirm').html("Are you sure you wish to remove {user}?");
         }, "Cancel": function() {
             $(this).dialog("close");
-            $('#confirm').html("Are you sure you wish to remove {user}?");
-            $(this).dialog("destroy");
         }
     };
     dialog(msg, title, buttons);
