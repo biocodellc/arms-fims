@@ -69,6 +69,7 @@ dependencies {
     server 'org.springframework.data:spring-data-jpa:1.10.1.RELEASE'
     server group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.0.Final'
     server 'org.slf4j:slf4j-log4j12:1.7.19'
+    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
     server 'org.apache.commons:commons-digester3:3.2'
     server 'org.apache.poi:poi:3.10.1'
     server 'org.apache.poi:poi-ooxml:3.10.1'
@@ -277,7 +278,8 @@ ext.remoteDeploy = { workingDir, remoteLibsDir, remoteWarDir ->
             // Copy war file to server
             put from: war.archivePath.path, into: workingDir
             // Extract libs and copy from server
-            execute "/usr/bin/unzip -d " + workingDir + " " + workingDir + war.archiveName
+            //execute "cd " + workingDir + "; /usr/bin/jar -xvf " + workingDir + war.archiveName
+            execute "cd " + workingDir + ";/usr/bin/jar -xvf " + war.archiveName
             execute "/bin/cp " + remoteLibsDir + "* " + workingDir + "WEB-INF/lib/"
             // Remove the old war file
             execute "/bin/rm " + workingDir + war.archiveName
