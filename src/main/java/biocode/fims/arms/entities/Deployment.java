@@ -86,7 +86,6 @@ public class Deployment {
         this.id = id;
     }
 
-    @Column(nullable = false)
     public String getArmsModel() {
         return armsModel;
     }
@@ -103,7 +102,6 @@ public class Deployment {
         this.attachmentMethod = attachmentMethod;
     }
 
-    @Column(nullable = false)
     public String getDeploymentId() {
         return deploymentId;
     }
@@ -112,7 +110,6 @@ public class Deployment {
         this.deploymentId = deploymentId;
     }
 
-    @Column(nullable = false)
     public String getHasScrubbieLayer() {
         return hasScrubbieLayer;
     }
@@ -121,7 +118,6 @@ public class Deployment {
         this.hasScrubbieLayer = hasScrubbieLayer;
     }
 
-    @Column(nullable = false)
     public String getLaminates() {
         return laminates;
     }
@@ -130,7 +126,6 @@ public class Deployment {
         this.laminates = laminates;
     }
 
-    @Column(nullable = false)
     public String getNewOrReused() {
         return newOrReused;
     }
@@ -139,7 +134,6 @@ public class Deployment {
         this.newOrReused = newOrReused;
     }
 
-    @Column(nullable = false)
     public int getNumLayers() {
         return numLayers;
     }
@@ -148,7 +142,6 @@ public class Deployment {
         this.numLayers = numLayers;
     }
 
-    @Column(nullable = false)
     public String getWeightsAttached() {
         return weightsAttached;
     }
@@ -214,7 +207,6 @@ public class Deployment {
         this.removalProtocol = removalProtocol;
     }
 
-    @Column(nullable = false)
     public String getIntentToBarcode() {
         return intentToBarcode;
     }
@@ -223,7 +215,6 @@ public class Deployment {
         this.intentToBarcode = intentToBarcode;
     }
 
-    @Column(nullable = false)
     public String getIntentToCollectOtherDatatypes() {
         return intentToCollectOtherDatatypes;
     }
@@ -232,7 +223,6 @@ public class Deployment {
         this.intentToCollectOtherDatatypes = intentToCollectOtherDatatypes;
     }
 
-    @Column(nullable = false)
     public String getIntentToMetabarcode() {
         return intentToMetabarcode;
     }
@@ -241,7 +231,6 @@ public class Deployment {
         this.intentToMetabarcode = intentToMetabarcode;
     }
 
-    @Column(nullable = false)
     public String getIntentToPhotographPlates() {
         return intentToPhotographPlates;
     }
@@ -250,7 +239,6 @@ public class Deployment {
         this.intentToPhotographPlates = intentToPhotographPlates;
     }
 
-    @Column(nullable = false)
     public String getIntentToPhotographSpecimens() {
         return intentToPhotographSpecimens;
     }
@@ -276,7 +264,6 @@ public class Deployment {
         this.photoUrl = photoUrl;
     }
 
-    @Column(nullable = false)
     public Date getActualDeploymentDate() {
         return actualDeploymentDate;
     }
@@ -293,7 +280,6 @@ public class Deployment {
         this.actualDeploymentTimeOfDay = actualDeploymentTimeOfDay;
     }
 
-    @Column(nullable = false)
     public Date getActualRecoveryDate() {
         return actualRecoveryDate;
     }
@@ -310,7 +296,6 @@ public class Deployment {
         this.actualRecoveryTimeOfDay = actualRecoveryTimeOfDay;
     }
 
-    @Column(nullable = false)
     public Date getIntendedDeploymentDate() {
         return intendedDeploymentDate;
     }
@@ -319,7 +304,6 @@ public class Deployment {
         this.intendedDeploymentDate = intendedDeploymentDate;
     }
 
-    @Column(nullable = false)
     public Date getIntendedRecoveryDate() {
         return intendedRecoveryDate;
     }
@@ -328,7 +312,6 @@ public class Deployment {
         this.intendedRecoveryDate = intendedRecoveryDate;
     }
 
-    @Column(nullable = false)
     public int getIntendedSoakTimeInYears() {
         return intendedSoakTimeInYears;
     }
@@ -337,7 +320,6 @@ public class Deployment {
         this.intendedSoakTimeInYears = intendedSoakTime;
     }
 
-    @Column(nullable = false)
     public String getContinentOcean() {
         return continentOcean;
     }
@@ -346,7 +328,6 @@ public class Deployment {
         this.continentOcean = continentOcean;
     }
 
-    @Column(nullable = false)
     public String getCountry() {
         return country;
     }
@@ -363,12 +344,10 @@ public class Deployment {
         this.county = county;
     }
 
-    @Column(nullable = false)
     public float getDecimalLatitude() {
         return decimalLatitude;
     }
 
-    @Column(nullable = false)
     public void setDecimalLatitude(float latitude) {
         this.decimalLatitude = latitude;
     }
@@ -381,7 +360,6 @@ public class Deployment {
         this.decimalLongitude = longitude;
     }
 
-    @Column(nullable = false)
     public int getDepthInMeters() {
         return depthInMeters;
     }
@@ -462,7 +440,6 @@ public class Deployment {
         this.stateProvince = stateProvince;
     }
 
-    @Column(nullable = false)
     public String getStationId() {
         return stationId;
     }
@@ -479,7 +456,7 @@ public class Deployment {
         this.substrateType = substrateType;
     }
 
-    @Column(columnDefinition = "text null")
+    @Column(columnDefinition = "text")
     public String getSiteDetails() {
         return siteDetails;
     }
