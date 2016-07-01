@@ -538,6 +538,7 @@
             <list alias="substrateType" caseInsensitive="true">
                 <field>hard</field>
                 <field>soft</field>
+                <field>mixed</field>
             </list>
         </lists>
     </validation>
