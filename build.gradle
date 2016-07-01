@@ -124,9 +124,9 @@ remotes {
 
 allprojects {
     task verifyMasterBranch << {
-        ext.repo = Grgit.open(project.file('.'))
-        if (ext.repo.branch.current.name != "master")
-            throw new GradleScriptException(project.name + ' is not on the master branch', null)
+    //    ext.repo = Grgit.open(project.file('.'))
+    //    if (ext.repo.branch.current.name != "master")
+    //        throw new GradleScriptException(project.name + ' is not on the master branch', null)
     }
 }
 
