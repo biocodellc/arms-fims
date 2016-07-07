@@ -44,12 +44,12 @@ public class Deployment {
     private URI photoUrl;
 
     // Deployment Time
-    private Date actualDeploymentDate;
-    private Date actualDeploymentTimeOfDay;
-    private Date actualRecoveryDate;
-    private Date actualRecoveryTimeOfDay;
-    private Date intendedDeploymentDate;
-    private Date intendedRecoveryDate;
+    private String actualDeploymentDate;
+    private String actualDeploymentTimeOfDay;
+    private String actualRecoveryDate;
+    private String actualRecoveryTimeOfDay;
+    private String intendedDeploymentDate;
+    private String intendedRecoveryDate;
     private int intendedSoakTimeInYears;
 
     // Location
@@ -264,51 +264,51 @@ public class Deployment {
         this.photoUrl = photoUrl;
     }
 
-    public Date getActualDeploymentDate() {
+    public String getActualDeploymentDate() {
         return actualDeploymentDate;
     }
 
-    public void setActualDeploymentDate(Date actualDeploymentDate) {
+    public void setActualDeploymentDate(String actualDeploymentDate) {
         this.actualDeploymentDate = actualDeploymentDate;
     }
 
-    public Date getActualDeploymentTimeOfDay() {
+    public String getActualDeploymentTimeOfDay() {
         return actualDeploymentTimeOfDay;
     }
 
-    public void setActualDeploymentTimeOfDay(Date actualDeploymentTimeOfDay) {
+    public void setActualDeploymentTimeOfDay(String actualDeploymentTimeOfDay) {
         this.actualDeploymentTimeOfDay = actualDeploymentTimeOfDay;
     }
 
-    public Date getActualRecoveryDate() {
+    public String getActualRecoveryDate() {
         return actualRecoveryDate;
     }
 
-    public void setActualRecoveryDate(Date actualRecoveryDate) {
+    public void setActualRecoveryDate(String actualRecoveryDate) {
         this.actualRecoveryDate = actualRecoveryDate;
     }
 
-    public Date getActualRecoveryTimeOfDay() {
+    public String getActualRecoveryTimeOfDay() {
         return actualRecoveryTimeOfDay;
     }
 
-    public void setActualRecoveryTimeOfDay(Date actualRecoveryTimeOfDay) {
+    public void setActualRecoveryTimeOfDay(String actualRecoveryTimeOfDay) {
         this.actualRecoveryTimeOfDay = actualRecoveryTimeOfDay;
     }
 
-    public Date getIntendedDeploymentDate() {
+    public String getIntendedDeploymentDate() {
         return intendedDeploymentDate;
     }
 
-    public void setIntendedDeploymentDate(Date intendedDeploymentDate) {
+    public void setIntendedDeploymentDate(String intendedDeploymentDate) {
         this.intendedDeploymentDate = intendedDeploymentDate;
     }
 
-    public Date getIntendedRecoveryDate() {
+    public String getIntendedRecoveryDate() {
         return intendedRecoveryDate;
     }
 
-    public void setIntendedRecoveryDate(Date intendedRecoveryDate) {
+    public void setIntendedRecoveryDate(String intendedRecoveryDate) {
         this.intendedRecoveryDate = intendedRecoveryDate;
     }
 
