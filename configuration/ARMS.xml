@@ -240,6 +240,7 @@
             <rule type="isInteger" column="numLayers" level="error"/>
             <rule type="isInteger" column="numReplicatesInSet" level="error"/>
             <rule type="isInteger" column="intendedSoakTimeInYears" level="error"/>
+            <rule type="isInteger" column="depthInMeters" level="error"/>
             <rule type="isValidUrl" column="photoURL" level="warning"/>
         </worksheet>
         <lists>
