@@ -22,7 +22,7 @@ public class Deployment {
     private String hasScrubbieLayer;
     private String laminates;
     private String newOrReused;
-    private int numLayers;
+    private Integer numLayers;
     private String weightsAttached;
 
     // ARMS Process
@@ -50,7 +50,7 @@ public class Deployment {
     private String actualRecoveryTimeOfDay;
     private String intendedDeploymentDate;
     private String intendedRecoveryDate;
-    private int intendedSoakTimeInYears;
+    private Integer intendedSoakTimeInYears;
 
     // Location
     private String continentOcean;
@@ -58,7 +58,7 @@ public class Deployment {
     private String county;
     private float decimalLatitude;
     private float decimalLongitude;
-    private int depthInMeters;
+    private Integer depthInMeters;
     private Integer depthOfBottomMeters;
     private Integer errorRadius;
     private String habitat;
@@ -134,11 +134,11 @@ public class Deployment {
         this.newOrReused = newOrReused;
     }
 
-    public int getNumLayers() {
+    public Integer getNumLayers() {
         return numLayers;
     }
 
-    public void setNumLayers(int numLayers) {
+    public void setNumLayers(Integer numLayers) {
         this.numLayers = numLayers;
     }
 
@@ -312,11 +312,11 @@ public class Deployment {
         this.intendedRecoveryDate = intendedRecoveryDate;
     }
 
-    public int getIntendedSoakTimeInYears() {
+    public Integer getIntendedSoakTimeInYears() {
         return intendedSoakTimeInYears;
     }
 
-    public void setIntendedSoakTimeInYears(int intendedSoakTime) {
+    public void setIntendedSoakTimeInYears(Integer intendedSoakTime) {
         this.intendedSoakTimeInYears = intendedSoakTime;
     }
 
@@ -360,11 +360,11 @@ public class Deployment {
         this.decimalLongitude = longitude;
     }
 
-    public int getDepthInMeters() {
+    public Integer getDepthInMeters() {
         return depthInMeters;
     }
 
-    public void setDepthInMeters(int depth) {
+    public void setDepthInMeters(Integer depth) {
         this.depthInMeters = depth;
     }
 
