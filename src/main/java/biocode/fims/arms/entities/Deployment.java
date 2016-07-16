@@ -494,11 +494,11 @@ public class Deployment {
         if (this.getId() != 0 && that.getId() != 0)
             return this.getId() == that.getId();
 
-        if (getNumLayers() != that.getNumLayers()) return false;
-        if (getIntendedSoakTimeInYears() != that.getIntendedSoakTimeInYears()) return false;
+        if (getNumLayers() != null ? !getNumLayers().equals(that.getNumLayers()) : that.getNumLayers() != null) return false;
+        if (getIntendedSoakTimeInYears() != null ? !getIntendedSoakTimeInYears().equals(that.getIntendedSoakTimeInYears()) : that.getIntendedSoakTimeInYears() != null) return false;
         if (Float.compare(that.getDecimalLatitude(), getDecimalLatitude()) != 0) return false;
         if (Float.compare(that.getDecimalLongitude(), getDecimalLongitude()) != 0) return false;
-        if (getDepthInMeters() != that.getDepthInMeters()) return false;
+        if (getDepthInMeters() != null ? !getDepthInMeters().equals(that.getDepthInMeters()) : that.getDepthInMeters() != null) return false;
         if (getArmsModel() != null ? !getArmsModel().equals(that.getArmsModel()) : that.getArmsModel() != null)
             return false;
         if (getAttachmentMethod() != null ? !getAttachmentMethod().equals(that.getAttachmentMethod()) : that.getAttachmentMethod() != null)
@@ -586,7 +586,7 @@ public class Deployment {
         result = 31 * result + (hasScrubbieLayer != null ? hasScrubbieLayer.hashCode() : 0);
         result = 31 * result + (laminates != null ? laminates.hashCode() : 0);
         result = 31 * result + (getNewOrReused() != null ? getNewOrReused().hashCode() : 0);
-        result = 31 * result + getNumLayers();
+        result = 31 * result + (numLayers != null ? numLayers.hashCode() : 0);
         result = 31 * result + (weightsAttached != null ? weightsAttached.hashCode() : 0);
         result = 31 * result + (getDataEntryPersonInCharge() != null ? getDataEntryPersonInCharge().hashCode() : 0);
         result = 31 * result + (getDeploymentPersonInCharge() != null ? getDeploymentPersonInCharge().hashCode() : 0);
@@ -608,13 +608,13 @@ public class Deployment {
         result = 31 * result + (getActualRecoveryTimeOfDay() != null ? getActualRecoveryTimeOfDay().hashCode() : 0);
         result = 31 * result + (getIntendedDeploymentDate() != null ? getIntendedDeploymentDate().hashCode() : 0);
         result = 31 * result + (getIntendedRecoveryDate() != null ? getIntendedRecoveryDate().hashCode() : 0);
-        result = 31 * result + getIntendedSoakTimeInYears();
+        result = 31 * result + (intendedSoakTimeInYears != null ? intendedSoakTimeInYears.hashCode() : 0);
         result = 31 * result + (getContinentOcean() != null ? getContinentOcean().hashCode() : 0);
         result = 31 * result + (getCountry() != null ? getCountry().hashCode() : 0);
         result = 31 * result + (getCounty() != null ? getCounty().hashCode() : 0);
         result = 31 * result + (getDecimalLatitude() != +0.0f ? Float.floatToIntBits(getDecimalLatitude()) : 0);
         result = 31 * result + (getDecimalLongitude() != +0.0f ? Float.floatToIntBits(getDecimalLongitude()) : 0);
-        result = 31 * result + getDepthInMeters();
+        result = 31 * result + (depthInMeters != null ? depthInMeters.hashCode() : 0);
         result = 31 * result + (getDepthOfBottomMeters() != null ? getDepthOfBottomMeters().hashCode() : 0);
         result = 31 * result + (getErrorRadius() != null ? getErrorRadius().hashCode() : 0);
         result = 31 * result + (getHabitat() != null ? getHabitat().hashCode() : 0);
