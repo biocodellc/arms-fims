@@ -345,16 +345,21 @@ class ArmsSearchForm extends FormBase {
     }
 
     $deployment_id_list = [];
-    // 0 is all deployments
-    if ($form_state->getValue("deployments") == "0") {
-      foreach ($form["toggle"]["deployments"]["#options"] as $deployment_id) {
-        if ($deployment_id != "0") {
-          array_push($deployment_id_list, $deployment_id);
+    // 0 is all expeditions. only filter by deployments if searching a specific expedition
+    if ($form_state->getValue("expeditions") != "0") {
+      // 0 is all deployments
+      if ($form_state->getValue("deployments")[0] == "0") {
+        foreach ($form["toggle"]["deployments"]["#options"] as $deployment_id => $v) {
+          if ($deployment_id != "0") {
+            array_push($deployment_id_list, $deployment_id);
+          }
         }
-      }
-    } else {
-      foreach ($form_state->getValue('deployments') as $deployment_id) {
-        array_push($deployment_id_list, $deployment_id);
+      } else {
+        foreach ($form_state->getValue('deployments') as $deployment_id) {
+          if ($deployment_id != "0") {
+            array_push($deployment_id_list, $deployment_id);
+          }
+        }
       }
     }
 
