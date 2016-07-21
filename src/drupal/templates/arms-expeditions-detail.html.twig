@@ -53,10 +53,31 @@
             <tbody>
             {%  for deploymentId in expedition.deployments %}
                 <tr>
-                    <td><a href="{{ path('arms.deployment', {'project_id': expedition.expedition.expeditionId, 'deployment_id': deploymentId}) }}">{{ deploymentId }}</a></td>
+                    <td><a data-toggle="modal" data-target="#deploymentModal" href="#" data-deployment-id="{{ deploymentId }}"
+                        data-load-url="{{ path('arms.deployment', {'project_id': expedition.expedition.expeditionId, 'deployment_id': deploymentId}) }}">{{ deploymentId }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+    <div class="modal fade" id="deploymentModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" style="text-align: center;"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        jQuery('#deploymentModal').on('show.bs.modal', function(e) {
+            var loadurl = jQuery(e.relatedTarget).data("load-url") + " #deploymentMetadata";
+            var deployment = jQuery(e.relatedTarget).data("deployment-id");
+            jQuery(this).find('.modal-title').html(deployment);
+            jQuery(this).find('.modal-body').load(loadurl);
+        });
+    </script>
 {% endif %}
