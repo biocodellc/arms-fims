@@ -44,9 +44,8 @@ class ArmsSearchForm extends FormBase {
     $form['expeditions'] = [
       '#type' => 'select',
       '#title' => $this->t('Choose Project'),
-      '#empty_option' => $this->t('Select a project'),
-      '#default_value' => '',
-      '#options' => $expeditions,
+      '#default_value' => '0',
+      '#options' => ['0' => $this->t('All Projects')] + $expeditions,
       '#ajax' => [
         'callback' => '::showDeploymentsCallback',
         'wrapper' => 'toggle',
@@ -58,119 +57,121 @@ class ArmsSearchForm extends FormBase {
       '#attributes' => ['id' => 'toggle'],
     ];
 
-    if ($form_state->getValue("expeditions") != $form['expeditions']['#default_value']) {
+    if ($form_state->getValue("expeditions") != $form['expeditions']['#default_value'] &&
+        $form_state->getValue("expeditions") != NULL) {
       $form['toggle']['deployments'] = [
         '#type' => 'select',
         '#title' => $this->t('Choose Deployment(s)'),
+        '#default_value' => '0',
         '#options' => $this->getDeployments($form_state->getValue("expeditions")),
         '#multiple' => TRUE,
       ];
+    }
 
-      $form['toggle']['filters'] = [
-        '#tree' => TRUE,
-        '#type' => 'container',
-        '#id' => 'filters',
-        '#attributes' => [
-          'class' => ['form-group-sm'],
-        ],
-      ];
+    $form['filters'] = [
+      '#tree' => TRUE,
+      '#type' => 'container',
+      '#id' => 'filters',
+      '#attributes' => [
+        'class' => ['form-group-sm'],
+      ],
+    ];
 
-      $filter_count = $form_state->get('filter_count');
-      if (is_null($filter_count)) {
-        $filter_count = 1;
-        $form_state->set('filter_count', $filter_count);
-      }
+    $filter_count = $form_state->get('filter_count');
+    if (is_null($filter_count)) {
+      $filter_count = 1;
+      $form_state->set('filter_count', $filter_count);
+    }
 
-      // Add elements that don't already exist
-      $filter_columns = $this->getFilterColumns();
-      $filter_operators = $this->getFilterOperators();
-      for ($delta = 0; $delta < $filter_count; $delta++) {
-        if (!isset($form['filters'][$delta])) {
-          if ($delta == 0) {
-            $label = "Filter";
-          }
-          else {
-            $label = "And";
-          }
-          $element = [
-            '#type' => 'container',
-            '#prefix' => "<span class=\"span-label\">" . $label . "</span>",
-            '#attributes' => [
-              'class' => ['form-inline'],
-            ],
-          ];
-
-          $element_column = [
-            '#type' => 'select',
-            '#options' => $filter_columns,
-          ];
-
-          $element_operator = [
-            '#type' => 'select',
-            '#options' => $filter_operators,
-          ];
-
-          $element_value = [
-            '#type' => 'textfield',
-          ];
-          $form['toggle']['filters'][$delta] = $element;
-          $form['toggle']['filters'][$delta]['column'] = $element_column;
-          $form['toggle']['filters'][$delta]['operator'] = $element_operator;
-          $form['toggle']['filters'][$delta]['value'] = $element_value;
+    // Add elements that don't already exist
+    $filter_columns = $this->getFilterColumns();
+    $filter_operators = $this->getFilterOperators();
+    for ($delta = 0; $delta < $filter_count; $delta++) {
+      if (!isset($form['filters'][$delta])) {
+        if ($delta == 0) {
+          $label = "Filter";
         }
-      }
-
-      if (!isset($form['toggle']['filters'][$filter_count - 1]['add'])) {
-        $form['toggle']['filters'][$filter_count - 1]['add'] = [
-          '#type' => 'submit',
-          '#value' => '+',
-          '#name' => 'addFilter',
-          '#submit' => ['::addFilter'],
-          '#ajax' => [
-            'callback' => '::addFilterCallback',
-            'wrapper' => 'filters',
+        else {
+          $label = "And";
+        }
+        $element = [
+          '#type' => 'container',
+          '#prefix' => "<span class=\"span-label\">" . $label . "</span>",
+          '#attributes' => [
+            'class' => ['form-inline'],
           ],
         ];
+
+        $element_column = [
+          '#type' => 'select',
+          '#options' => $filter_columns,
+        ];
+
+        $element_operator = [
+          '#type' => 'select',
+          '#options' => $filter_operators,
+        ];
+
+        $element_value = [
+          '#type' => 'textfield',
+        ];
+        $form['filters'][$delta] = $element;
+        $form['filters'][$delta]['column'] = $element_column;
+        $form['filters'][$delta]['operator'] = $element_operator;
+        $form['filters'][$delta]['value'] = $element_value;
       }
+    }
 
-      $form['toggle']['buttons'] = [
-        '#type' => 'container',
-      ];
-
-      $form['toggle']['buttons']['table'] = [
-        '#type' => 'button',
-        '#value' => 'table',
-        '#name' => 'table',
-        '#id' => 'query-table',
-        '#ajax' => [
-          'callback' => '::query',
-          'wrapper' => 'query-results',
-          'method' => 'html',
-        ],
-      ];
-
-      $form['toggle']['buttons']['download'] = [
+    if (!isset($form['filters'][$filter_count - 1]['add'])) {
+      $form['filters'][$filter_count - 1]['add'] = [
         '#type' => 'submit',
-        '#value' => 'excel',
-        '#name' => 'download',
-        '#id' => 'download-query',
-      ];
-
-      $form['toggle']['buttons']['map'] = [
-        '#type' => 'button',
-        '#value' => 'map',
-        '#name' => 'map',
-        '#id' => 'query-map',
+        '#value' => '+',
+        '#name' => 'addFilter',
+        '#submit' => ['::addFilter'],
         '#ajax' => [
-          'callback' => '::map',
+          'callback' => '::addFilterCallback',
+          'wrapper' => 'filters',
         ],
-      ];
-
-      $form['toggle']['query_results'] = [
-        '#type' => 'container',
-        '#id' => 'query-results',
       ];
     }
+
+    $form['buttons'] = [
+      '#type' => 'container',
+    ];
+
+    $form['buttons']['table'] = [
+      '#type' => 'button',
+      '#value' => 'table',
+      '#name' => 'table',
+      '#id' => 'query-table',
+      '#ajax' => [
+        'callback' => '::query',
+        'wrapper' => 'query-results',
+        'method' => 'html',
+      ],
+    ];
+
+    $form['buttons']['download'] = [
+      '#type' => 'submit',
+      '#value' => 'excel',
+      '#name' => 'download',
+      '#id' => 'download-query',
+    ];
+
+    $form['buttons']['map'] = [
+      '#type' => 'button',
+      '#value' => 'map',
+      '#name' => 'map',
+      '#id' => 'query-map',
+      '#ajax' => [
+        'callback' => '::map',
+      ],
+    ];
+
+    $form['query_results'] = [
+      '#type' => 'container',
+      '#id' => 'query-results',
+    ];
 
     return $form;
   }
@@ -189,6 +190,7 @@ class ArmsSearchForm extends FormBase {
         );
         $expedition = json_decode($result->getBody());
 
+        $options['0'] = "All Deployments";
         foreach ($expedition->{'deployments'} as $deployment_id) {
           $options[$deployment_id] = $deployment_id;
         }
@@ -213,7 +215,7 @@ class ArmsSearchForm extends FormBase {
   }
 
   public function addFilterCallback(array &$form, FormStateInterface &$form_state) {
-    return $form['toggle']['filters'];
+    return $form['filters'];
   }
 
   public function query(array $form, FormStateInterface $form_state) {
@@ -343,18 +345,28 @@ class ArmsSearchForm extends FormBase {
     }
 
     $deployment_id_list = [];
-    foreach ($form_state->getValue('deployments') as $deployment_id) {
-      array_push($deployment_id_list, $deployment_id);
-
+    // 0 is all deployments
+    if ($form_state->getValue("deployments") == "0") {
+      foreach ($form["toggle"]["deployments"]["#options"] as $deployment_id) {
+        if ($deployment_id != "0") {
+          array_push($deployment_id_list, $deployment_id);
+        }
+      }
+    } else {
+      foreach ($form_state->getValue('deployments') as $deployment_id) {
+        array_push($deployment_id_list, $deployment_id);
+      }
     }
 
-    $criteria = [
-      'key' => 'deploymentId',
-      'operator' => 'IN',
-      'value' => implode(",", $deployment_id_list),
-      'condition' => 'AND',
-    ];
-    array_push($filters, $criteria);
+    if (!empty($deployment_id_list)) {
+      $criteria = [
+        'key' => 'deploymentId',
+        'operator' => 'IN',
+        'value' => implode(",", $deployment_id_list),
+        'condition' => 'AND',
+      ];
+      array_push($filters, $criteria);
+    }
 
     return $filters;
   }
