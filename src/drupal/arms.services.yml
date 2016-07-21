@@ -1,0 +1,5 @@
+services:
+  arms.twig_extension:
+    class: Drupal\arms\TwigExtension\ADate
+    tags:
+      - { name: twig.extension }

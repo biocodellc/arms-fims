@@ -19,19 +19,19 @@
                 </tr>
                 <tr>
                     <td>Estimated Deployment Date: </td>
-                    <td>{{ deployment.intendedDeploymentDate | date("m/d/Y") }}</td>
+                    <td>{{ deployment.intendedDeploymentDate is empty ? "N/A" : deployment.intendedDeploymentDate is a_date ? deployment.intendedDeploymentDate | date("m/d/Y") : deployment.intendedDeploymentDate }}</td>
                 </tr>
                 <tr>
                     <td>Estimated Retrieval Date: </td>
-                    <td>{{ deployment.indentedRecoveryDate | date("m/d/Y") }}</td>
+                    <td>{{ deployment.intendedRecoveryDate is empty ? "N/A" : deployment.intendedRecoveryDate is a_date ? deployment.intendedRecoveryDate | date("m/d/Y") : deployment.intendedRecoveryDate }}</td>
                 </tr>
                 <tr>
                     <td>Actual Deployment Date: </td>
-                    <td>{{ deployment.actualDeploymentDate | date("m/d/Y") }}</td>
+                    <td>{{ deployment.actualDeploymentDate is empty ? "N/A" : deployment.actualDeploymentDate is a_date ? deployment.actualDeploymentDate | date("m/d/Y") : deployment.actualDeploymentDate }}</td>
                 </tr>
                 <tr>
                     <td>Actual Retrieval Date: </td>
-                    <td>{{ deployment.actualRetrievalDate | date("m/d/Y") }}</td>
+                    <td>{{ deployment.actualRecoveryDate is empty ? "N/A" : deployment.actualRecoveryDate is a_date ? deployment.actualRecoveryDate | date("m/d/Y") : deployment.actualRecoveryDate }}</td>
                 </tr>
                 <tr>
                     <td>Lat/Lng: </td>
