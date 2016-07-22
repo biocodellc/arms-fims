@@ -20,10 +20,10 @@
         {% for deployment in deployments %}
             <tr>
                 <td>{{ deployment.deploymentId }}</td>
-                <td>{{ deployment.intendedDeploymentDate | date("m/d/Y") }}</td>
-                <td>{{ deployment.indentedRecoveryDate | date("m/d/Y") }}</td>
-                <td>{{ deployment.actualDeploymentDate | date("m/d/Y") }}</td>
-                <td>{{ deployment.actualRetrievalDate | date("m/d/Y") }}</td>
+                <td>{{ deployment.intendedDeploymentDate is empty ? "N/A" : deployment.intendedDeploymentDate is a_date ? deployment.intendedDeploymentDate | date("m/d/Y") : deployment.intendedDeploymentDate }}</td>
+                <td>{{ deployment.intendedRecoveryDate is empty ? "N/A" : deployment.intendedRecoveryDate is a_date ? deployment.intendedRecoveryDate | date("m/d/Y") : deployment.intendedRecoveryDate }}</td>
+                <td>{{ deployment.actualDeploymentDate is empty ? "N/A" : deployment.actualDeploymentDate is a_date ? deployment.actualDeploymentDate | date("m/d/Y") : deployment.actualDeploymentDate }}</td>
+                <td>{{ deployment.actualRecoveryDate is empty ? "N/A" : deployment.actualRecoveryDate is a_date ? deployment.actualRecoveryDate | date("m/d/Y") : deployment.actualRecoveryDate }}</td>
                 <td>{{ deployment.decimalLatitude }}/{{ deployment.decimalLongitude }}</td>
                 <td>{{ deployment.depthInMeters }} meters</td>
                 <td>{{ deployment.habitat }}</td>
