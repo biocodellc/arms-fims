@@ -1,0 +1,25 @@
+<berkeleymapper>
+<metadata>
+<name>
+ARMS Map Configuration File
+</name>
+<relatedinformation>http://arms.biocodellc.com/</relatedinformation>
+<abstract>
+GIS configuration file for ARMS project
+</abstract>
+<mapkeyword keyword="arms deployment"/>
+<header location="http://ucjeps.berkeley.edu/consortium/code_banner.html"/>
+<logo img="https://pifsc-www.irc.noaa.gov/cred/images/arms_deployed1_med.jpg" url="http://arms.biocodellc.com/"/>
+</metadata>
+<concepts xmlns:darwin="http://digir.net/schema/conceptual/darwin/2003/1.0">
+<concept order="1" viewlist="1" datatype="char255:1" alias="Deployment ID"/>
+<concept order="2" viewlist="1" datatype="char255:2" alias="Actual Recovery Date"/>
+<concept order="2" viewlist="1" datatype="darwin:decimallatitude" alias="Decimal Latitude"/>
+<concept order="3" viewlist="1" datatype="darwin:decimallongitude" alias="Decimal Longitude"/>
+<concept order="4" viewlist="1" datatype="char255:3" alias="Depth In Meters"/>
+<concept order="5" viewlist="1" datatype="char255:4" alias="Substrate Type"/>
+</concepts>
+<annotation show="1">
+<annotation_replyto_email value="jdeck88@gmail.com"/>
+</annotation>
+</berkeleymapper>
