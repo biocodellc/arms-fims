@@ -7,6 +7,7 @@ description: 'Uses the jsDelivr CDN for all CSS and JavaScript. No source files 
 package: 'Bootstrap'
 
 regions:
+  arms_page_top: 'Arms Page Top'
   navigation: 'Navigation'
   navigation_collapsible: 'Navigation (Collapsible)'
   header: 'Top Bar'

@@ -15,3 +15,14 @@
     margin-bottom: 5px;
     font-weight: bold;
 }
+
+.navbar {
+    min-height: 40px;
+}
+
+@media (min-width: 768px) {
+    .navbar-nav > li > a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
