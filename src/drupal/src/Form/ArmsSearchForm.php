@@ -9,16 +9,11 @@ namespace Drupal\arms\Form;
 
 use Drupal\arms\Controller\ArmsController;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\PrependCommand;
-use Drupal\Core\Ajax\RedirectCommand;
-use Drupal\Core\File\FileSystem;
+use Drupal\arms\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
-use Drupal\file\Entity\File;
 use GuzzleHttp\Exception\RequestException;
 
 class ArmsSearchForm extends FormBase {
@@ -273,7 +268,7 @@ class ArmsSearchForm extends FormBase {
         ]
       );
       $url = (string) $formatter;
-      $response->addCommand(new RedirectCommand($url));
+      $response->addCommand(new RedirectCommand($url, TRUE));
     }
     catch (RequestException $e) {
       watchdog_exception('arms', $e);

@@ -27,7 +27,7 @@ class ArmsController extends ControllerBase {
       $expeditions = json_decode($result->getBody());
 
       foreach ($expeditions as $value) {
-        $options[$value->{'expedition'}->{'expeditionId'}] = $this->t($value->{'expedition'}->{'expeditionTitle'});
+        $options[$value->{'expeditionId'}] = $this->t($value->{'expedition'}->{'expeditionTitle'});
       }
     }
     catch (RequestException $e) {

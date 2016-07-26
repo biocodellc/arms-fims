@@ -1,0 +1,7 @@
+redirect-command:
+  version: 1.x
+  js:
+    js/redirect-command.js: {}
+  dependencies:
+    - core/drupal.ajax
+

@@ -27,3 +27,11 @@ function arms_theme($existing, $type, $theme, $path) {
     ],
   ];
 }
+
+/**
+ * Implements hook_page_attachments().
+ */
+function arms_page_attachments(array &$attachments) {
+  // $attachments['#attached']['library'][] = drupal_get_path('module', 'arms').'/js/redirect-command.js';
+  $attachments['#attached']['library'][] = 'arms/redirect-command';
+}

@@ -77,6 +77,7 @@
             var loadurl = jQuery(e.relatedTarget).data("load-url") + " #deploymentMetadata";
             var deployment = jQuery(e.relatedTarget).data("deployment-id");
             jQuery(this).find('.modal-title').html(deployment);
+            jQuery(this).find('.modal-body').html("loading...");
             jQuery(this).find('.modal-body').load(loadurl);
         });
     </script>
