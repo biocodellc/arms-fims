@@ -16,7 +16,7 @@ GIS configuration file for ARMS project
 <concept order="2" viewlist="1" datatype="char255:2" alias="Actual Recovery Date"/>
 <concept order="2" viewlist="1" datatype="darwin:decimallatitude" alias="Decimal Latitude"/>
 <concept order="3" viewlist="1" datatype="darwin:decimallongitude" alias="Decimal Longitude"/>
-<concept order="4" viewlist="1" datatype="char255:3" alias="Depth"/>
+<concept order="4" viewlist="1" datatype="char255:3" alias="Depth In Meters"/>
 <concept order="5" viewlist="1" datatype="char255:4" alias="Substrate Type"/>
 </concepts>
 <annotation show="1">
