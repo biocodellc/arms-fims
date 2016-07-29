@@ -18,6 +18,11 @@
 
 .navbar {
     min-height: 40px;
+    border-radius: 1px;
+}
+
+#front-page-carousel {
+    margin-top: -20px;
 }
 
 @media (min-width: 768px) {

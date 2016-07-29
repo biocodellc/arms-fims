@@ -1,0 +1,47 @@
+{#
+/**
+ * @file
+ */
+#}
+
+<div class="carousel slide" id="{{ id }}" data-ride="carousel">
+    {% if imgs|length > 1 %}
+        <ol class="carousel-indicators">
+            {% for img in imgs %}
+                {% if loop.first == 1 %}
+                    {% set state = 'active' %}
+                {% else %}
+                    {% set state = '' %}
+                {% endif %}
+
+                <li class="{{ state }}" data-target="#{{ id }}" data-slide-to="{{ loop.index0 }}"></li>
+            {% endfor %}
+        </ol>
+    {% endif %}
+
+    <div class="carousel-inner" style="max-height: {{ height }} !important; max-width: {{ width }} !important;" role="listbox">
+        {% for img in imgs %}
+            {% if loop.first == 1 %}
+                {% set state = 'active' %}
+            {% else %}
+                {% set state = '' %}
+            {% endif %}
+
+            <div class="item {{ state }} {{ loop.index0 }}">
+                <img src="{{ img }}"/>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Controls -->
+    {% if imgs|length > 1 %}
+        <a class="left carousel-control" href="#{{ id }}" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#{{ id }}" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    {% endif %}
+</div>

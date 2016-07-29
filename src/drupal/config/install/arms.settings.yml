@@ -1,3 +1,3 @@
 arms_rest_uri: 'http://biscicol.org/arms/rest/'
 berkley_mapper_template_uri: 'http://berkeleymapper.berkeley.edu/?ViewResults=tab&maptype=Satellite&tabfile=@tabfile&configfile=@configfile'
-arms_berkley_mapper_config_uri: 'https://raw.githubusercontent.com/biocodellc/arms-fims/master/configuration/berkleyMapperConfig.xml'
+arms_berkley_mapper_config_uri: 'https://raw.githubusercontent.com/biocodellc/arms-fims/master/configuration/bmapper.xml'
