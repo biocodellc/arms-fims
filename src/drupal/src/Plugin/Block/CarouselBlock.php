@@ -2,6 +2,7 @@
 
 namespace Drupal\arms\Plugin\Block;
 
+use Drupal;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
@@ -29,8 +30,9 @@ class CarouselBlock extends BlockBase {
     $imgs = [];
 
     foreach ($config['img'] as $img_id) {
-      $file = File::load($img_id);
-      array_push($imgs, file_create_url($file->getFileUri()));
+      if ($file = File::load($img_id)) {
+        array_push($imgs, file_create_url($file->getFileUri()));
+      }
     }
 
     return [
@@ -94,6 +96,12 @@ class CarouselBlock extends BlockBase {
     $this->setConfigurationValue('height', $form_state->getValue('height'));
     $this->setConfigurationValue('id', $form_state->getValue('id'));
     $this->setConfigurationValue('img', $form_state->getValue('img'));
+
+    foreach (File::loadMultiple($form_state->getValue('img')) as $img) {
+      $img->setPermanent();
+      $img->save();
+      Drupal::service('file.usage')->add($img, 'arms', 'carousel', $img->id());
+    }
   }
 
 }
