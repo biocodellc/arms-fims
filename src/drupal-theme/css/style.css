@@ -18,11 +18,23 @@
 
 .navbar {
     min-height: 40px;
-    border-radius: 1px;
+    border-radius: 3px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.navbar-collapse {
+    padding-left: 0px;
 }
 
 #front-page-carousel {
-    margin-top: -20px;
+    margin-top: -15px;
+    margin-bottom: 20px;
+}
+
+.carousel-inner>.item>img,
+.carousel-inner>.item>a>img {
+    border-radius: 3px;
 }
 
 @media (min-width: 768px) {
