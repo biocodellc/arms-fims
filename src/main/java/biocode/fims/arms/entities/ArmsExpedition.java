@@ -217,8 +217,6 @@ public class ArmsExpedition {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonView(withDeploymentsView.class)
     @JsonManagedReference
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="deploymentId")
-    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(targetEntity = Deployment.class,
             mappedBy = "armsExpedition",
             fetch = FetchType.LAZY

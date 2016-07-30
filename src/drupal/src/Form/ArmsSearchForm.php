@@ -31,8 +31,6 @@ class ArmsSearchForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $options = NULL) {
-    // Disable caching on this form.
-    $form_state->setCached(FALSE);
 
     $arms_controller = new ArmsController();
     $expeditions = $arms_controller->getExpeditions();
@@ -186,8 +184,8 @@ class ArmsSearchForm extends FormBase {
         $expedition = json_decode($result->getBody());
 
         $options['0'] = "All Deployments";
-        foreach ($expedition->{'deployments'} as $deployment_id) {
-          $options[$deployment_id] = $deployment_id;
+        foreach ($expedition->{'deployments'} as $deployment) {
+          $options[$deployment->{'deploymentId'}] = $deployment->{'deploymentId'};
         }
       }
       catch (RequestException $e) {
