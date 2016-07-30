@@ -1,9 +1,7 @@
 package biocode.fims.rest.services.rest;
 
-import biocode.fims.bcid.ResourceTypes;
 import biocode.fims.config.ConfigurationFileTester;
 import biocode.fims.digester.Attribute;
-import biocode.fims.entities.Bcid;
 import biocode.fims.entities.Expedition;
 import biocode.fims.fimsExceptions.*;
 import biocode.fims.fimsExceptions.BadRequestException;
@@ -38,17 +36,15 @@ public class Validate extends FimsService {
     private final MySqlUploader mySqlUploader;
     private final MySqlDatasetTableValidator mySqlDatasetTableValidator;
     private final ExpeditionService expeditionService;
-    private final BcidService bcidService;
 
     @Autowired
     public Validate(MySqlUploader mySqlUploader, MySqlDatasetTableValidator mySqlDatasetTableValidator,
-                    ExpeditionService expeditionService, BcidService bcidService,
+                    ExpeditionService expeditionService,
                     OAuthProviderService providerService, SettingsManager settingsManager) {
         super(providerService, settingsManager);
         this.mySqlUploader = mySqlUploader;
         this.mySqlDatasetTableValidator = mySqlDatasetTableValidator;
         this.expeditionService = expeditionService;
-        this.bcidService = bcidService;
     }
     /**
      * service to validate a dataset against a project's rules
@@ -261,19 +257,6 @@ public class Validate extends FimsService {
 
         // upload the dataset
         mySqlUploader.execute(expedition.getExpeditionId(), acceptableColumnsInternal, csvTabularDataConverter.getCsvFile().getPath());
-
-        Bcid bcid = new Bcid.BcidBuilder(ResourceTypes.DATASET_RESOURCE_TYPE)
-                .ezidRequest(Boolean.parseBoolean(settingsManager.retrieveValue("ezidRequests")))
-                .title("Dataset " + processController.getExpeditionCode())
-                .finalCopy(processController.getFinalCopy())
-                .build();
-
-        bcidService.create(bcid, processController.getUserId());
-
-        bcidService.attachBcidToExpedition(
-                bcid,
-                expedition.getExpeditionId()
-        );
 
         // delete the temporary file now that it has been uploaded
         new File(processController.getInputFilename()).delete();
