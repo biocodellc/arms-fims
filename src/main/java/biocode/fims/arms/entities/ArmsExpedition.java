@@ -13,7 +13,6 @@ import java.util.Set;
  * ArmsExpedition domain object. An ArmsExpedition has a one-to-one unidirectional relationship to
  * a biocode-fims {@link Expedition}.
  */
-//@JsonSerialize(using = ArmsExpeditionSerializer.class)
 @Entity
 @Table(name = "armsExpeditions")
 @NamedEntityGraph(name = "withDeployments",
@@ -216,7 +215,6 @@ public class ArmsExpedition {
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonView(withDeploymentsView.class)
-    @JsonManagedReference
     @OneToMany(targetEntity = Deployment.class,
             mappedBy = "armsExpedition",
             fetch = FetchType.LAZY

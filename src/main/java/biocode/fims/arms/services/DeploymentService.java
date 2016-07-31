@@ -1,9 +1,12 @@
 package biocode.fims.arms.services;
 
+import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.query.DeploymentPredicatesBuilder;
 import biocode.fims.arms.repositories.DeploymentRepository;
+import biocode.fims.entities.Bcid;
 import biocode.fims.mysql.query.Query;
+import biocode.fims.service.BcidService;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional("armsTransactionManager")
 public class DeploymentService {
     private final DeploymentRepository deploymentRepository;
+    private final BcidService bcidService;
 
     @Autowired
-    public DeploymentService(DeploymentRepository deploymentRepository) {
+    public DeploymentService(DeploymentRepository deploymentRepository, BcidService bcidService) {
         this.deploymentRepository = deploymentRepository;
+        this.bcidService = bcidService;
     }
 
     /**
@@ -32,6 +37,19 @@ public class DeploymentService {
 
     public Deployment getDeployment(int expeditionId, String deploymentId) {
         return deploymentRepository.findOneByArmsExpeditionExpeditionIdAndDeploymentId(expeditionId, deploymentId);
+    }
+
+    public Deployment getDeployment(String rootIdentifier, String deploymentId) {
+        Deployment deployment = null;
+        Bcid rootEntity = bcidService.getBcid(rootIdentifier);
+
+        if (rootEntity.getExpedition() != null) {
+            deployment = deploymentRepository.findOneByArmsExpeditionExpeditionIdAndDeploymentId(
+                    rootEntity.getExpedition().getExpeditionId(), deploymentId);
+        }
+
+        return deployment;
+
     }
 
     public Iterable<Deployment> query(Query query) {

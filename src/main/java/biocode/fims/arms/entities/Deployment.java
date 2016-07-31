@@ -1,7 +1,6 @@
 package biocode.fims.arms.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.net.URI;
@@ -473,9 +472,11 @@ public class Deployment {
         this.replicateLabel = replicateLabel;
     }
 
+    @JsonProperty(value = "expeditionId")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "expeditionId")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(optional = false)
     @JoinColumn(name = "expeditionId")
-    @JsonBackReference
     public ArmsExpedition getArmsExpedition() {
         return armsExpedition;
     }

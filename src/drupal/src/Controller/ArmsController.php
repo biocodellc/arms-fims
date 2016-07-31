@@ -64,6 +64,38 @@ class ArmsController extends ControllerBase {
     ];
 
   }
+  
+  public function deploymentDetailByIdentifier($scheme, $naan, $shoulder, $suffix) {
+    $deployment = [];
+    $identifier = $scheme . '/' . $naan . '/' . $shoulder . $suffix;
+    try {
+      $result = $this->client->get(
+        $this->restRoot . 'deployments/' . $identifier,
+        ['Accept' => 'application/json']
+      );
+      $deployment = json_decode($result->getBody());
+
+      if ($deployment == NULL) {
+        drupal_set_message("Deployment " . $identifier . " doesn't exist.", 'error');
+      }
+    }
+    catch (RequestException $e) {
+      watchdog_exception('arms', $e);
+      drupal_set_message('Error fetching deployment.', 'error');
+    }
+
+    return [
+      '#theme' => 'arms_deployment_detail',
+      '#deployment' => $deployment,
+      '#deploymentId' => $suffix,
+      '#projectId' => $deployment->expeditionId,
+    ];
+  }
+
+  public function deploymentDetailByIdentifierTitle($scheme, $naan, $shoulder, $suffix) {
+    $identifier = $scheme . '/' . $naan . '/' . $shoulder . $suffix;
+    return 'Deployment: ' . $identifier;
+  }
 
   public function expeditionDetailById($expedition_id) {
     $expedition = [];
@@ -90,7 +122,7 @@ class ArmsController extends ControllerBase {
   }
 
   public function expeditionDetailByIdTitle($expedition_id) {
-    return $expedition_id;
+    return 'Project: ' . $expedition_id;
   }
 
   public function expeditionDetail($scheme, $naan, $shoulder_plus_suffix) {
@@ -119,6 +151,6 @@ class ArmsController extends ControllerBase {
   }
   
   public function expeditionDetailTitle($scheme, $naan, $shoulder_plus_suffix) {
-    return $scheme . "/" . $naan . "/" . $shoulder_plus_suffix;
+    return 'Project: ' . $scheme . "/" . $naan . "/" . $shoulder_plus_suffix;
   }
 }

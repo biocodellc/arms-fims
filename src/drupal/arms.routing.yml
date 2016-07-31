@@ -13,7 +13,6 @@ arms.expeditions.detail:
     _title_callback: '\Drupal\arms\Controller\ArmsController::expeditionDetailTitle'
   requirements:
     _permission: 'access content'
-#    identifier: ^ark:\/\d{5}\/\w+2
     scheme: ^ark:
     naan: ^\d{5}
     shoulder_plus_suffix: ^\w+2\w*
@@ -35,6 +34,17 @@ arms.deployment:
   requirements:
     _permission: 'access content'
     project_id: ^[0-9]+
+
+arms.deployment.detailByIdentifier:
+  path: '/deployments/{scheme}/{naan}/{shoulder}/{suffix}'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsController::deploymentDetailByIdentifier'
+    _title_callback: '\Drupal\arms\Controller\ArmsController::deploymentDetailByIdentifierTitle'
+  requirements:
+    _permission: 'access content'
+    scheme: ^ark:
+    naan: ^\d{5}
+    shoulder_plus_suffix: ^\w+2\w*
 
 arms.search:
   path: '/deployments/search'

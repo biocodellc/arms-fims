@@ -98,6 +98,7 @@ public class ArmsExpeditionRestService extends FimsService {
             return Response.ok(armsExpedition).build();
         return Response.noContent().build();
     }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JsonView(ArmsExpedition.withDeploymentsView.class)

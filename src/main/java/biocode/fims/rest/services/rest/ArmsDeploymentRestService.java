@@ -2,6 +2,7 @@ package biocode.fims.rest.services.rest;
 
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.services.DeploymentService;
+import biocode.fims.bcid.Identifier;
 import biocode.fims.rest.FimsService;
 import biocode.fims.service.OAuthProviderService;
 import biocode.fims.settings.SettingsManager;
@@ -36,5 +37,18 @@ public class ArmsDeploymentRestService extends FimsService {
         if (deployment == null)
             return Response.noContent().build();
         return Response.ok(deployment).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{identifier: .+}")
+    public Response getExpedition(@PathParam("identifier") String identifierString) {
+        String divider = settingsManager.retrieveValue("divider");
+        Identifier identifier = new Identifier(identifierString, divider);
+
+        Deployment deployment = deploymentService.getDeployment(identifier.getBcidIdentifier(), identifier.getSuffix());
+        if (deployment != null)
+            return Response.ok(deployment).build();
+        return Response.noContent().build();
     }
 }
