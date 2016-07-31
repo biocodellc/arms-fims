@@ -2,9 +2,30 @@ arms.expeditions:
   path: 'projects'
   defaults:
     _form: '\Drupal\arms\Form\ArmsExpeditionSelectForm'
-    _title: 'ARMS Projects'
+    _title: 'Projects'
   requirements:
     _permission: 'access content'
+
+arms.expeditions.detail:
+  path: '/projects/{scheme}/{naan}/{shoulder_plus_suffix}'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsController::expeditionDetail'
+    _title_callback: '\Drupal\arms\Controller\ArmsController::expeditionDetailTitle'
+  requirements:
+    _permission: 'access content'
+#    identifier: ^ark:\/\d{5}\/\w+2
+    scheme: ^ark:
+    naan: ^\d{5}
+    shoulder_plus_suffix: ^\w+2\w*
+
+arms.expeditions.detailById:
+  path: '/projects/{expedition_id}'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsController::expeditionDetailById'
+    _title_callback: '\Drupal\arms\Controller\ArmsController::expeditionDetailByIdTitle'
+  requirements:
+    _permission: 'access content'
+    expedition_id: ^[0-9]+
 
 arms.deployment:
   path: '/deployments/{project_id}/{deployment_id}'

@@ -64,6 +64,15 @@ public class ArmsExpeditionService {
         return armsExpedition;
     }
 
+    public ArmsExpedition getArmsExpeditionByIdentifier(String identifier) {
+        Expedition expedition = expeditionService.getExpedition(identifier);
+
+        ArmsExpedition armsExpedition = armsExpeditionRepository.findByExpeditionId(expedition.getExpeditionId());
+        armsExpedition.setExpedition(expedition);
+
+        return armsExpedition;
+    }
+
     public Set<ArmsExpedition> findAll() {
         Set<ArmsExpedition> armsExpeditions = armsExpeditionRepository.findAll();
 

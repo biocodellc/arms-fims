@@ -2,6 +2,7 @@ package biocode.fims.rest.services.rest;
 
 import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.services.ArmsExpeditionService;
+import biocode.fims.bcid.Identifier;
 import biocode.fims.config.ConfigurationFileFetcher;
 import biocode.fims.digester.Entity;
 import biocode.fims.digester.Mapping;
@@ -15,6 +16,7 @@ import biocode.fims.settings.SettingsManager;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.digester3.Digester;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -92,6 +94,19 @@ public class ArmsExpeditionRestService extends FimsService {
     @Path("{expeditionId}/")
     public Response getExpedition(@PathParam("expeditionId") int expeditionId) {
         ArmsExpedition armsExpedition = armsExpeditionService.getArmsExpedition(expeditionId);
+        if (armsExpedition != null)
+            return Response.ok(armsExpedition).build();
+        return Response.noContent().build();
+    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @JsonView(ArmsExpedition.withDeploymentsView.class)
+    @Path("{identifier: .+}")
+    public Response getExpedition(@PathParam("identifier") String identifierString) {
+        String divider = settingsManager.retrieveValue("divider");
+        Identifier identifier = new Identifier(identifierString, divider);
+
+        ArmsExpedition armsExpedition = armsExpeditionService.getArmsExpeditionByIdentifier(identifier.getBcidIdentifier());
         if (armsExpedition != null)
             return Response.ok(armsExpedition).build();
         return Response.noContent().build();

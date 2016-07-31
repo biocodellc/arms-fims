@@ -64,4 +64,61 @@ class ArmsController extends ControllerBase {
     ];
 
   }
+
+  public function expeditionDetailById($expedition_id) {
+    $expedition = [];
+    try {
+      $result = $this->client->get(
+        $this->restRoot . 'arms/projects/' . $expedition_id,
+        ['Accept' => 'application/json']
+      );
+      $expedition = json_decode($result->getBody());
+
+      if ($expedition == NULL) {
+        drupal_set_message("Project with id " . $expedition_id . " doesn't exist.", 'error');
+      }
+    }
+    catch (RequestException $e) {
+      watchdog_exception('arms', $e);
+      drupal_set_message('Error fetching project.', 'error');
+    }
+
+    return [
+      '#theme' => 'arms_expeditions_detail',
+      '#expedition' => $expedition,
+    ];
+  }
+
+  public function expeditionDetailByIdTitle($expedition_id) {
+    return $expedition_id;
+  }
+
+  public function expeditionDetail($scheme, $naan, $shoulder_plus_suffix) {
+    $expedition = [];
+    $identifier = $scheme . "/" . $naan . "/" . $shoulder_plus_suffix;
+    try {
+      $result = $this->client->get(
+        $this->restRoot . 'arms/projects/' . $identifier,
+        ['Accept' => 'application/json']
+      );
+      $expedition = json_decode($result->getBody());
+
+      if ($expedition == NULL) {
+        drupal_set_message("Project with identifier " . $identifier . " doesn't exist.", 'error');
+      }
+    }
+    catch (RequestException $e) {
+      watchdog_exception('arms', $e);
+      drupal_set_message('Error fetching project.', 'error');
+    }
+
+    return [
+      '#theme' => 'arms_expeditions_detail',
+      '#expedition' => $expedition,
+    ];
+  }
+  
+  public function expeditionDetailTitle($scheme, $naan, $shoulder_plus_suffix) {
+    return $scheme . "/" . $naan . "/" . $shoulder_plus_suffix;
+  }
 }
