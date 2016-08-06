@@ -7,6 +7,7 @@
 
 namespace Drupal\arms\Form;
 
+use Drupal\arms\Ajax\BootstrapSortableCommand;
 use Drupal\arms\Controller\ArmsController;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -77,6 +78,8 @@ class ArmsExpeditionSelectForm extends FormBase {
         '#expedition' => $expedition,
       ]
     ));
+
+    $response->addCommand(new BootstrapSortableCommand());
 
     return $response;
   }

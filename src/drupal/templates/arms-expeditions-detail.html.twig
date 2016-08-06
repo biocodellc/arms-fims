@@ -3,6 +3,7 @@
  * @file
  */
 #}
+{{ attach_library('arms/bootstrap-sortable') }}
 {% if expedition %}
     <div class="panel panel-default">
         <div class="panel-heading">My Arms Project</div>
@@ -48,22 +49,33 @@
         </table>
     </div>
     <div class="panel panel-default">
-        <table class="table">
-                <thead>
-                <th>Deployment Event Id</th>
-                <th>Actual Deployment Date</th>
-                <th>Actual Retrieval Date</th>
-                </thead>
+        <table class="table table-condensed sortable">
+            <thead>
+            <th>Deployment Event ID</th>
+            <th data-dateformat="MM-DD-YYYY">Estimated Deployment Date</th>
+            <th data-dateformat>Estimated Retrieval Date</th>
+            <th data-dateformat>Actual Deployment Date</th>
+            <th data-dateformat>Actual Retrieval Date</th>
+            <th>Lat/Lng</th>
+            <th>Depth</th>
+            <th>Habitat Type:</th>
+            <th>Station ID</th>
+            </thead>
             <tbody>
-
             {% for deployment in expedition.deployments %}
                 <tr>
                     <td><a data-toggle="modal" data-target="#deploymentModal" href="#"
                            data-deployment-id="{{ deployment.deploymentId }}"
-                           data-load-url="{{ path('arms.deployment', {'project_id': expedition.expedition.expeditionId, 'deployment_id': deployment.deploymentId}) }}">{{ deployment.deploymentId }}</a>
+                           data-load-url="{{ path('arms.deployment', {'project_id': deployment.expeditionId, 'deployment_id': deployment.deploymentId}) }}">{{ deployment.deploymentId }}</a>
                     </td>
+                    <td>{{ deployment.intendedDeploymentDate is empty ? "N/A" : deployment.intendedDeploymentDate is a_date ? deployment.intendedDeploymentDate | date("m/d/Y") : deployment.intendedDeploymentDate }}</td>
+                    <td>{{ deployment.intendedRecoveryDate is empty ? "N/A" : deployment.intendedRecoveryDate is a_date ? deployment.intendedRecoveryDate | date("m/d/Y") : deployment.intendedRecoveryDate }}</td>
                     <td>{{ deployment.actualDeploymentDate is empty ? "N/A" : deployment.actualDeploymentDate is a_date ? deployment.actualDeploymentDate | date("m/d/Y") : deployment.actualDeploymentDate }}</td>
                     <td>{{ deployment.actualRecoveryDate is empty ? "N/A" : deployment.actualRecoveryDate is a_date ? deployment.actualRecoveryDate | date("m/d/Y") : deployment.actualRecoveryDate }}</td>
+                    <td>{{ deployment.decimalLatitude }}/{{ deployment.decimalLongitude }}</td>
+                    <td>{{ deployment.depthInMeters }} meters</td>
+                    <td>{{ deployment.habitat }}</td>
+                    <td>{{ deployment.stationId }}</td>
                 </tr>
             {% endfor %}
             </tbody>
