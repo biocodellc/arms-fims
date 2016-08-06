@@ -7,9 +7,11 @@
 
 namespace Drupal\arms\Form;
 
+use Drupal\arms\Ajax\BootstrapSortableCommand;
 use Drupal\arms\Controller\ArmsController;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\arms\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
@@ -51,7 +53,8 @@ class ArmsSearchForm extends FormBase {
     ];
 
     if ($form_state->getValue("expeditions") != $form['expeditions']['#default_value'] &&
-        $form_state->getValue("expeditions") != NULL) {
+      $form_state->getValue("expeditions") != NULL
+    ) {
       $form['toggle']['deployments'] = [
         '#type' => 'select',
         '#title' => $this->t('Choose Deployment(s)'),
@@ -139,8 +142,8 @@ class ArmsSearchForm extends FormBase {
       '#id' => 'query-table',
       '#ajax' => [
         'callback' => '::query',
-        'wrapper' => 'query-results',
-        'method' => 'html',
+        // 'wrapper' => 'query-results',
+        // 'method' => 'html',
       ],
     ];
 
@@ -214,6 +217,7 @@ class ArmsSearchForm extends FormBase {
   public function query(array $form, FormStateInterface $form_state) {
     $arms_config = \Drupal::config('arms.settings');
     $rest_root = $arms_config->get("arms_rest_uri");
+    $response = new AjaxResponse();
 
     $client = \Drupal::service('http_client');
     try {
@@ -230,11 +234,17 @@ class ArmsSearchForm extends FormBase {
       watchdog_exception('arms', $e);
       drupal_set_message('Error fetching query results.', 'error');
     }
+    $response->addCommand(new HtmlCommand(
+      '#query-results',
+      [
+        '#theme' => 'arms_query_results',
+        '#deployments' => $deployments,
+      ]
+    ));
 
-    return [
-      '#theme' => 'arms_query_results',
-      '#deployments' => $deployments,
-    ];
+    $response->addCommand(new BootstrapSortableCommand());
+    
+    return $response;
   }
 
   public function map(array &$form, FormStateInterface $form_state) {
@@ -347,7 +357,8 @@ class ArmsSearchForm extends FormBase {
             array_push($deployment_id_list, $deployment_id);
           }
         }
-      } else {
+      }
+      else {
         foreach ($form_state->getValue('deployments') as $deployment_id) {
           if ($deployment_id != "0") {
             array_push($deployment_id_list, $deployment_id);

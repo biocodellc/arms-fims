@@ -254,7 +254,7 @@
         var rowsToSort = rows.not('[data-disablesort="true"]');
         if (rowsToSort.length != 0) {
             var emptySorting = bsSort[sortKey] === 'asc' ? emptyEnd : false;
-            sortEngine(rowsToSort, { emptyEnd: emptySorting, selector: 'td:nth-child(' + (sortColumn + 1) + ')', order: bsSort[sortKey], data: 'value' });
+            sortEngine(rowsToSort, { emptyEnd: emptySorting, selector: 'td:nth-child(' + (sortColumn + 1) + ')', order: bsSort[sortKey], data: 'value', ignoreDashes: 'true'});
         }
 
         // add back the fixed rows
