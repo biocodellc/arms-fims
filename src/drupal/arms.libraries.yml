@@ -2,10 +2,6 @@ redirect-command:
   version: 1.x
   js:
     js/redirect-command.js: {}
-    js/bootstrap-sortable-command.js: {}
-    js/moment.min.js: {minified: true}
-    js/bootstrap-sortable.js: {}
-    js/tinysort.js: {}
   dependencies:
     - core/drupal.ajax
 
@@ -15,5 +11,9 @@ bootstrap-sortable:
     theme:
       css/bootstrap-sortable.css: {}
   js:
+    js/bootstrap-sortable-command.js: {}
+    js/moment.min.js: {minified: true}
+    js/bootstrap-sortable.js: {}
+    js/tinysort.js: {}
   dependencies:
     - core/jquery
