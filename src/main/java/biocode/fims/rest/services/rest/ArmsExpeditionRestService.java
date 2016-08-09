@@ -4,7 +4,6 @@ import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.services.ArmsExpeditionService;
 import biocode.fims.bcid.Identifier;
 import biocode.fims.config.ConfigurationFileFetcher;
-import biocode.fims.digester.Entity;
 import biocode.fims.digester.Mapping;
 import biocode.fims.entities.Expedition;
 import biocode.fims.rest.FimsService;
@@ -16,14 +15,11 @@ import biocode.fims.settings.SettingsManager;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.digester3.Digester;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  * ARMS specific expedition services
