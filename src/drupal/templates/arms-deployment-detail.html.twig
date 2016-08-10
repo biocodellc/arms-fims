@@ -4,18 +4,17 @@
  */
 #}
 {% if deployment %}
-    <h2 class="h2">Deployment Detail Page for {{ deploymentId }}</h2>
     <div class="panel panel-default" id="deploymentMetadata">
         <div class="panel-heading">Deployment Metadata:</div>
         <table class="table">
             <tbody>
                 <tr>
                     <td>Deployment Event ID: </td>
-                    <td>{{ deploymentId }}</td>
+                    <td>{{ deployment.deploymentId }}</td>
                 </tr>
                 <tr>
                     <td>Project ID: </td>
-                    <td>{{ projectId }}</td>
+                    <td><a href="{{ path('arms.expeditions.detailById', {'expedition_id': expedition.expeditionId }) }}">{{ expedition.expeditionId }}</a></td>
                 </tr>
                 <tr>
                     <td>Estimated Deployment Date: </td>
@@ -48,6 +47,10 @@
                 <tr>
                     <td>Station ID: </td>
                     <td>{{ deployment.stationId }}</td>
+                </tr>
+                <tr>
+                    <td>Deployment Event GUID: </td>
+                    <td><a href="http://n2t.net/{{ expedition.expedition.entityBcids[0].identifier }}{{ deployment.deploymentId }}">http://n2t.net/{{ expedition.expedition.entityBcids[0].identifier }}{{ deployment.deploymentId }}</a></td>
                 </tr>
             </tbody>
         </table>

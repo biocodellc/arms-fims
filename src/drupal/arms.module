@@ -16,8 +16,7 @@ function arms_theme($existing, $type, $theme, $path) {
     'arms_deployment_detail' => [
       'variables' => [
         'deployment' => NULL,
-        'deploymentId' => NULL,
-        'projectId' => NULL,
+        'expedition' => NULL,
       ],
     ],
     'arms_query_results' => [

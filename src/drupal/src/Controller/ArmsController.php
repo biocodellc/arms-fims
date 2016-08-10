@@ -40,6 +40,7 @@ class ArmsController extends ControllerBase {
 
   public function deploymentDetail($project_id, $deployment_id) {
     $deployment = [];
+    $expedition = [];
     try {
       $result = $this->client->get(
         $this->restRoot . 'deployments/' . $project_id . '/' . $deployment_id,
@@ -50,6 +51,17 @@ class ArmsController extends ControllerBase {
       if ($deployment == NULL) {
         drupal_set_message("Deployment " . $deployment_id . " doesn't exist for projectId: " . $project_id . ".", 'error');
       }
+      else {
+        try {
+          $result = $this->client->get(
+            $this->restRoot . 'arms/projects/' . $deployment->expeditionId,
+            ['Accept' => 'application/json']
+          );
+          $expedition = json_decode($result->getBody());
+        }
+        catch (RequestException $e) {
+        }
+      }
     }
     catch (RequestException $e) {
       watchdog_exception('arms', $e);
@@ -59,14 +71,14 @@ class ArmsController extends ControllerBase {
     return [
       '#theme' => 'arms_deployment_detail',
       '#deployment' => $deployment,
-      '#deploymentId' => $deployment_id,
-      '#projectId' => $project_id,
+      '#expedition' => $expedition,
     ];
 
   }
-  
+
   public function deploymentDetailByIdentifier($scheme, $naan, $shoulder, $suffix) {
     $deployment = [];
+    $expedition = [];
     $identifier = $scheme . '/' . $naan . '/' . $shoulder . $suffix;
     try {
       $result = $this->client->get(
@@ -78,6 +90,17 @@ class ArmsController extends ControllerBase {
       if ($deployment == NULL) {
         drupal_set_message("Deployment " . $identifier . " doesn't exist.", 'error');
       }
+      else {
+        try {
+          $result = $this->client->get(
+            $this->restRoot . 'arms/projects/' . $deployment->expeditionId,
+            ['Accept' => 'application/json']
+          );
+          $expedition = json_decode($result->getBody());
+        }
+        catch (RequestException $e) {
+        }
+      }
     }
     catch (RequestException $e) {
       watchdog_exception('arms', $e);
@@ -87,14 +110,12 @@ class ArmsController extends ControllerBase {
     return [
       '#theme' => 'arms_deployment_detail',
       '#deployment' => $deployment,
-      '#deploymentId' => $suffix,
-      '#projectId' => $deployment->expeditionId,
+      '#expedition' => $expedition,
     ];
   }
 
   public function deploymentDetailByIdentifierTitle($scheme, $naan, $shoulder, $suffix) {
-    $identifier = $scheme . '/' . $naan . '/' . $shoulder . $suffix;
-    return 'Deployment: ' . $identifier;
+    return 'Deployment: ' . $suffix;
   }
 
   public function expeditionDetailById($expedition_id) {
@@ -149,8 +170,8 @@ class ArmsController extends ControllerBase {
       '#expedition' => $expedition,
     ];
   }
-  
+
   public function expeditionDetailTitle($scheme, $naan, $shoulder_plus_suffix) {
-    return 'Project: ' . $scheme . "/" . $naan . "/" . $shoulder_plus_suffix;
+    return 'Project: ' . $shoulder_plus_suffix;
   }
 }
