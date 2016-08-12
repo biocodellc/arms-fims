@@ -1,7 +1,9 @@
 package biocode.fims.rest.services.rest;
 
+import biocode.fims.bcid.ResourceTypes;
 import biocode.fims.config.ConfigurationFileTester;
 import biocode.fims.digester.Attribute;
+import biocode.fims.entities.Bcid;
 import biocode.fims.entities.Expedition;
 import biocode.fims.fimsExceptions.*;
 import biocode.fims.fimsExceptions.BadRequestException;
@@ -16,6 +18,8 @@ import biocode.fims.run.Process;
 import biocode.fims.run.ProcessController;
 import biocode.fims.service.*;
 import biocode.fims.settings.SettingsManager;
+import biocode.fims.tools.ServerSideSpreadsheetTools;
+import org.apache.commons.io.FilenameUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
@@ -25,6 +29,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,15 +42,17 @@ public class Validate extends FimsService {
     private final MySqlUploader mySqlUploader;
     private final MySqlDatasetTableValidator mySqlDatasetTableValidator;
     private final ExpeditionService expeditionService;
+    private final BcidService bcidService;
 
     @Autowired
     public Validate(MySqlUploader mySqlUploader, MySqlDatasetTableValidator mySqlDatasetTableValidator,
-                    ExpeditionService expeditionService,
+                    ExpeditionService expeditionService, BcidService bcidService,
                     OAuthProviderService providerService, SettingsManager settingsManager) {
         super(providerService, settingsManager);
         this.mySqlUploader = mySqlUploader;
         this.mySqlDatasetTableValidator = mySqlDatasetTableValidator;
         this.expeditionService = expeditionService;
+        this.bcidService = bcidService;
     }
     /**
      * service to validate a dataset against a project's rules
@@ -258,8 +266,32 @@ public class Validate extends FimsService {
         // upload the dataset
         mySqlUploader.execute(expedition.getExpeditionId(), acceptableColumnsInternal, csvTabularDataConverter.getCsvFile().getPath());
 
+        boolean ezidRequest = Boolean.valueOf(settingsManager.retrieveValue("ezidRequests"));
+
+        // Mint the data group
+        Bcid bcid = new Bcid.BcidBuilder(ResourceTypes.DATASET_RESOURCE_TYPE)
+                .title(processController.getExpeditionCode())
+                .finalCopy(processController.getFinalCopy())
+                .ezidRequest(ezidRequest)
+                .build();
+
+        bcidService.create(bcid, user.getUserId());
+        bcidService.attachBcidToExpedition(bcid, expedition.getExpeditionId());
+
+        // save the spreadsheet on the server
+        File inputFile = new File(processController.getInputFilename());
+        String ext = FilenameUtils.getExtension(inputFile.getName());
+        String filename = bcid.getIdentifier() + ext;
+        File outputFile = new File(settingsManager.retrieveValue("serverRoot") + filename);
+
+        ServerSideSpreadsheetTools serverSideSpreadsheetTools = new ServerSideSpreadsheetTools(inputFile);
+        serverSideSpreadsheetTools.write(outputFile);
+
+        bcid.setSourceFile(filename);
+        bcidService.update(bcid);
+
         // delete the temporary file now that it has been uploaded
-        new File(processController.getInputFilename()).delete();
+        inputFile.delete();
 
         successMessage = "<br><font color=#188B00>Successfully Uploaded!</font><br><br>";
         processController.appendStatus(successMessage);
