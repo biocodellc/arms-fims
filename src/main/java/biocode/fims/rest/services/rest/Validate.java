@@ -281,7 +281,7 @@ public class Validate extends FimsService {
         // save the spreadsheet on the server
         File inputFile = new File(processController.getInputFilename());
         String ext = FilenameUtils.getExtension(inputFile.getName());
-        String filename = bcid.getIdentifier() + ext;
+        String filename = "bcid_id_" + bcid.getBcidId() + "." + ext;
         File outputFile = new File(settingsManager.retrieveValue("serverRoot") + filename);
 
         ServerSideSpreadsheetTools serverSideSpreadsheetTools = new ServerSideSpreadsheetTools(inputFile);
