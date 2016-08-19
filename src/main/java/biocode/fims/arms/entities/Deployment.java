@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.net.URI;
-import java.util.Date;
 
 /**
  * Deployment Entity object
@@ -21,7 +20,7 @@ public class Deployment {
     private String hasScrubbieLayer;
     private String laminates;
     private String newOrReused;
-    private Integer numLayers;
+    private Integer numPlates;
     private String weightsAttached;
 
     // ARMS Process
@@ -49,7 +48,7 @@ public class Deployment {
     private String actualRecoveryTimeOfDay;
     private String intendedDeploymentDate;
     private String intendedRecoveryDate;
-    private Integer intendedSoakTimeInYears;
+    private Integer intendedSoakTimeInMonths;
 
     // Location
     private String continentOcean;
@@ -133,12 +132,12 @@ public class Deployment {
         this.newOrReused = newOrReused;
     }
 
-    public Integer getNumLayers() {
-        return numLayers;
+    public Integer getNumPlates() {
+        return numPlates;
     }
 
-    public void setNumLayers(Integer numLayers) {
-        this.numLayers = numLayers;
+    public void setNumPlates(Integer numPlates) {
+        this.numPlates = numPlates;
     }
 
     public String getWeightsAttached() {
@@ -311,12 +310,12 @@ public class Deployment {
         this.intendedRecoveryDate = intendedRecoveryDate;
     }
 
-    public Integer getIntendedSoakTimeInYears() {
-        return intendedSoakTimeInYears;
+    public Integer getIntendedSoakTimeInMonths() {
+        return intendedSoakTimeInMonths;
     }
 
-    public void setIntendedSoakTimeInYears(Integer intendedSoakTime) {
-        this.intendedSoakTimeInYears = intendedSoakTime;
+    public void setIntendedSoakTimeInMonths(Integer intendedSoakTime) {
+        this.intendedSoakTimeInMonths = intendedSoakTime;
     }
 
     public String getContinentOcean() {
@@ -495,8 +494,8 @@ public class Deployment {
         if (this.getId() != 0 && that.getId() != 0)
             return this.getId() == that.getId();
 
-        if (getNumLayers() != null ? !getNumLayers().equals(that.getNumLayers()) : that.getNumLayers() != null) return false;
-        if (getIntendedSoakTimeInYears() != null ? !getIntendedSoakTimeInYears().equals(that.getIntendedSoakTimeInYears()) : that.getIntendedSoakTimeInYears() != null) return false;
+        if (getNumPlates() != null ? !getNumPlates().equals(that.getNumPlates()) : that.getNumPlates() != null) return false;
+        if (getIntendedSoakTimeInMonths() != null ? !getIntendedSoakTimeInMonths().equals(that.getIntendedSoakTimeInMonths()) : that.getIntendedSoakTimeInMonths() != null) return false;
         if (Float.compare(that.getDecimalLatitude(), getDecimalLatitude()) != 0) return false;
         if (Float.compare(that.getDecimalLongitude(), getDecimalLongitude()) != 0) return false;
         if (getDepthInMeters() != null ? !getDepthInMeters().equals(that.getDepthInMeters()) : that.getDepthInMeters() != null) return false;
@@ -587,7 +586,7 @@ public class Deployment {
         result = 31 * result + (hasScrubbieLayer != null ? hasScrubbieLayer.hashCode() : 0);
         result = 31 * result + (laminates != null ? laminates.hashCode() : 0);
         result = 31 * result + (getNewOrReused() != null ? getNewOrReused().hashCode() : 0);
-        result = 31 * result + (numLayers != null ? numLayers.hashCode() : 0);
+        result = 31 * result + (numPlates != null ? numPlates.hashCode() : 0);
         result = 31 * result + (weightsAttached != null ? weightsAttached.hashCode() : 0);
         result = 31 * result + (getDataEntryPersonInCharge() != null ? getDataEntryPersonInCharge().hashCode() : 0);
         result = 31 * result + (getDeploymentPersonInCharge() != null ? getDeploymentPersonInCharge().hashCode() : 0);
@@ -609,7 +608,7 @@ public class Deployment {
         result = 31 * result + (getActualRecoveryTimeOfDay() != null ? getActualRecoveryTimeOfDay().hashCode() : 0);
         result = 31 * result + (getIntendedDeploymentDate() != null ? getIntendedDeploymentDate().hashCode() : 0);
         result = 31 * result + (getIntendedRecoveryDate() != null ? getIntendedRecoveryDate().hashCode() : 0);
-        result = 31 * result + (intendedSoakTimeInYears != null ? intendedSoakTimeInYears.hashCode() : 0);
+        result = 31 * result + (intendedSoakTimeInMonths != null ? intendedSoakTimeInMonths.hashCode() : 0);
         result = 31 * result + (getContinentOcean() != null ? getContinentOcean().hashCode() : 0);
         result = 31 * result + (getCountry() != null ? getCountry().hashCode() : 0);
         result = 31 * result + (getCounty() != null ? getCounty().hashCode() : 0);

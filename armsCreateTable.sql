@@ -34,7 +34,7 @@ CREATE TABLE `deployments` (
 	  `horizontalDatum` varchar(40) DEFAULT NULL,
 	  `intendedDeploymentDate` varchar(100),
 	  `intendedRecoveryDate` varchar(100),
-	  `intendedSoakTimeInYears` int(3),
+	  `intendedSoakTimeInMonths` int(3),
 	  `island` varchar(100) DEFAULT NULL,
 	  `islandGroup` varchar(100) DEFAULT NULL,
 	  `decimalLatitude` float,
@@ -42,7 +42,7 @@ CREATE TABLE `deployments` (
 	  `decimalLongitude` float,
 	  `newOrReused` varchar(6) DEFAULT '',
 	  `notes` text,
-	  `numLayers` int(3),
+	  `numPlates` int(3),
 	  `numReplicatesInSet` int(5) DEFAULT NULL,
 	  `photoUrl` varchar(2083) DEFAULT '',
 	  `processingPersonInCharge` varchar(125) DEFAULT NULL,
@@ -70,3 +70,6 @@ CREATE TABLE `deployments` (
 	  CONSTRAINT `FKk94yxos6l5qr88ur2eqxq1e2m` FOREIGN KEY (`expeditionId`) REFERENCES `armsExpeditions` (`expeditionId`),
 	  CONSTRAINT `deployments_ibfk_1` FOREIGN KEY (`expeditionId`) REFERENCES `armsExpeditions` (`expeditionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+ALTER TABLE deployments CHANGE numLayers `numPlates` int(3);
+ALTER TABLE deployments CHANGE intendedSoakTimeInYears `intendedSoakTimeInMonths` int(3);
