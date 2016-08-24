@@ -7,114 +7,121 @@
     </metadata>
     <mapping>
         <entity worksheet="Samples" worksheetUniqueKey="deploymentID" conceptAlias="Event"
-                conceptURI="http://purl.org/dc/dcmitype/Event" entityID="1" conceptForwardingAddress="http://arms.biocodellc.com/deployments/{ark}/{suffix}">
+                conceptURI="http://purl.org/dc/dcmitype/Event" entityID="1"
+                conceptForwardingAddress="http://arms.biocodellc.com/deployments/{ark}/{suffix}">
             <attribute column='armsModel' column_internal='armsModel' uri='urn:armsModel' group='ARMS Details'
-                       defined_by='urn:armsModel'>
+                       defined_by='urn:armsModel' datatype="string">
                 <![CDATA[description of ARMS structure (e.g. 10 plates with scrubbie, 9 plates with scrubbie, 10 plates without scrubbie, 9 plates without scrubbie)]]>
             </attribute>
             <attribute column='deploymentID' column_internal="deploymentId" uri='urn:deploymentID' group='ARMS Details'
-                       defined_by='http://rs.tdwg.org/dwc/terms/eventID'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/eventID' datatype="string">
                 <![CDATA[An identifier unique to each ARMS deployed within a project (example: 2016_INDO_CE01)]]>
             </attribute>
             <attribute column='laminates' column_internal="laminates" uri='urn:laminates' group='ARMS Details'
-                       defined_by='urn:laminates'>
+                       defined_by='urn:laminates' datatype="string">
                 <![CDATA[A thin PVC layer affixed to each side of the ARMS PVC plate]]>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='new/reused' column_internal="newOrReused" uri='urn:newReused' group='ARMS Details'
-                       defined_by='urn:newReused'>
+                       defined_by='urn:newReused' datatype="string">
                 <![CDATA[new: The ARMS PVC parts were new when deployed; reused: the ARMS PVC parts had already been deployed, processed, cleaned before being redeployed.]]>
             </attribute>
             <attribute column='numPlates' column_internal="numPlates" uri='urn:numPlates' group='ARMS Details'
-                       defined_by='urn:numPlates'>
+                       defined_by='urn:numPlates' datatype="integer">
                 <![CDATA[Number of plates in ARMS structure (standard is 9 plates creating 4 closed and 4 open layers)]]>
             </attribute>
             <attribute column='hasScrubbieLayer' column_internal="hasScrubbieLayer" uri='urn:hasScrubbieLayer'
-                       group='ARMS Details' defined_by='urn:hasScrubbieLayer'>
+                       group='ARMS Details' defined_by='urn:hasScrubbieLayer' datatype="string">
                 <![CDATA[The top layer of the ARMS contains a scrubbie material]]>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='weightsAttached' column_internal="weightsAttached" uri='urn:weightsAttached'
-                       group='ARMS Details' defined_by='urn:weightsAttached'>
+                       group='ARMS Details' defined_by='urn:weightsAttached' datatype="string">
                 <![CDATA[The ARMS stucture is anchored with the use of weights on each side of the base plate]]>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='attachmentMethod' column_internal="attachmentMethod" uri='urn:attachmentMethod'
-                       group='ARMS Details' defined_by='urn:attachmentMethod'>
+                       group='ARMS Details' defined_by='urn:attachmentMethod' datatype="string">
                 <![CDATA[Method used to anchor the ARMS on the benthos. The usual method is the use of long stainless steal rods hammered through the base plate holes into the substrate. Other methods are use of zipties, drilling, Z-spar etc…]]>
             </attribute>
             <attribute column='intentToBarcode' column_internal="intentToBarcode" uri='urn:intentToBarcode'
-                       group='Data' defined_by='urn:intentToBarcode'>
+                       group='Data' defined_by='urn:intentToBarcode' datatype="string">
                 <![CDATA[If you intend to barcode organisms retained in the 2mm sieve, enter "Intended" in this field. If the barcoding has already happened, enter "Completed". If you are unsure but intend to collect for possible DNA barcoding, enter "Unknown". If you do not intend to Barcode, enter "No". ]]>
             </attribute>
             <attribute column='intentToMetabarcode' column_internal="intentToMetabarcode" uri='urn:intentToMetabarcode'
-                       group='Data' defined_by='urn:intentToMetabarcode'>
+                       group='Data' defined_by='urn:intentToMetabarcode' datatype="string">
                 <![CDATA[If you intend to use metabarcoding on the whole community samples (sessile and motiles), enter"Intended" in this field. If the metabarcoding has already happened, enter "Completed". If you are unsure but intend to collect for possible metabarcoding, enter "Unknown". If you do not intend to metabarcode, enter "No". ]]>
             </attribute>
             <attribute column='intentToCollectOtherDatatypes' column_internal="intentToCollectOtherDatatypes"
                        uri='urn:intentToCollectOtherDatatypes' group='Data'
-                       defined_by='urn:intentToCollectOtherDatatypes'>
+                       defined_by='urn:intentToCollectOtherDatatypes' datatype="string">
                 <![CDATA[If you intend to capture other types of data (e.g. Temperature, Salinity, Wave Action), enter "Intended" in this field. If you have captured other types of data, enter "Completed". If you are unsure about capturing other types of data, enter "Unknown". If you do not intend to collect outher data types, enter "No". ]]>
             </attribute>
             <attribute column='intentToPhotographPlates' column_internal="intentToPhotographPlates"
-                       uri='urn:intentToPhotographPlates' group='Data' defined_by='urn:intentToPhotographPlates'>
+                       uri='urn:intentToPhotographPlates' group='Data' defined_by='urn:intentToPhotographPlates'
+                       datatype="string">
                 <![CDATA[If you intend to take photos of the ARMS plates after disassembly, enter" Intended" in this field. If you have photographed the plates, enter "Completed". If you are unsure you want to photograph the plates, enter "Unknown". If you do not intend to photograph the plates, enter "No".]]>
             </attribute>
             <attribute column='intentToPhotographSpecimens' column_internal="intentToPhotographSpecimens"
-                       uri='urn:intentToPhotographSpecimens' group='Data' defined_by='urn:intentToPhotographSpecimens'>
+                       uri='urn:intentToPhotographSpecimens' group='Data' defined_by='urn:intentToPhotographSpecimens'
+                       datatype="string">
                 <![CDATA[If you intend to take photos of the bigger organisms retained in the 2mm sieve, enter "Intended" in this field. If you have photographed the specimens, enter "Completed" If you are unsure you want to photograph the specimens, enter "Unknown". If you do not intend to photograph the specimens, enter "No".]]>
             </attribute>
             <attribute column='numReplicatesInSet' column_internal="numReplicatesInSet" uri='urn:numReplicatesInSet'
-                       group='Data' defined_by='urn:numReplicatesInSet'>
+                       group='Data' defined_by='urn:numReplicatesInSet' datatype="integer">
                 <![CDATA[A replicate set is defined as several ARMS unit deployed at the same time with the same geographic coordinates and retrieved at the same time. Those units are intended as replicates. Write the number of units in your replicate set.]]>
             </attribute>
             <attribute column='photoURL' column_internal="photoUrl" uri='urn:photoURL' group='Data'
-                       defined_by='urn:photoURL'>
+                       defined_by='urn:photoURL' datatype="string">
                 <![CDATA[Web address where the ARMS photos are located]]>
             </attribute>
             <attribute column='intendedRecoveryDate' column_internal="intendedRecoveryDate"
-                       uri='urn:intendedRecoveryDate' group='deploymentTime' defined_by='urn:intendedRecoveryDate'>
+                       uri='urn:intendedRecoveryDate' group='deploymentTime' defined_by='urn:intendedRecoveryDate'
+                       datatype="datetime">
                 <![CDATA[The date in MM/YY when you intend to retrieve the ARMS unit]]>
             </attribute>
             <attribute column='intendedDeploymentDate' column_internal="intendedDeploymentDate"
-                       uri='urn:intendedDeploymentDate' group='deploymentTime' defined_by='urn:intendedDeploymentDate'>
+                       uri='urn:intendedDeploymentDate' group='deploymentTime' defined_by='urn:intendedDeploymentDate'
+                       datatype="datetime">
                 <![CDATA[The date in MM/YY when you intend to deploy the ARMS unit]]>
             </attribute>
             <attribute column='intendedSoakTimeInMonths' column_internal="intendedSoakTimeInMonths"
                        uri='urn:intendedSoakTimeInMonths' group='deploymentTime'
-                       defined_by='urn:intendedSoakTimeInMonths'>
+                       defined_by='urn:intendedSoakTimeInMonths' datatype="integer">
                 <![CDATA[The number of months that you intend to leave the ARMS unit on the benthos]]>
             </attribute>
             <attribute column='actualDeploymentDate' column_internal="actualDeploymentDate"
-                       uri='urn:actualDeploymentDate' group='deploymentTime' defined_by='urn:actualDeploymentDate'>
+                       uri='urn:actualDeploymentDate' group='deploymentTime' defined_by='urn:actualDeploymentDate'
+                       datatype="datetime">
                 <![CDATA[The actual date DD/MM/YY when the ARMS was deployed]]>
             </attribute>
             <attribute column='actualRecoveryDate' column_internal="actualRecoveryDate"
-                       uri='urn:actualRecoveryDate' group='deploymentTime' defined_by='urn:actualRecoveryDate'>
+                       uri='urn:actualRecoveryDate' group='deploymentTime' defined_by='urn:actualRecoveryDate'
+                       datatype="datetime">
                 <![CDATA[The actual date DD/MM/YY when the ARMS was retrieved]]>
             </attribute>
             <attribute column='actualRecoveryTimeOfDay' column_internal="actualRecoveryTimeOfDay"
                        uri='urn:actualRecoveryTimeOfDay' group='deploymentTime'
-                       defined_by='urn:actualRecoveryTimeOfDay'>
+                       defined_by='urn:actualRecoveryTimeOfDay' datatype="string">
                 <![CDATA[The local time HH:MM when the ARMS was collected]]>
             </attribute>
             <attribute column='actualDeploymentTimeOfDay' column_internal="actualDeploymentTimeOfDay"
                        uri='urn:actualDeploymentTimeOfDay' group='deploymentTime'
-                       defined_by='urn:actualDeploymentTimeOfDay'>
+                       defined_by='urn:actualDeploymentTimeOfDay' datatype="string">
                 <![CDATA[The local time HH:MM when the ARMS was deployed]]>
             </attribute>
             <attribute column='continentOcean' column_internal="continentOcean" uri='urn:continentOcean'
-                       group='location' defined_by='urn:continentOcean'>
+                       group='location' defined_by='urn:continentOcean' datatype="string">
                 <![CDATA[continentOcean from list]]>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='country' column_internal="country" uri='urn:country' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/country'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/country' datatype="string">
                 <![CDATA[country from list]]>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='decimalLatitude' column_internal="decimalLatitude" uri='urn:decimalLatitude'
-                       group='location' defined_by='http://rs.tdwg.org/dwc/terms/decimalLatitude'>
+                       group='location' defined_by='http://rs.tdwg.org/dwc/terms/decimalLatitude' datatype="string">
                 <![CDATA[The geographic latitude in decimal degrees where the ARMS was deployed]]>
                 <dataFormat><![CDATA[>=-90 <=90]]></dataFormat>
             </attribute>
@@ -124,97 +131,101 @@
                 <dataFormat><![CDATA[>=-180 <=180]]></dataFormat>
             </attribute>
             <attribute column='depthInMeters' column_internal="depthInMeters" uri='urn:depthInMeters'
-                       group='location' defined_by='urn:depthInMeters'>
+                       group='location' defined_by='urn:depthInMeters' datatype="integer">
                 <![CDATA[The depth at which the ARMS where anchored to the substrate]]>
             </attribute>
             <attribute column='stationID' column_internal="stationId" uri='urn:stationID' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/locationID'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/locationID' datatype="string">
                 <![CDATA[A unique identifier within the project to each station with the same coordinates and depth]]>
             </attribute>
             <attribute column='county' column_internal="county" uri='urn:county' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/county'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/county' datatype="string">
                 <![CDATA[country from list]]>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='errorRadius' column_internal="errorRadius" uri='urn:errorRadius' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters' datatype="integer">
                 <![CDATA[the maximum radius from GPS location]]>
             </attribute>
             <attribute column='habitat' column_internal="habitat" uri='urn:habitat' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/habitat'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/habitat' datatype="string">
                 <![CDATA[Describes the coastal habitat where the ARMS was deployed: coral reef, sand flat, seagrass bed, mangrove, rocky shore…]]>
             </attribute>
             <attribute column='substrateType' column_internal="substrateType" uri='urn:substrateType' group='location'
-                       defined_by='urn:substrateType'>
+                       defined_by='urn:substrateType' datatype="string">
                 <![CDATA[Substrate was hard (coral reef, rocky shores), soft (sand flat), mixed (a mix of hard and soft)]]>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='horizontalDatum' column_internal="horizontalDatum" uri='urn:horizontalDatum'
                        group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/geodeticDatum'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/geodeticDatum' datatype="string">
                 <![CDATA[Reference system used for the geographic longitude and latitude]]>
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='island' column_internal="island" uri='urn:island' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/island'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/island' datatype="string">
                 <![CDATA[e.g. Maui, Moorea]]>
             </attribute>
             <attribute column='islandGroup' column_internal="islandGroup" uri='urn:islandGroup' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/islandGroup'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/islandGroup' datatype="string">
                 <![CDATA[e.g. Hawaii, Society Islands]]>
             </attribute>
             <attribute column='region/Location' column_internal="region" uri='urn:region/Location' group='location'
-                       defined_by='http://purl.org/dc/terms/Location'>
+                       defined_by='http://purl.org/dc/terms/Location' datatype="string">
                 <![CDATA[broad geographic reference less specific than locality, Example: north coast, Puget Sound]]>
             </attribute>
             <attribute column='locality' column_internal="locality" uri='urn:locality' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/locality'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/locality' datatype="string">
                 <![CDATA[more specific site - Example: to the north of a certain pass, 100 meters from buoy, etc.]]>
             </attribute>
             <attribute column='siteDetails' column_internal="siteDetails" uri='urn:siteDetails' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/locationRemarks'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/locationRemarks' datatype="string">
                 <![CDATA[Notes about the site]]>
             </attribute>
             <attribute column='replicateLabel' column_internal="replicateLabel" uri='urn:replicateLabel'
-                       group='location' defined_by='urn:replicateLabel'>
+                       group='location' defined_by='urn:replicateLabel' datatype="string">
                 <![CDATA[An identical identifier to all ARMS of a replicate]]>
             </attribute>
             <attribute column='depthOfBottomMeters' column_internal="depthOfBottomMeters" uri='urn:depthOfBottomMeters'
-                       group='location' defined_by='urn:depthOfBottomMeters'>
+                       group='location' defined_by='urn:depthOfBottomMeters' datatype="integer">
                 <![CDATA[In the event where the ARMS was not anchored on the actual bottom (oil rig, dock, etc.), indicate the depth of the substrate below the deployment. ]]>
             </attribute>
             <attribute column='stateProvince' column_internal="stateProvince" uri='urn:stateProvince' group='location'
-                       defined_by='http://rs.tdwg.org/dwc/terms/stateProvince'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/stateProvince' datatype="string">
                 <![CDATA[State or Province if available]]>
             </attribute>
             <attribute column='deploymentPersonInCharge' column_internal="deploymentPersonInCharge"
                        uri='urn:deploymentPersonInCharge' group='ARMS Process'
-                       defined_by='http://rs.tdwg.org/dwc/terms/recordedBy'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/recordedBy' datatype="string">
                 <![CDATA[Name of the person supervising the deployment event]]>
             </attribute>
             <attribute column='recoveryPersonInCharge' column_internal="recoveryPersonInCharge"
-                       uri='urn:recoveryPersonInCharge' group='ARMS Process' defined_by='urn:recoveryPersonInCharge'>
+                       uri='urn:recoveryPersonInCharge' group='ARMS Process' defined_by='urn:recoveryPersonInCharge'
+                       datatype="string">
                 <![CDATA[Name of the person supervising the recovery event]]>
             </attribute>
             <attribute column='processingPersonInCharge' column_internal="processingPersonInCharge"
                        uri='urn:processingPersonInCharge' group='ARMS Process'
-                       defined_by='urn:processingPersonInCharge'>
+                       defined_by='urn:processingPersonInCharge' datatype="string">
                 <![CDATA[Name of the person supervising the processing event]]>
             </attribute>
             <attribute column='dataEntryPersonInCharge' column_internal="dataEntryPersonInCharge"
-                       uri='urn:dataEntryPersonInCharge' group='ARMS Process' defined_by='urn:dataEntryPersonInCharge'>
+                       uri='urn:dataEntryPersonInCharge' group='ARMS Process' defined_by='urn:dataEntryPersonInCharge'
+                       datatype="string">
                 <![CDATA[Name of the person supervising the data entry]]>
             </attribute>
             <attribute column='durationToProcessing' column_internal="durationToProcessing"
-                       uri='urn:durationToProcessing' group='ARMS Process' defined_by='urn:durationToProcessing'>
+                       uri='urn:durationToProcessing' group='ARMS Process' defined_by='urn:durationToProcessing'
+                       datatype="integer">
                 <![CDATA[The amount of time in hours between the recovery event and the processing of the ARMS unit]]>
             </attribute>
             <attribute column='notes' column_internal="notes" uri='urn:notes' group='ARMS Process'
-                       defined_by='http://rs.tdwg.org/dwc/terms/fieldNotes'>
+                       defined_by='http://rs.tdwg.org/dwc/terms/fieldNotes' datatype="string">
                 <![CDATA[This field can be used to record information about the site, the ARMS unit, the processing etc…]]>
             </attribute>
             <attribute column='removalProtocol' column_internal="removalProtocol" uri='urn:removalProtocol'
-                       group='ARMS Process' defined_by='http://rs.tdwg.org/dwc/terms/samplingProtocol'>
+                       group='ARMS Process' defined_by='http://rs.tdwg.org/dwc/terms/samplingProtocol'
+                       datatype="string">
                 <![CDATA[the means of recovery (e.g. mesh crate, non-mesh crate, with gasket, without gasket)]]>
             </attribute>
         </entity>
@@ -296,6 +307,8 @@
             <rule type="isInteger" column="numReplicatesInSet" level="error"/>
             <rule type="isInteger" column="intendedSoakTimeInMonths" level="error"/>
             <rule type="isInteger" column="depthInMeters" level="error"/>
+            <rule type="isInteger" column="depthOfBottomMeters" level="error"/>
+            <rule type="isInteger" column="durationToProcessing" level="error"/>
             <rule type="isValidUrl" column="photoURL" level="warning"/>
         </worksheet>
         <lists>
