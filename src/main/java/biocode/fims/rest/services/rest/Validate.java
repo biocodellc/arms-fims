@@ -122,12 +122,10 @@ public class Validate extends FimsService {
         );
 
         // Test the configuration file to see that we're good to go...
-        ConfigurationFileTester cFT = new ConfigurationFileTester();
+        ConfigurationFileTester cFT = new ConfigurationFileTester(p.configFile);
         boolean configurationGood = true;
 
-        cFT.init(p.configFile);
-
-        if (!cFT.checkUniqueKeys()) {
+        if (!cFT.isValidConfig()) {
             String message = "<br>CONFIGURATION FILE ERROR...<br>Please talk to your project administrator to fix the following error:<br>\t\n";
             message += cFT.getMessages();
             processController.setHasErrors(true);

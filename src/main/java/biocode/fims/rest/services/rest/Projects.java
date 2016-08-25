@@ -1,6 +1,5 @@
 package biocode.fims.rest.services.rest;
 
-import biocode.fims.bcid.ExpeditionMinter;
 import biocode.fims.bcid.ProjectMinter;
 import biocode.fims.config.ConfigurationFileFetcher;
 import biocode.fims.digester.*;
@@ -19,7 +18,6 @@ import biocode.fims.service.OAuthProviderService;
 import biocode.fims.service.ProjectService;
 import biocode.fims.service.UserService;
 import biocode.fims.settings.SettingsManager;
-import org.apache.commons.digester3.Digester;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -68,7 +66,7 @@ public class Projects extends FimsService {
             File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), true).getOutputFile();
 
             Mapping mapping = new Mapping();
-            mapping.addMappingRules(new Digester(), configFile);
+            mapping.addMappingRules(configFile);
             String defaultSheet = mapping.getDefaultSheetName();
             ArrayList<Attribute> attributeList = mapping.getAllAttributes(defaultSheet);
 
@@ -98,7 +96,7 @@ public class Projects extends FimsService {
         File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), true).getOutputFile();
 
         Mapping mapping = new Mapping();
-        mapping.addMappingRules(new Digester(), configFile);
+        mapping.addMappingRules(configFile);
         ArrayList<Attribute> attributeArrayList = mapping.getAllAttributes(mapping.getDefaultSheetName());
 
         JSONObject response = new JSONObject();
@@ -671,7 +669,7 @@ public class Projects extends FimsService {
         File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), true).getOutputFile();
 
         Mapping mapping = new Mapping();
-        mapping.addMappingRules(new Digester(), configFile);
+        mapping.addMappingRules(configFile);
 
         return Response.ok("{\"uniqueKey\":\"" + mapping.getDefaultSheetUniqueKey() + "\"}").build();
     }
