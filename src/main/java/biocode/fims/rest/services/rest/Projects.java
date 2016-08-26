@@ -18,6 +18,7 @@ import biocode.fims.service.OAuthProviderService;
 import biocode.fims.service.ProjectService;
 import biocode.fims.service.UserService;
 import biocode.fims.settings.SettingsManager;
+import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -108,17 +109,28 @@ public class Projects extends FimsService {
             JSONObject attribute = new JSONObject();
             attribute.put("column", a.getColumn());
             attribute.put("column_internal", a.getColumn_internal());
+            attribute.put("datatype", a.getDatatype());
+            attribute.put("dataformat", (!StringUtils.isBlank(a.getDataformat())) ? a.getDataformat() : null);
 
             keys.add(attribute);
         }
 
-        JSONArray operators = new JSONArray();
-        for (Operator op: Operator.values()) {
-            operators.add(op.name());
+        JSONArray dataTypeOperators = new JSONArray();
+        for (DataType dataType: DataType.values()) {
+            JSONObject dtOperators = new JSONObject();
+            JSONArray operators = new JSONArray();
+
+            for (Operator op : Operator.values()) {
+                if (op.getDataTypes().contains(dataType)) {
+                    operators.add(op.name());
+                }
+            }
+            dtOperators.put(dataType, operators);
+            dataTypeOperators.add(dtOperators);
         }
 
         response.put("keys", keys);
-        response.put("operators", operators);
+        response.put("operators", dataTypeOperators);
 
         return Response.ok(response.toJSONString()).build();
     }
