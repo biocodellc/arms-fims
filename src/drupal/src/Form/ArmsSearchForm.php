@@ -9,18 +9,29 @@ namespace Drupal\arms\Form;
 
 use Drupal\arms\Ajax\BootstrapSortableCommand;
 use Drupal\arms\Controller\ArmsController;
+use Drupal\arms\Controller\ArmsFilterUtils;
+use Drupal\arms\Form\ArmsSearchFieldForm;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\arms\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use GuzzleHttp\Exception\RequestException;
 
 class ArmsSearchForm extends FormBase {
-  private static $filter_keys_cache_id = 'arms_cache_filter_keys';
-  private static $filter_operators_cache_id = 'arms_cache_filter_operators';
+  private $OPERATOR_MAP = [
+    "EQUALS" => "=",
+    "LESS_THEN" => "<",
+    "GREATER_THEN" => ">",
+    "ENDS_WITH" => "Ends With",
+    "STARTS_WITH" => "Starts With",
+  ];
 
   /**
    * {@inheritdoc}
@@ -32,7 +43,7 @@ class ArmsSearchForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $options = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $filter_columns = NULL) {
 
     $arms_controller = new ArmsController();
     $expeditions = $arms_controller->getExpeditions();
@@ -80,8 +91,6 @@ class ArmsSearchForm extends FormBase {
     }
 
     // Add elements that don't already exist
-    $filter_columns = $this->getFilterColumns();
-    $filter_operators = $this->getFilterOperators();
     for ($delta = 0; $delta < $filter_count; $delta++) {
       if (!isset($form['filters'][$delta])) {
         if ($delta == 0) {
@@ -90,6 +99,8 @@ class ArmsSearchForm extends FormBase {
         else {
           $label = "And";
         }
+
+        $column = $this->getFilterColumnValue($delta, $form_state);
         $element = [
           '#type' => 'container',
           '#prefix' => "<span class=\"span-label\">" . $label . "</span>",
@@ -100,17 +111,41 @@ class ArmsSearchForm extends FormBase {
 
         $element_column = [
           '#type' => 'select',
-          '#options' => $filter_columns,
+          '#options' => $this->getFilterColumnsForDisplay(),
+          '#default_value' => $column,
+          '#ajax' => [
+            'callback' => '::updateFilterOperatorsCallback',
+            'wrapper' => 'filters',
+          ],
         ];
 
         $element_operator = [
           '#type' => 'select',
-          '#options' => $filter_operators,
+          '#options' => $this->getOperatorsForColumn($column),
         ];
 
         $element_value = [
           '#type' => 'textfield',
         ];
+
+        if ($filter_count > 0) {
+          $element_remove = [
+            '#type' => 'submit',
+            '#value' => '',
+            '#name' => 'removeFilter-' . $delta,
+            '#submit' => ['::removeFilter'],
+            '#attributes' => [
+              'class' => ['glyphicon', 'glyphicon-remove'],
+              'data-delta' => $delta,
+            ],
+            '#ajax' => [
+              'callback' => '::removeFilterCallback',
+              'wrapper' => 'filters',
+            ],
+          ];
+          $form['filters'][$delta]['remove'] = $element_remove;
+        }
+
         $form['filters'][$delta] = $element;
         $form['filters'][$delta]['column'] = $element_column;
         $form['filters'][$delta]['operator'] = $element_operator;
@@ -121,9 +156,12 @@ class ArmsSearchForm extends FormBase {
     if (!isset($form['filters'][$filter_count - 1]['add'])) {
       $form['filters'][$filter_count - 1]['add'] = [
         '#type' => 'submit',
-        '#value' => '+',
+        '#value' => '',
         '#name' => 'addFilter',
         '#submit' => ['::addFilter'],
+        '#attributes' => [
+          'class' => ['glyphicon', 'glyphicon-plus'],
+        ],
         '#ajax' => [
           'callback' => '::addFilterCallback',
           'wrapper' => 'filters',
@@ -142,8 +180,6 @@ class ArmsSearchForm extends FormBase {
       '#id' => 'query-table',
       '#ajax' => [
         'callback' => '::query',
-        // 'wrapper' => 'query-results',
-        // 'method' => 'html',
       ],
     ];
 
@@ -214,6 +250,36 @@ class ArmsSearchForm extends FormBase {
     return $form['filters'];
   }
 
+  public function removeFilter(array &$form, FormStateInterface &$form_state) {
+    $c = $form_state->get('filter_count') - 1;
+    $form_state->set('filter_count', $c);
+
+    $delta = $form_state->getTriggeringElement()['#attributes']['data-delta'];
+    $last_filter = array_pop($form_state->getValue('filters'));
+
+    $form_state->setValue([
+      'filters',
+      $delta,
+      'column',
+    ], $last_filter['column']);
+    $form_state->setValue([
+      'filters',
+      $delta,
+      'operator',
+    ], $last_filter['operator']);
+    $form_state->setValue(['filters', $delta, 'value'], $last_filter['value']);
+
+    $form_state->setRebuild(TRUE);
+  }
+
+  public function removeFilterCallback(array &$form, FormStateInterface &$form_state) {
+    return $form['filters'];
+  }
+
+  public function updateFilterOperatorsCallback(array &$form, FormStateInterface &$form_state) {
+    return $form['filters'];
+  }
+
   public function query(array $form, FormStateInterface $form_state) {
     $arms_config = \Drupal::config('arms.settings');
     $rest_root = $arms_config->get("arms_rest_uri");
@@ -243,7 +309,7 @@ class ArmsSearchForm extends FormBase {
     ));
 
     $response->addCommand(new BootstrapSortableCommand());
-    
+
     return $response;
   }
 
@@ -317,17 +383,6 @@ class ArmsSearchForm extends FormBase {
     }
   }
 
-  private function getFilterColumns() {
-    if ($cache = \Drupal::cache()->get($this::$filter_keys_cache_id)) {
-      $filter_keys = $cache->data;
-    }
-    else {
-      $this->setFilterOptions();
-      return $this->getFilterColumns();
-    }
-    return $filter_keys;
-  }
-
   /**
    * create a Query json object from the form filter and deployments fields
    * @param array $form
@@ -380,48 +435,57 @@ class ArmsSearchForm extends FormBase {
     return $filters;
   }
 
-  private function getFilterOperators() {
-    if ($cache = \Drupal::cache()->get($this::$filter_operators_cache_id)) {
-      $filter_operators = $cache->data;
+  private function getFilterColumnsForDisplay() {
+    $filter_columns = ArmsFilterUtils::getFilterColumns();
+    $filter_columns_display = [];
+
+    foreach ($filter_columns as $column) {
+      $filter_columns_display[$column->column_internal] = $column->column;
     }
-    else {
-      $this->setFilterOptions();
-      return $this->getFilterOperators();
-    }
-    return $filter_operators;
+
+    return $filter_columns_display;
   }
 
-  private function setFilterOptions() {
-    $arms_config = \Drupal::config('arms.settings');
-    $rest_root = $arms_config->get("arms_rest_uri");
+  private function getFilterColumnValue($delta, $form_state) {
+    return $form_state->getValue([
+      'filters',
+      $delta,
+      'column',
+    ], ArmsFilterUtils::getFilterColumns()[0]->column_internal);
+  }
 
-    $client = \Drupal::service('http_client');
-    try {
-      $filter_keys = [];
-      $filter_operators = [];
+  private function getOperatorsForColumn($column_internal) {
+    $filter_columns = ArmsFilterUtils::getFilterColumns();
+    $operators = ArmsFilterUtils::getFilterOperators();
 
-      $result = $client->get(
-        $rest_root . 'projects/filterOptions',
-        ['Accept' => 'application/json']
-      );
-      $data = json_decode($result->getBody());
+    $datatype = "STRING";
 
-      foreach ($data->keys as $option) {
-        if ($option->column != 'deploymentID') {
-          $filter_keys[$option->column_internal] = $this->t($option->column);
-        }
+    foreach ($filter_columns as $c) {
+      if ($c->column_internal == $column_internal) {
+        $datatype = $c->datatype;
       }
-      foreach ($data->operators as $operator) {
-        $filter_operators[$operator] = $operator;
-      }
+    }
 
-      \Drupal::cache()->set($this::$filter_keys_cache_id, $filter_keys);
-      \Drupal::cache()
-        ->set($this::$filter_operators_cache_id, $filter_operators);
+    $column_operators = [];
+    $column_operators_display = [];
+
+    foreach ($operators as $operator) {
+      if (key($operator) == $datatype) {
+        $column_operators = array_merge([], current($operator));
+        break;
+      }
     }
-    catch (RequestException $e) {
-      watchdog_exception('arms', $e);
-      drupal_set_message('Error fetching filter options.', 'error');
+
+    if (sizeof($column_operators) == 0) {
+      // default to STRING datatype
+      $column_operators = array_merge([], $operators[0]);
     }
+
+    foreach ($column_operators as $operator) {
+      $val = (array_key_exists($operator, $this->OPERATOR_MAP) ? $this->OPERATOR_MAP[$operator] : $operator);
+      array_push($column_operators_display, $val);
+    }
+
+    return array_combine($column_operators, $column_operators_display);
   }
 }

@@ -54,6 +54,14 @@ arms.search:
   requirements:
     _permission: 'access content'
 
+arms.search.filterColumns:
+  path: '/deployments/search/filter'
+  defaults:
+    _form: '\Drupal\arms\Form\ArmsSearchFieldForm'
+    _title: 'ARMS Search Fields'
+  requirements:
+    _permission: 'access content'
+
 arms.settings:
   path: '/admin/config/arms/configuration'
   defaults:

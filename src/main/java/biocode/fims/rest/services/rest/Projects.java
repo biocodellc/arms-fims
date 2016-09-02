@@ -109,7 +109,7 @@ public class Projects extends FimsService {
             JSONObject attribute = new JSONObject();
             attribute.put("column", a.getColumn());
             attribute.put("column_internal", a.getColumn_internal());
-            attribute.put("datatype", a.getDatatype());
+            attribute.put("datatype", a.getDatatype().name());
             attribute.put("dataformat", (!StringUtils.isBlank(a.getDataformat())) ? a.getDataformat() : null);
 
             keys.add(attribute);

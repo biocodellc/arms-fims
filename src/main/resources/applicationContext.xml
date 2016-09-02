@@ -23,4 +23,6 @@
 
     <bean id="expeditionMinter" class="biocode.fims.bcid.ExpeditionMinter"/>
 
+    <bean id="resolver" class="biocode.fims.bcid.Resolver" />
+
 </beans>
