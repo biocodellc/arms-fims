@@ -261,6 +261,8 @@
                 <field>islandGroup</field>
                 <field>region/Location</field>
                 <field>locality</field>
+                <field>siteDetails</field>
+                <field>replicateLabel</field>
                 <field>depthOfBottomMeters</field>
                 <field>stateProvince</field>
                 <field>actualDeploymentTimeOfDay</field>
