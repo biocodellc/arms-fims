@@ -77,12 +77,12 @@
             </attribute>
             <attribute column='intendedRecoveryDate' column_internal="intendedRecoveryDate"
                        uri='urn:intendedRecoveryDate' group='deploymentTime' defined_by='urn:intendedRecoveryDate'
-                       datatype="datetime">
+                       datatype="datetime" dataformat="MM/yy">
                 <![CDATA[The date in MM/YY when you intend to retrieve the ARMS unit]]>
             </attribute>
             <attribute column='intendedDeploymentDate' column_internal="intendedDeploymentDate"
                        uri='urn:intendedDeploymentDate' group='deploymentTime' defined_by='urn:intendedDeploymentDate'
-                       datatype="datetime">
+                       datatype="datetime" dataformat="MM/yy">
                 <![CDATA[The date in MM/YY when you intend to deploy the ARMS unit]]>
             </attribute>
             <attribute column='intendedSoakTimeInMonths' column_internal="intendedSoakTimeInMonths"
@@ -92,22 +92,22 @@
             </attribute>
             <attribute column='actualDeploymentDate' column_internal="actualDeploymentDate"
                        uri='urn:actualDeploymentDate' group='deploymentTime' defined_by='urn:actualDeploymentDate'
-                       datatype="datetime">
+                       datatype="datetime" dataformat="dd/MM/yy">
                 <![CDATA[The actual date DD/MM/YY when the ARMS was deployed]]>
             </attribute>
             <attribute column='actualRecoveryDate' column_internal="actualRecoveryDate"
                        uri='urn:actualRecoveryDate' group='deploymentTime' defined_by='urn:actualRecoveryDate'
-                       datatype="datetime">
+                       datatype="datetime" dataformat="dd/MM/yy">
                 <![CDATA[The actual date DD/MM/YY when the ARMS was retrieved]]>
             </attribute>
             <attribute column='actualRecoveryTimeOfDay' column_internal="actualRecoveryTimeOfDay"
                        uri='urn:actualRecoveryTimeOfDay' group='deploymentTime'
-                       defined_by='urn:actualRecoveryTimeOfDay' datatype="string">
+                       defined_by='urn:actualRecoveryTimeOfDay' datatype="datetime" dataformat="HH:mm">
                 <![CDATA[The local time HH:MM when the ARMS was collected]]>
             </attribute>
             <attribute column='actualDeploymentTimeOfDay' column_internal="actualDeploymentTimeOfDay"
                        uri='urn:actualDeploymentTimeOfDay' group='deploymentTime'
-                       defined_by='urn:actualDeploymentTimeOfDay' datatype="string">
+                       defined_by='urn:actualDeploymentTimeOfDay' datatype="datetime" dataformat="HH:mm">
                 <![CDATA[The local time HH:MM when the ARMS was deployed]]>
             </attribute>
             <attribute column='continentOcean' column_internal="continentOcean" uri='urn:continentOcean'
