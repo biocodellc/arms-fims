@@ -3,7 +3,7 @@ var appRoot = "/arms/";
 var armsFimsRestRoot = "/arms/rest/";
 
 $.ajaxSetup({
-    beforeSend: function(jqxhr, config) {
+    beforeSend: function (jqxhr, config) {
         jqxhr.config = config;
         var armsSessionStorage = JSON.parse(window.sessionStorage.arms);
         var accessToken = armsSessionStorage.accessToken;
@@ -17,7 +17,7 @@ $.ajaxSetup({
     }
 });
 
-$.ajaxPrefilter(function(opts, originalOpts, jqXHR) {
+$.ajaxPrefilter(function (opts, originalOpts, jqXHR) {
     // you could pass this option in on a "retry" so that it doesn't
     // get all recursive on you.
     if (opts.refreshRequest) {
@@ -40,12 +40,12 @@ $.ajaxPrefilter(function(opts, originalOpts, jqXHR) {
 
     // if the request fails, do something else
     // yet still resolve
-    jqXHR.fail(function() {
+    jqXHR.fail(function () {
         var args = Array.prototype.slice.call(arguments);
         var armsSessionStorage = JSON.parse(window.sessionStorage.arms);
         var refreshToken = armsSessionStorage.refreshToken;
         if ((jqXHR.status === 401 || (jqXHR.status === 400 && jqXHR.responseJSON.usrMessage == "invalid_grant"))
-                && !isTokenExpired() && refreshToken) {
+            && !isTokenExpired() && refreshToken) {
             $.ajax({
                 url: armsFimsRestRoot + 'authenticationService/oauth/refresh',
                 method: 'POST',
@@ -54,7 +54,7 @@ $.ajaxPrefilter(function(opts, originalOpts, jqXHR) {
                     client_id: client_id,
                     refresh_token: refreshToken
                 }),
-                error: function() {
+                error: function () {
                     window.sessionStorage.arms = JSON.stringify({});
 
                     // reject with the original 401 data
@@ -63,7 +63,7 @@ $.ajaxPrefilter(function(opts, originalOpts, jqXHR) {
                     if (!window.location.pathname == appRoot)
                         window.location = appRoot + "login";
                 },
-                success: function(data) {
+                success: function (data) {
                     var armsSessionStorage = {
                         accessToken: data.access_token,
                         refreshToken: data.refresh_token,
@@ -109,7 +109,7 @@ function loadingDialog(promise) {
     dialog(msg, "", null);
 
     // close the dialog when the ajax call has returned only if the html is the same
-    promise.always(function(){
+    promise.always(function () {
         if (dialogContainer.html() == msg) {
             dialogContainer.dialog("close");
         }
@@ -119,7 +119,7 @@ function loadingDialog(promise) {
 // function to retrieve a user's projects and populate the page
 function listProjects(username, url, expedition) {
     var jqxhr = $.getJSON(url
-    ).done(function(data) {
+    ).done(function (data) {
         if (!expedition) {
             var html = '<h1>Project Manager (' + username + ')</h2>\n';
         } else {
@@ -128,9 +128,9 @@ function listProjects(username, url, expedition) {
         var expandTemplate = '<br>\n<a class="expand-content" id="{project}-{section}" href="javascript:void(0);">\n'
             + '\t <img src="' + appRoot + 'images/right-arrow.png" id="arrow" class="img-arrow">{text}'
             + '</a>\n';
-        $.each(data, function(index, element) {
-            key=element.projectId;
-            val=element.projectTitle;
+        $.each(data, function (index, element) {
+            key = element.projectId;
+            val = element.projectTitle;
             var project = val.replace(new RegExp('[#. ()]', 'g'), '_') + '_' + key;
 
             html += expandTemplate.replace('{text}', element.projectTitle).replace('-{section}', '');
@@ -140,7 +140,7 @@ function listProjects(username, url, expedition) {
                 html += '<div id="{project}-metadata" class="toggle-content">Loading Project Metadata...</div>';
                 html += expandTemplate.replace('{text}', 'Project Expeditions').replace('{section}', 'expeditions');
                 html += '<div id="{project}-expeditions" class="toggle-content">Loading Project Expeditions...</div>';
-                html +=  expandTemplate.replace('{text}', 'Project Users').replace('{section}', 'users');
+                html += expandTemplate.replace('{text}', 'Project Users').replace('{section}', 'users');
                 html += '<div id="{project}-users" class="toggle-content">Loading Project Users...</div>';
             } else {
                 html += 'Loading...';
@@ -160,20 +160,20 @@ function listProjects(username, url, expedition) {
         $(".sectioncontent").html(html);
 
         // store project id with element, so we don't have to retrieve project id later with an ajax call
-        $.each(data, function(index, element) {
-            key=element.projectId;
-            val=element.projectTitle;
+        $.each(data, function (index, element) {
+            key = element.projectId;
+            val = element.projectTitle;
             var project = val.replace(new RegExp('[#. ()]', 'g'), '_') + '_' + key;
 
             if (!expedition) {
-                $('div#' + project +'-metadata').data('projectId', key);
-                $('div#' + project +'-users').data('projectId', key);
+                $('div#' + project + '-metadata').data('projectId', key);
+                $('div#' + project + '-users').data('projectId', key);
                 $('div#' + project + '-expeditions').data('projectId', key);
             } else {
                 $('div#' + project).data('projectId', key);
             }
         });
-    }).fail(function(jqxhr) {
+    }).fail(function (jqxhr) {
         $(".sectioncontent").html(jqxhr.responseText);
     });
     return jqxhr;
@@ -198,22 +198,23 @@ function getQueryParam(sParam) {
 }
 
 // Populate Div element from a REST service with HTML
-function populateDivFromService(url,elementID,failMessage)  {
+function populateDivFromService(url, elementID, failMessage) {
     if (elementID.indexOf('#') == -1) {
         elementID = '#' + elementID
     }
-    return jqxhr = $.ajax(url, function() {})
-        .done(function(data) {
+    return jqxhr = $.ajax(url, function () {
+    })
+        .done(function (data) {
             $(elementID).html(data);
         })
-        .fail(function() {
+        .fail(function () {
             $(elementID).html(failMessage);
         });
 }
 
 function failError(jqxhr) {
     var buttons = {
-        "OK": function(){
+        "OK": function () {
             $("#dialogContainer").removeClass("error");
             $(this).dialog("close");
         }
@@ -237,7 +238,7 @@ function dialog(msg, title, buttons) {
     }
 
     if (!$(".ui-dialog").is(":visible") || (dialogContainer.dialog("option", "title") != title ||
-        dialogContainer.dialog("option" , "buttons") != buttons)) {
+        dialogContainer.dialog("option", "buttons") != buttons)) {
         dialogContainer.dialog({
             modal: true,
             autoOpen: true,
@@ -246,7 +247,7 @@ function dialog(msg, title, buttons) {
             width: 'auto',
             draggable: false,
             buttons: buttons,
-            position: { my: "center top", at: "top", of: window}
+            position: {my: "center top", at: "top", of: window}
         });
     }
 
@@ -255,18 +256,18 @@ function dialog(msg, title, buttons) {
 
 // A short message
 function showMessage(message) {
-$('#alerts').append(
+    $('#alerts').append(
         '<div class="fims-alert">' +
-            '<button type="button" class="close" data-dismiss="alert">' +
-            '&times;</button>' + message + '</div>');
+        '<button type="button" class="close" data-dismiss="alert">' +
+        '&times;</button>' + message + '</div>');
 }
 
 // A big message
 function showBigMessage(message) {
-$('#alerts').append(
+    $('#alerts').append(
         '<div class="fims-alert" style="height:400px">' +
-            '<button type="button" class="close" data-dismiss="alert">' +
-            '&times;</button>' + message + '</div>');
+        '<button type="button" class="close" data-dismiss="alert">' +
+        '&times;</button>' + message + '</div>');
 }
 
 // Get the projectID
@@ -278,10 +279,10 @@ function getProjectID() {
 
 function resetSubmit() {
     var jqxhr = $.get(armsFimsRestRoot + "users/" + $("#username").val() + "/sendResetToken")
-        .done(function(data) {
+        .done(function (data) {
             if (data.success) {
                 var buttons = {
-                    "Ok": function() {
+                    "Ok": function () {
                         window.location.replace(appRoot);
                         $(this).dialog("close");
                     }
@@ -291,7 +292,7 @@ function resetSubmit() {
             } else {
                 failError(null);
             }
-        }).fail(function(jqxhr) {
+        }).fail(function (jqxhr) {
             failError(jqxhr);
         });
 }
@@ -301,10 +302,10 @@ function resetSubmit() {
 // function to submit the reset password form
 function resetPassSubmit() {
     var jqxhr = $.post(armsFimsRestRoot + "users/resetPassword/", $("#resetForm").serialize())
-        .done(function(data) {
+        .done(function (data) {
             if (data.success) {
                 var buttons = {
-                    "Ok": function() {
+                    "Ok": function () {
                         window.location.replace(appRoot);
                         $(this).dialog("close");
                     }
@@ -314,7 +315,7 @@ function resetPassSubmit() {
             } else {
                 failError(null);
             }
-        }).fail(function(jqxhr) {
+        }).fail(function (jqxhr) {
             failError(jqxhr);
         });
 }
@@ -326,11 +327,12 @@ function getResourceTypesMinusDataset(id) {
     var url = armsFimsRestRoot + "resourceTypes/minusDataset/";
 
     // get JSON from server and loop results
-    var jqxhr = $.getJSON(url, function() {})
-        .done(function(data) {
+    var jqxhr = $.getJSON(url, function () {
+    })
+        .done(function (data) {
             var options = '<option value=0>Select a Concept</option>';
-            $.each(data, function(key, val) {
-                options+='<option value="' + val.resourceType + '">' + val.string + '</option>';
+            $.each(data, function (key, val) {
+                options += '<option value="' + val.resourceType + '">' + val.string + '</option>';
             });
             $("#" + id).html(options);
             if (id == "adminProjects") {
@@ -344,16 +346,16 @@ function getResourceTypesMinusDataset(id) {
 function bcidCreatorSubmit() {
     /* Send the data using post */
     var posting = $.post(armsFimsRestRoot + "bcids", $("#bcidForm").serialize())
-        .done(function(data) {
+        .done(function (data) {
             var b = {
-                "Ok": function() {
+                "Ok": function () {
                     $('#bcidForm')[0].reset();
                     $(this).dialog("close");
                 }
             }
             var msg = "Successfully created the bcid with identifier: " + data.identifier;
             dialog(msg, "Success creating bcid!", b);
-        }).fail(function(jqxhr) {
+        }).fail(function (jqxhr) {
             failError(jqxhr);
         });
 }
@@ -363,22 +365,22 @@ function bcidCreatorSubmit() {
 // function to populate the expeditions.html page
 function populateExpeditionPage(username) {
     var jqxhr = listProjects(username, armsFimsRestRoot + 'projects/user/list', true
-    ).done(function() {
+    ).done(function () {
         // attach toggle function to each project
-        $(".expand-content").click(function() {
+        $(".expand-content").click(function () {
             loadExpeditions(this.id)
         });
-    }).fail(function(jqxhr) {
+    }).fail(function (jqxhr) {
         $("#sectioncontent").html(jqxhr.responseText);
     });
 }
 
 // function to load the expeditions.html subsections
 function loadExpeditions(id) {
-    if ($('.toggle-content#'+id).is(':hidden')) {
-        $('.img-arrow', '#'+id).attr("src", appRoot + "images/down-arrow.png");
+    if ($('.toggle-content#' + id).is(':hidden')) {
+        $('.img-arrow', '#' + id).attr("src", appRoot + "images/down-arrow.png");
     } else {
-        $('.img-arrow', '#'+id).attr("src", appRoot + "images/right-arrow.png");
+        $('.img-arrow', '#' + id).attr("src", appRoot + "images/right-arrow.png");
     }
     // check if we've loaded this section, if not, load from service
     var divId = 'div#' + id
@@ -388,19 +390,19 @@ function loadExpeditions(id) {
     } else if ($(divId).children().length == 0) {
         listExpeditions(divId);
     }
-    $('.toggle-content#'+id).slideToggle('slow');
+    $('.toggle-content#' + id).slideToggle('slow');
 }
 
 // retrieve the expeditions for a project and display them on the page
 function listExpeditions(divId) {
     var projectId = $(divId).data('projectId');
     var jqxhr = $.getJSON(armsFimsRestRoot + 'projects/' + projectId + '/expeditions/')
-        .done(function(data) {
+        .done(function (data) {
             var html = '';
             var expandTemplate = '<br>\n<a class="expand-content" id="{expedition}-{section}" href="javascript:void(0);">\n'
                 + '\t <img src="' + appRoot + 'images/right-arrow.png" id="arrow" class="img-arrow">{text}'
                 + '</a>\n';
-            $.each(data, function(index, e) {
+            $.each(data, function (index, e) {
                 var expedition = e.expeditionTitle.replace(new RegExp('[#. ():]', 'g'), '_') + '_' + e.expeditionId;
                 while (!expedition.match(/^[a-zA-Z](.)*$/)) {
                     expedition = expedition.substring(1);
@@ -412,7 +414,7 @@ function listExpeditions(divId) {
                 html += '<div id="{expedition}-configuration" class="toggle-content">Loading Expedition Metadata...</div>';
                 html += expandTemplate.replace('{text}', 'Expedition Resources').replace('{section}', 'resources');
                 html += '<div id="{expedition}-resources" class="toggle-content">Loading Expedition Resources...</div>';
-                html +=  expandTemplate.replace('{text}', 'Datasets associated with this expedition').replace('{section}', 'datasets');
+                html += expandTemplate.replace('{text}', 'Datasets associated with this expedition').replace('{section}', 'datasets');
                 html += '<div id="{expedition}-datasets" class="toggle-content">Loading Datasets associated wih this expedition...</div>';
                 html += '</div>\n';
 
@@ -424,23 +426,23 @@ function listExpeditions(divId) {
                 html += 'You have no datasets in this project.';
             }
             $(divId).html(html);
-            $.each(data, function(index, e) {
+            $.each(data, function (index, e) {
                 var expedition = e.expeditionTitle.replace(new RegExp('[#. ():]', 'g'), '_') + '_' + e.expeditionId;
                 while (!expedition.match(/^[a-zA-Z](.)*$/)) {
                     expedition = expedition.substring(1);
                 }
 
-                $('div#' + expedition +'-configuration').data('expeditionId', e.expeditionId);
-                $('div#' + expedition +'-resources').data('expeditionId', e.expeditionId);
-                $('div#' + expedition +'-datasets').data('expeditionId', e.expeditionId);
+                $('div#' + expedition + '-configuration').data('expeditionId', e.expeditionId);
+                $('div#' + expedition + '-resources').data('expeditionId', e.expeditionId);
+                $('div#' + expedition + '-datasets').data('expeditionId', e.expeditionId);
             });
 
             // remove previous click event and attach toggle function to each project
             $(".expand-content").off("click");
-            $(".expand-content").click(function() {
+            $(".expand-content").click(function () {
                 loadExpeditions(this.id);
             });
-        }).fail(function(jqxhr) {
+        }).fail(function (jqxhr) {
             $(divId).html(jqxhr.responseText);
         });
 }
@@ -448,7 +450,7 @@ function listExpeditions(divId) {
 // function to populate the expedition resources, datasets, or configuration subsection of expeditions.html
 function populateExpeditionSubsections(divId) {
     // load config table from REST service
-    var expeditionId= $(divId).data('expeditionId');
+    var expeditionId = $(divId).data('expeditionId');
     if (divId.indexOf("resources") != -1) {
         var jqxhr = populateDivFromService(
             armsFimsRestRoot + 'expeditions/' + expeditionId + '/resourcesAsTable/',
@@ -486,22 +488,22 @@ function editExpedition(projectId, expeditionCode, e) {
     message += "></td></tr></table>";
 
     var buttons = {
-        "Update": function() {
+        "Update": function () {
             var public = $("[name='public']")[0].checked;
 
             $.get(armsFimsRestRoot + "expeditions/updateStatus/" + projectId + "/" + expeditionCode + "/" + public
-            ).done(function() {
+            ).done(function () {
                 var b = {
-                    "Ok": function() {
+                    "Ok": function () {
                         $(this).dialog("close");
                         location.reload();
                     }
                 }
                 dialog("Successfully updated the public status.", "Success!", b);
-            }).fail(function(jqXHR) {
+            }).fail(function (jqXHR) {
                 $("#dialogContainer").addClass("error");
-                var b= {
-                    "Ok": function() {
+                var b = {
+                    "Ok": function () {
                         $("#dialogContainer").removeClass("error");
                         $(this).dialog("close");
                     }
@@ -509,7 +511,7 @@ function editExpedition(projectId, expeditionCode, e) {
                 dialog("Error updating expedition's public status!<br><br>" + JSON.stringify($.parseJSON(jqxhr.responseText).usrMessage), "Error!", buttons)
             });
         },
-        "Cancel": function() {
+        "Cancel": function () {
             $(this).dialog("close");
         }
     }
@@ -531,7 +533,7 @@ function profileSubmit(divId) {
             postURL += "?return_to=" + encodeURIComponent(return_to);
         }
         var jqxhr = $.post(postURL, $("form", divId).serialize(), 'json'
-        ).done (function(data) {
+        ).done(function (data) {
             // if adminAccess == true, an admin updated the user's password, so no need to redirect
             if (data.adminAccess == true) {
                 populateProjectSubsections(divId);
@@ -543,14 +545,14 @@ function profileSubmit(divId) {
                         armsFimsRestRoot + "users/profile/listAsTable",
                         "listUserProfile",
                         "Unable to load this user's profile from the Server")
-                        .done(function() {
-                            $("a", "#profile").click( function() {
+                        .done(function () {
+                            $("a", "#profile").click(function () {
                                 getProfileEditor();
                             });
                         });
                 }
             }
-        }).fail(function(jqxhr) {
+        }).fail(function (jqxhr) {
             var json = $.parseJSON(jqxhr.responseText);
             $(".error", divId).html(json.usrMessage);
         });
@@ -563,20 +565,20 @@ function getProfileEditor(username) {
         armsFimsRestRoot + "users/profile/listEditorAsTable",
         "listUserProfile",
         "Unable to load this user's profile editor from the Server"
-    ).done(function() {
+    ).done(function () {
         $(".error").text(getQueryParam("error"));
-        $("#cancelButton").click(function() {
+        $("#cancelButton").click(function () {
             var jqxhr2 = populateDivFromService(
                 armsFimsRestRoot + "users/profile/listAsTable",
                 "listUserProfile",
                 "Unable to load this user's profile from the Server")
-                .done(function() {
-                    $("a", "#profile").click( function() {
+                .done(function () {
+                    $("a", "#profile").click(function () {
                         getProfileEditor();
                     });
                 });
         });
-        $("#profile_submit").click(function() {
+        $("#profile_submit").click(function () {
             profileSubmit('div#listUserProfile');
         });
     });
@@ -590,14 +592,14 @@ function populateMetadata(id, projectID) {
         armsFimsRestRoot + 'projects/' + projectID + '/metadata',
         id,
         'Unable to load this project\'s metadata from server.'
-    ).done(function() {
-        $("#edit_metadata", id).click(function() {
+    ).done(function () {
+        $("#edit_metadata", id).click(function () {
             var jqxhr2 = populateDivFromService(
                 armsFimsRestRoot + 'projects/' + projectID + '/metadataEditor',
                 id,
                 'Unable to load this project\'s metadata editor.'
-            ).done(function() {
-                $('#metadataSubmit', id).click(function() {
+            ).done(function () {
+                $('#metadataSubmit', id).click(function () {
                     projectMetadataSubmit(projectID, id);
                 });
             });
@@ -612,10 +614,10 @@ function confirmRemoveUserDialog(element) {
     var title = "Remove User";
     var msg = "Are you sure you wish to remove " + username + "?";
     var buttons = {
-        "Yes": function() {
+        "Yes": function () {
             projectRemoveUser(element);
             $(this).dialog("close");
-        }, "Cancel": function() {
+        }, "Cancel": function () {
             $(this).dialog("close");
         }
     };
@@ -628,14 +630,14 @@ function populateUsers(id, projectID) {
         armsFimsRestRoot + 'projects/' + projectID + '/users',
         id,
         'Unable to load this project\'s users from server.'
-    ).done(function() {
-        $.each($('a#remove_user', id), function(key, e) {
-            $(e).click(function() {
+    ).done(function () {
+        $.each($('a#remove_user', id), function (key, e) {
+            $(e).click(function () {
                 confirmRemoveUserDialog(e);
             });
         });
-        $.each($('a#edit_profile', id), function(key, e) {
-            $(e).click(function() {
+        $.each($('a#edit_profile', id), function (key, e) {
+            $(e).click(function () {
                 var username = $(e).data('username');
                 var divId = 'div#' + $(e).closest('div').attr('id');
 
@@ -643,11 +645,11 @@ function populateUsers(id, projectID) {
                     armsFimsRestRoot + "users/admin/profile/listEditorAsTable/" + username,
                     divId,
                     "error loading profile editor"
-                ).done(function() {
-                    $("#profile_submit", divId).click(function() {
+                ).done(function () {
+                    $("#profile_submit", divId).click(function () {
                         profileSubmit(divId);
                     })
-                    $("#cancelButton").click(function() {
+                    $("#cancelButton").click(function () {
                         populateProjectSubsections(divId);
                     })
                 });
@@ -676,8 +678,8 @@ function populateProjectSubsections(id) {
             armsFimsRestRoot + 'projects/' + projectID + '/admin/expeditions/',
             id,
             'Unable to load this project\'s expeditions from server.'
-        ).done(function() {
-            $('#expeditionForm', id).click(function() {
+        ).done(function () {
+            $('#expeditionForm', id).click(function () {
                 expeditionsPublicSubmit(id);
             });
         });
@@ -689,7 +691,7 @@ function populateProjectSubsections(id) {
 function expeditionsPublicSubmit(divId) {
     var inputs = $('form input[name]', divId);
     var data = '';
-    inputs.each( function(index, element) {
+    inputs.each(function (index, element) {
         if (element.name == 'projectId') {
             data += '&projectId=' + element.value;
             return true;
@@ -698,9 +700,9 @@ function expeditionsPublicSubmit(divId) {
         data += expedition;
     });
     var jqxhr = $.post(armsFimsRestRoot + 'expeditions/admin/updateStatus', data.replace('&', '')
-    ).done(function() {
+    ).done(function () {
         populateProjectSubsections(divId);
-    }).fail(function(jqxhr) {
+    }).fail(function (jqxhr) {
         $(divId).html(jqxhr.responseText);
     });
 }
@@ -714,20 +716,20 @@ function projectUserSubmit(id) {
             armsFimsRestRoot + 'users/admin/createUserForm',
             divId,
             'error fetching create user form'
-        ).done(function() {
+        ).done(function () {
             $("input[name=projectId]", divId).val(projectId);
-            $("#createFormButton", divId).click(function() {
+            $("#createFormButton", divId).click(function () {
                 createUserSubmit(projectId, divId);
             });
-            $("#createFormCancelButton", divId).click(function() {
+            $("#createFormCancelButton", divId).click(function () {
                 populateProjectSubsections(divId);
             });
         });
     } else {
         var jqxhr = $.post(armsFimsRestRoot + "projects/" + projectId + "/admin/addUser", $('form', divId).serialize()
-        ).done(function(data) {
+        ).done(function (data) {
             var jqxhr2 = populateProjectSubsections(divId);
-        }).fail(function(jqxhr) {
+        }).fail(function (jqxhr) {
             var jqxhr2 = populateProjectSubsections(divId);
             $(".error", divId).html($.parseJSON(jqxhr.responseText).usrMessage);
         });
@@ -740,9 +742,9 @@ function createUserSubmit(projectId, divId) {
         $(".error", divId).html("password too weak");
     } else {
         var jqxhr = $.post(armsFimsRestRoot + "users/admin/create", $('form', divId).serialize()
-        ).done(function() {
+        ).done(function () {
             populateProjectSubsections(divId);
-        }).fail(function(jqxhr) {
+        }).fail(function (jqxhr) {
             $(".error", divId).html($.parseJSON(jqxhr.responseText).usrMessage);
         });
     }
@@ -755,11 +757,11 @@ function projectRemoveUser(e) {
     var divId = 'div#' + $(e).closest('div').attr('id');
 
     var jqxhr = $.getJSON(armsFimsRestRoot + "projects/" + projectId + "/admin/removeUser/" + userId
-    ).done (function(data) {
+    ).done(function (data) {
         var jqxhr2 = populateProjectSubsections(divId);
-    }).fail(function(jqxhr) {
+    }).fail(function (jqxhr) {
         var jqxhr2 = populateProjectSubsections(divId)
-            .done(function() {
+            .done(function () {
                 $(".error", divId).html($.parseJSON(jqxhr.responseText).usrMessage);
             });
     });
@@ -768,9 +770,9 @@ function projectRemoveUser(e) {
 // function to submit the project metadata editor form
 function projectMetadataSubmit(projectId, divId) {
     var jqxhr = $.post(armsFimsRestRoot + "projects/" + projectId + "/metadata/update", $('form', divId).serialize()
-    ).done(function(data) {
+    ).done(function (data) {
         populateProjectSubsections(divId);
-    }).fail(function(jqxhr) {
+    }).fail(function (jqxhr) {
         $(".error", divId).html($.parseJSON(jqxhr.responseText).usrMessage);
     });
 }
@@ -778,9 +780,9 @@ function projectMetadataSubmit(projectId, divId) {
 // function to populate the bcid projects.html page
 function populateProjectPage(username) {
     var jqxhr = listProjects(username, armsFimsRestRoot + 'projects/admin/list', false
-    ).done(function() {
+    ).done(function () {
         // attach toggle function to each project
-        $(".expand-content").click(function() {
+        $(".expand-content").click(function () {
             projectToggle(this.id)
         });
     });
@@ -791,11 +793,11 @@ function projectToggle(id) {
     // escape special characters in id field
     id = id.replace(/([!@#$%^&*()+=\[\]\\';,./{}|":<>?~_-])/g, "\\$1");
     // store the element value in a field
-    var idElement = $('.toggle-content#'+id);
+    var idElement = $('.toggle-content#' + id);
     if (idElement.is(':hidden')) {
-        $('.img-arrow', 'a#'+id).attr("src", appRoot + "images/down-arrow.png");
+        $('.img-arrow', 'a#' + id).attr("src", appRoot + "images/down-arrow.png");
     } else {
-        $('.img-arrow', 'a#'+id).attr("src", appRoot + "images/right-arrow.png");
+        $('.img-arrow', 'a#' + id).attr("src", appRoot + "images/right-arrow.png");
     }
     // check if we've loaded this section, if not, load from service
     var divId = 'div#' + id
@@ -820,12 +822,12 @@ function showTemplateInfo() {
     }
 }
 
-function populate_bottom(){
+function populate_bottom() {
     var selected = new Array();
     var listElement = document.createElement("ul");
     listElement.className = 'picked_tags';
     $("#checked_list").html(listElement);
-    $("input:checked").each(function() {
+    $("input:checked").each(function () {
         var listItem = document.createElement("li");
         listItem.className = 'picked_tags_li';
         listItem.innerHTML = ($(this).val());
@@ -833,18 +835,18 @@ function populate_bottom(){
     });
 }
 
-function download_file(){
+function download_file() {
     var url = armsFimsRestRoot + 'projects/createExcel/';
     var input_string = '';
     // Loop through CheckBoxes and find ones that are checked
-    $(".check_boxes").each(function(index) {
+    $(".check_boxes").each(function (index) {
         if ($(this).is(':checked'))
-            input_string+='<input type="hidden" name="fields" value="' + $(this).val() + '" />';
+            input_string += '<input type="hidden" name="fields" value="' + $(this).val() + '" />';
     });
-    input_string+='<input type="hidden" name="projectId" value="' + getProjectID() + '" />';
+    input_string += '<input type="hidden" name="projectId" value="' + getProjectID() + '" />';
 
     // Pass the form to the server and submit
-    $('<form action="'+ url +'" method="post">'+input_string+'</form>').appendTo('body').submit().remove();
+    $('<form action="' + url + '" method="post">' + input_string + '</form>').appendTo('body').submit().remove();
 }
 
 // for template generator, get the definitions when the user clicks on DEF
@@ -858,9 +860,9 @@ function populateDefinitions(column) {
         url: theUrl,
         dataType: "html",
     })
-    .done(function(data) {
-        $("#definition").html(data);
-    });
+        .done(function (data) {
+            $("#definition").html(data);
+        });
 }
 
 function populateColumns(targetDivId) {
@@ -869,17 +871,17 @@ function populateColumns(targetDivId) {
     if (projectId != 0) {
         theUrl = armsFimsRestRoot + "projects/" + projectId + "/attributes/";
 
-        var jqxhr = $.ajax( {
+        var jqxhr = $.ajax({
             url: theUrl,
             async: false,
-            dataType : 'html'
-        }).done(function(data) {
+            dataType: 'html'
+        }).done(function (data) {
             $(targetDivId).html(data);
-        }).fail(function(jqXHR,textStatus) {
+        }).fail(function (jqXHR, textStatus) {
             if (textStatus == "timeout") {
-                showMessage ("Timed out waiting for response!");
+                showMessage("Timed out waiting for response!");
             } else {
-                showMessage ("Error completing request!" );
+                showMessage("Error completing request!");
             }
         });
 
@@ -896,17 +898,17 @@ function populateAbstract(targetDivId) {
 
     theUrl = armsFimsRestRoot + "projects/" + projectId + "/abstract/";
 
-    var jqxhr = $.ajax( {
+    var jqxhr = $.ajax({
         url: theUrl,
         async: false,
-        dataType : 'json'
-    }).done(function(data) {
-        $(targetDivId).html(data.abstract +"<p>");
-    }).fail(function(jqXHR,textStatus) {
+        dataType: 'json'
+    }).done(function (data) {
+        $(targetDivId).html(data.abstract + "<p>");
+    }).fail(function (jqXHR, textStatus) {
         if (textStatus == "timeout") {
-            showMessage ("Timed out waiting for response!");
+            showMessage("Timed out waiting for response!");
         } else {
-            showMessage ("Error completing request!" );
+            showMessage("Error completing request!");
         }
     });
 }
@@ -916,7 +918,7 @@ function saveTemplateConfig() {
     var message = "<table><tr><td>Configuration Name:</td><td><input type='text' name='configName' /></td></tr></table>";
     var title = "Save Template Generator Configuration";
     var buttons = {
-        "Save": function() {
+        "Save": function () {
             var checked = [];
             var configName = $("input[name='configName']").val();
 
@@ -926,17 +928,18 @@ function saveTemplateConfig() {
                 return;
             }
 
-            $("#cat1 input[type='checkbox']:checked").each(function() {
+            $("#cat1 input[type='checkbox']:checked").each(function () {
                 checked.push($(this).data().uri);
             });
 
             savedConfig = configName;
             $.post(armsFimsRestRoot + "projects/" + $("#project").val() + "/saveTemplateConfig", $.param(
-                {"configName": configName,
+                {
+                    "configName": configName,
                     "checkedOptions": checked,
                     "projectId": $("#project").val()
                 }, true)
-            ).done(function(data) {
+            ).done(function (data) {
                 if (data.error != null) {
                     $("#dialogContainer").addClass("error");
                     var m = data.error + "<br><br>" + message;
@@ -945,17 +948,17 @@ function saveTemplateConfig() {
                     $("#dialogContainer").removeClass("error");
                     populateConfigs();
                     var b = {
-                        "Ok": function() {
+                        "Ok": function () {
                             $(this).dialog("close");
                         }
                     }
                     dialog(data.success + "<br><br>", "Success!", b);
                 }
-            }).fail(function(jqXHR) {
+            }).fail(function (jqXHR) {
                 failError(jqXHR);
             });
         },
-        "Cancel": function() {
+        "Cancel": function () {
             $("#dialogContainer").removeClass("error");
             $(this).dialog("close");
         }
@@ -972,13 +975,12 @@ function populateConfigs() {
         var el = $("#configs");
         el.empty();
         el.append($("<option></option>").attr("value", 0).text("Loading configs..."));
-        var jqxhr = $.getJSON(armsFimsRestRoot + "projects/" + projectId + "/getTemplateConfigs").done(function(data) {
+        var jqxhr = $.getJSON(armsFimsRestRoot + "projects/" + projectId + "/getTemplateConfigs").done(function (data) {
             var listItems = "";
 
             el.empty();
-            data.forEach(function(configName) {
-                el.append($("<option></option>").
-                attr("value", configName).text(configName));
+            data.forEach(function (configName) {
+                el.append($("<option></option>").attr("value", configName).text(configName));
             });
 
             if (savedConfig != null) {
@@ -993,11 +995,11 @@ function populateConfigs() {
                 $("#removeConfig").addClass("hidden");
             }
 
-        }).fail(function(jqXHR,textStatus) {
+        }).fail(function (jqXHR, textStatus) {
             if (textStatus == "timeout") {
-                showMessage ("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
+                showMessage("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
             } else {
-                showMessage ("Error fetching template configurations!");
+                showMessage("Error fetching template configurations!");
             }
         });
     }
@@ -1008,24 +1010,24 @@ function updateCheckedBoxes() {
     if (configName == "Default") {
         populateColumns("#cat1");
     } else {
-        $.getJSON(armsFimsRestRoot + "projects/" + $("#project").val() + "/getTemplateConfig/" + configName.replace(/\//g, "%2F")).done(function(data) {
+        $.getJSON(armsFimsRestRoot + "projects/" + $("#project").val() + "/getTemplateConfig/" + configName.replace(/\//g, "%2F")).done(function (data) {
             if (data.error != null) {
                 showMessage(data.error);
                 return;
             }
             // deselect all unrequired columns
-            $(':checkbox').not(":disabled").each(function() {
+            $(':checkbox').not(":disabled").each(function () {
                 this.checked = false;
             });
 
-            data.checkedOptions.forEach(function(uri) {
+            data.checkedOptions.forEach(function (uri) {
                 $(':checkbox[data-uri="' + uri + '"]')[0].checked = true;
             });
-        }).fail(function(jqXHR, textStatus) {
+        }).fail(function (jqXHR, textStatus) {
             if (textStatus == "timeout") {
-                showMessage ("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
+                showMessage("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
             } else {
-                showMessage ("Error fetching template configuration!");
+                showMessage("Error fetching template configuration!");
             }
         });
     }
@@ -1035,7 +1037,7 @@ function removeConfig() {
     var configName = $("#configs").val();
     if (configName == "Default") {
         var buttons = {
-            "Ok": function() {
+            "Ok": function () {
                 $(this).dialog("close");
             }
         }
@@ -1043,18 +1045,18 @@ function removeConfig() {
         return;
     }
 
-    var message = "Are you sure you want to remove "+ configName + " configuration?";
+    var message = "Are you sure you want to remove " + configName + " configuration?";
     var title = "Warning";
     var buttons = {
-        "OK": function() {
+        "OK": function () {
             var buttons = {
-                "Ok": function() {
+                "Ok": function () {
                     $(this).dialog("close");
                 }
             }
             var title = "Remove Template Generator Configuration";
 
-            $.getJSON(armsFimsRestRoot + "projects/" + $("#project").val() + "/removeTemplateConfig/" + configName.replace("/\//g", "%2F")).done(function(data) {
+            $.getJSON(armsFimsRestRoot + "projects/" + $("#project").val() + "/removeTemplateConfig/" + configName.replace("/\//g", "%2F")).done(function (data) {
                 if (data.error != null) {
                     showMessage(data.error);
                     return;
@@ -1063,11 +1065,11 @@ function removeConfig() {
                 savedConfig = null;
                 populateConfigs();
                 dialog(data.success, title, buttons);
-            }).fail(function(jqXHR) {
+            }).fail(function (jqXHR) {
                 failError(jqXHR);
             });
         },
-        "Cancel": function() {
+        "Cancel": function () {
             $("#dialogContainer").removeClass("error");
             $(this).dialog("close");
         }
@@ -1083,41 +1085,41 @@ var datasetId;
 function list(listName, columnName) {
     var projectId = $("#project").val();
     $.getJSON(armsFimsRestRoot + "projects/" + projectId + "/getListFields/" + listName)
-    .done(function(data) {
-        if (data.length == 0) {
-            var msg = "No list has been defined for \"" + columnName + "\" but there is a rule saying it exists.  " +
-                                          "Please talk to your FIMS data manager to fix this.";
-            showBigMessage(msg);
-        } else {
-            var msg = '';
-            if (columnName != null && columnName.length > 0) {
-                msg += "<b>Acceptable values for " + columnName + "</b><br>\n";
+        .done(function (data) {
+            if (data.length == 0) {
+                var msg = "No list has been defined for \"" + columnName + "\" but there is a rule saying it exists.  " +
+                    "Please talk to your FIMS data manager to fix this.";
+                showBigMessage(msg);
             } else {
+                var msg = '';
+                if (columnName != null && columnName.length > 0) {
+                    msg += "<b>Acceptable values for " + columnName + "</b><br>\n";
+                } else {
                     msg += "<b>Acceptable values for " + listName + "</b><br>\n";
-            }
+                }
 
-            $.each(data, function(index, value) {
-                msg += "<li>" + value + "</li>\n";
-            });
-            showBigMessage(msg);
-        }
-    });
+                $.each(data, function (index, value) {
+                    msg += "<li>" + value + "</li>\n";
+                });
+                showBigMessage(msg);
+            }
+        });
 }
 
 function parseSpreadsheet(regExpression, sheetName) {
     try {
         f = new FileReader();
-    } catch(err) {
+    } catch (err) {
         return null;
     }
     var deferred = new $.Deferred();
     // older browsers don't have a FileReader
     if (f != null) {
-        var inputFile= $('#' + datasetId)[0].files[0];
+        var inputFile = $('#' + datasetId)[0].files[0];
 
         var splitFileName = $('#' + datasetId).val().split('.');
         if ($.inArray(splitFileName[splitFileName.length - 1], XLSXReader.exts) > -1) {
-            $.when(XLSXReader.utils.findCell(inputFile, regExpression, sheetName)).done(function(match) {
+            $.when(XLSXReader.utils.findCell(inputFile, regExpression, sheetName)).done(function (match) {
                 if (match) {
                     deferred.resolve(match.toString().split('=')[1].slice(0, -1));
                 } else {
@@ -1127,7 +1129,9 @@ function parseSpreadsheet(regExpression, sheetName) {
             return deferred.promise();
         }
     }
-    setTimeout(function(){deferred.resolve(null)}, 100);
+    setTimeout(function () {
+        deferred.resolve(null)
+    }, 100);
     return deferred.promise();
 
 }
@@ -1152,7 +1156,7 @@ function validForm(expeditionCode) {
         error = true;
     } else if ($("#upload").is(":checked")) {
         // check if expeditionCode is a select and val = 0
-        if (!$("#" + datasetId).val() && 
+        if (!$("#" + datasetId).val() &&
             $("#expeditionCode").is("select") && $("#expeditionCode").val() == 0) {
             message = "You must select an existing expedition.";
             error = true;
@@ -1166,7 +1170,7 @@ function validForm(expeditionCode) {
     if (error) {
         $('#resultsContainer').html(message);
         var buttons = {
-            "OK": function(){
+            "OK": function () {
                 $(this).dialog("close");
             }
         }
@@ -1182,11 +1186,11 @@ function validatorSubmit() {
     if (validForm($("#expeditionCode").val())) {
 
         // change the input names to the appropriate file type
-        $("#" + datasetId).attr("name","dataset");
+        $("#" + datasetId).attr("name", "dataset");
 
-        submitForm().done(function(data) {
+        submitForm().done(function (data) {
             validationResults(data);
-        }).fail(function(jqxhr) {
+        }).fail(function (jqxhr) {
             failError(jqxhr);
         });
     }
@@ -1194,9 +1198,9 @@ function validatorSubmit() {
 
 // keep looping pollStatus every second until results are returned
 function loopStatus(promise) {
-    setTimeout( function() {
+    setTimeout(function () {
         pollStatus()
-            .done(function(data) {
+            .done(function (data) {
                 if (promise.state() == "pending") {
                     if (data.error != null) {
                         dialog(data.error, "Validation Results");
@@ -1213,11 +1217,11 @@ function loopStatus(promise) {
 function pollStatus() {
     var def = new $.Deferred();
     $.getJSON(armsFimsRestRoot + "validate/status")
-        .done(function(data) {
+        .done(function (data) {
             def.resolve(data);
-        }).fail(function() {
-            def.reject();
-        });
+        }).fail(function () {
+        def.reject();
+    });
     return def.promise();
 }
 
@@ -1230,13 +1234,13 @@ function continueUpload(createExpedition) {
         url += "?createExpedition=true";
     }
     $.getJSON(url)
-        .done(function(data) {
+        .done(function (data) {
             d.resolve();
             uploadResults(data);
-        }).fail(function(jqxhr) {
-            d.reject();
-            failError(jqxhr);
-        });
+        }).fail(function (jqxhr) {
+        d.reject();
+        failError(jqxhr);
+    });
     loopStatus(d.promise());
 }
 
@@ -1244,7 +1248,7 @@ function continueUpload(createExpedition) {
 function checkNAAN(spreadsheetNaan, naan) {
     if (spreadsheetNaan != naan) {
         var buttons = {
-            "Ok": function() {
+            "Ok": function () {
                 $("#dialogContainer").removeClass("error");
                 $(this).dialog("close");
             }
@@ -1261,7 +1265,7 @@ function checkNAAN(spreadsheetNaan, naan) {
 
 // function to toggle the projectId and expeditionCode inputs of the validation form
 function validationFormToggle() {
-    $("input[name=file]").change(function() {
+    $("input[name=file]").change(function () {
         // Clear the resultsContainer
         $("#resultsContainer").empty();
 
@@ -1269,10 +1273,10 @@ function validationFormToggle() {
         datasetId = this.id;
 
         // Check NAAN
-        $.when(parseSpreadsheet("~naan=[0-9]+~", "Instructions")).done(function(spreadsheetNaan) {
+        $.when(parseSpreadsheet("~naan=[0-9]+~", "Instructions")).done(function (spreadsheetNaan) {
             if (spreadsheetNaan > 0) {
                 $.getJSON(armsFimsRestRoot + "utils/getNAAN")
-                    .done(function(data) {
+                    .done(function (data) {
                         checkNAAN(spreadsheetNaan, data.naan);
                     });
             }
@@ -1281,14 +1285,14 @@ function validationFormToggle() {
         generateMap('map', getProjectID());
     });
 
-    $('#upload').change(function() {
+    $('#upload').change(function () {
         if ($('#upload').is(":checked"))
             showUpload();
         else
             hideUpload();
     });
 
-    $("#file_button").on("click", function() {
+    $("#file_button").on("click", function () {
         if ($('.toggle-content#file_toggle').is(':hidden')) {
             $('.toggle-content#file_toggle').show(400);
             $('#file_button').html("-");
@@ -1330,10 +1334,10 @@ function validationResults(data) {
             // ask user if want to proceed
             var message = parseResults(data.continue);
             var buttons = {
-                "Continue": function() {
+                "Continue": function () {
                     continueUpload(false);
                 },
-                "Cancel": function() {
+                "Cancel": function () {
                     $(this).dialog("close");
                 }
             }
@@ -1356,7 +1360,7 @@ function uploadResults(data) {
             message = data.error;
         }
         var buttons = {
-            "Ok": function() {
+            "Ok": function () {
                 $("#dialogContainer").removeClass("error");
                 $(this).dialog("close");
             }
@@ -1370,10 +1374,10 @@ function uploadResults(data) {
     } else {
         // ask user if want to proceed
         var buttons = {
-            "Continue": function() {
+            "Continue": function () {
                 continueUpload(true);
             },
-            "Cancel": function() {
+            "Cancel": function () {
                 $(this).dialog("close");
             }
         }
@@ -1386,7 +1390,7 @@ function loopMessages(level, groupMessage, messageArray) {
     var message = "<div id=\"expand\">";
     message += "<dl>";
     message += "<dt><div id='groupMessage' class='" + level + "'>" + level + ": " + groupMessage + "</div><dt>";
-    $.each(messageArray, function(key, val) {
+    $.each(messageArray, function (key, val) {
         message += "<dd>" + val + "</dd>";
     })
     message += "</dl></div>";
@@ -1397,35 +1401,44 @@ function loopMessages(level, groupMessage, messageArray) {
 function parseResults(messages) {
     var message = "";
 
-    // loop through the messages for each sheet
-    $.each(messages, function(key, val) {
-        $.each(val, function(sheetName, sheetMessages) {
-            if (sheetMessages.errors.length > 0) {
-                message += "<br>\t<b>Validation results on \"" + sheetName + "\" worksheet.</b>";
-                message += "<br><b>1 or more errors found.  Must fix to continue. Click each message for details</b><br>";
-            } else if (sheetMessages.warnings.length > 0) {
-                message += "<br>\t<b>Validation results on \"" + sheetName + "\" worksheet.</b>";
-                message += "<br><b>1 or more warnings found. Click each message for details</b><br>";
-            } else {
-                return false;
-            }
+    if (messages.config) {
+        message += "<br>\t<b>Invalid Project Configuration.</b>";
+        message += "<br>\t<b>Please talk to your project administrator to fix the following error(s):</b><br><br>";
 
-            if (sheetMessages.errors.length > 0) {
-                $.each(sheetMessages.errors, function(key, val) {
-                    $.each(val, function(groupMessage, messageArray) {
-                        message += loopMessages("Error", groupMessage, messageArray);
+        $.each(messages.config.errors, function (groupMessage, messageArray) {
+            message += loopMessages("Error", groupMessage, messageArray);
+        })
+    } else {
+        // loop through the messages for each sheet
+        $.each(messages.worksheets, function (key, val) {
+            $.each(val, function (sheetName, sheetMessages) {
+                if (sheetMessages.errors.length > 0) {
+                    message += "<br>\t<b>Validation results on \"" + sheetName + "\" worksheet.</b>";
+                    message += "<br><b>1 or more errors found.  Must fix to continue. Click each message for details</b><br>";
+                } else if (sheetMessages.warnings.length > 0) {
+                    message += "<br>\t<b>Validation results on \"" + sheetName + "\" worksheet.</b>";
+                    message += "<br><b>1 or more warnings found. Click each message for details</b><br>";
+                } else {
+                    return false;
+                }
+
+                if (sheetMessages.errors.length > 0) {
+                    $.each(sheetMessages.errors, function (key, val) {
+                        $.each(val, function (groupMessage, messageArray) {
+                            message += loopMessages("Error", groupMessage, messageArray);
+                        });
                     });
-                });
-            }
-            if (sheetMessages.warnings.length > 0) {
-                $.each(sheetMessages.warnings, function(key, val) {
-                    $.each(val, function(groupMessage, messageArray) {
-                        message += loopMessages("Warning", groupMessage, messageArray);
+                }
+                if (sheetMessages.warnings.length > 0) {
+                    $.each(sheetMessages.warnings, function (key, val) {
+                        $.each(val, function (groupMessage, messageArray) {
+                            message += loopMessages("Warning", groupMessage, messageArray);
+                        });
                     });
-                });
-            }
+                }
+            });
         });
-    });
+    }
 
     if (message.length == 0) {
         message = "<span style='color:green;'>Successfully Validated!</span>";
@@ -1438,10 +1451,10 @@ function parseResults(messages) {
 function writeResults(message) {
     $("#resultsContainer").show();
     // Add some nice coloring
-    message = message.replace(/Warning:/g,"<span style='color:orange;'>Warning:</span>");
-    message = message.replace(/Error:/g,"<span style='color:red;'>Error:</span>");
+    message = message.replace(/Warning:/g, "<span style='color:orange;'>Warning:</span>");
+    message = message.replace(/Error:/g, "<span style='color:red;'>Error:</span>");
     // set the project key for any projectId expressions... these come from the validator to call REST services w/ extra data
-    message= message.replace(/projectId=/g,getProjectKeyValue());
+    message = message.replace(/projectId=/g, getProjectKeyValue());
 
     //$("#resultsContainer").html("<table><tr><td>" + message + "</td></tr></table>");
     $("#resultsContainer").html($("#resultsContainer").html() + message);
@@ -1450,17 +1463,22 @@ function writeResults(message) {
 // If the user wants to create a new expedition, get the expedition code
 function createExpedition() {
     var d = new $.Deferred();
-    if ($("#" + datasetId).val().length < 1 && 
+    if ($("#" + datasetId).val().length < 1 &&
         $("#expeditionCode").is("select") && $("#expeditionCode").val() == 0) {
         dialog("You must select an existing expedition code if you are not uploading a new dataset.", "Select an Expedition",
-            {"OK":function() {d.reject();$(this).dialog("close");}});
+            {
+                "OK": function () {
+                    d.reject();
+                    $(this).dialog("close");
+                }
+            });
     } else {
         var message = "<input type='text' id='new_expedition' />";
         var buttons = {
-            "Create": function() {
+            "Create": function () {
                 d.resolve($("#new_expedition").val());
             },
-            "Cancel": function() {
+            "Cancel": function () {
                 d.reject();
                 $(this).dialog("close");
             }
@@ -1471,14 +1489,14 @@ function createExpedition() {
 }
 
 // function to submit the validation form using jquery form plugin to handle the file uploads
-function submitForm(){
+function submitForm() {
     var de = new $.Deferred();
     var promise = de.promise();
     var options = {
         url: armsFimsRestRoot + "validate/",
         type: "POST",
         contentType: "multipart/form-data",
-        beforeSubmit: function(form, options) {
+        beforeSubmit: function (form, options) {
             dialog("Loading ...", "Validation Results", null);
             // For browsers that don't support the upload progress listener
             var xhr = $.ajaxSettings.xhr();
@@ -1486,16 +1504,16 @@ function submitForm(){
                 loopStatus(promise)
             }
         },
-        error: function(jqxhr) {
+        error: function (jqxhr) {
             de.reject(jqxhr);
         },
-        success: function(data) {
+        success: function (data) {
             de.resolve(data);
         },
-        fail: function(jqxhr) {
+        fail: function (jqxhr) {
             de.reject(jqxhr);
         },
-        uploadProgress: function(event, position, total, percentComplete) {
+        uploadProgress: function (event, position, total, percentComplete) {
             // For browsers that do support the upload progress listener
             if (percentComplete == 100) {
                 loopStatus(promise)
@@ -1511,10 +1529,11 @@ function submitForm(){
 // Populate a table of data showing resourceTypes
 function getResourceTypesTable(a) {
     var url = armsFimsRestRoot + "resourceTypes";
-    var jqxhr = $.getJSON(url, function() {})
-        .done(function(data) {
+    var jqxhr = $.getJSON(url, function () {
+    })
+        .done(function (data) {
             var html = "<table><tr><td><b>Name/URI</b></td><td><b>Description</b></td></tr>";
-            $.each(data, function(key, val) {
+            $.each(data, function (key, val) {
                 if (!(val.string == "---")) {
                     html += "<tr><td><a href='" + val.uri + "'>" + val.string + "</a></td>";
                     html += "<td>" + val.description + "</td></tr>";
@@ -1522,7 +1541,7 @@ function getResourceTypesTable(a) {
             })
             $("#" + a).html(html);
         })
-        .fail(function(jqxhr) {
+        .fail(function (jqxhr) {
             failError(jqxhr);
         });
 }
@@ -1540,27 +1559,27 @@ function graphsMessage(message) {
 function populateGraphs(projectId) {
     $("#resultsContainer").hide();
     // Don't let this progress if this is the first option, then reset graphs message
-    if ($("#project").val() == 0)  {
+    if ($("#project").val() == 0) {
         graphsMessage('Choose an project to see loaded spreadsheets');
         return;
     }
     theUrl = armsFimsRestRoot + "projects/" + projectId + "/graphs";
-    var jqxhr = $.getJSON( theUrl, function(data) {
+    var jqxhr = $.getJSON(theUrl, function (data) {
         // Check for empty object in response
         if (data.length == 0) {
             graphsMessage('No datasets found for this project');
         } else {
             var listItems = "";
-            $.each(data, function(index,graph) {
-                listItems+= "<option value='" + graph.graph + "'>" + graph.expeditionTitle + "</option>";
+            $.each(data, function (index, graph) {
+                listItems += "<option value='" + graph.graph + "'>" + graph.expeditionTitle + "</option>";
             });
             $("#graphs").html(listItems);
         }
-    }).fail(function(jqXHR,textStatus) {
+    }).fail(function (jqXHR, textStatus) {
         if (textStatus == "timeout") {
-            showMessage ("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
+            showMessage("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
         } else {
-            showMessage ("Error completing request!");
+            showMessage("Error completing request!");
         }
     });
 }
@@ -1568,7 +1587,7 @@ function populateGraphs(projectId) {
 // Get the query graph URIs
 function getGraphURIs() {
     var graphs = [];
-    $( "select#graphs option:selected" ).each(function() {
+    $("select#graphs option:selected").each(function () {
         graphs.push($(this).val());
     });
     return graphs;
@@ -1578,17 +1597,17 @@ function getGraphURIs() {
 function queryJSON(params) {
     // serialize the params object using a shallow serialization
     var jqxhr = $.post(armsFimsRestRoot + "projects/query/json/", $.param(params, true))
-        .done(function(data) {
+        .done(function (data) {
             $("#resultsContainer").show();
             //alert('debugging queries now, will fix soon!');
             //alert(data);
             // TODO: remove distal from this spot
-            distal(results,data);
-        }).fail(function(jqXHR,textStatus) {
+            distal(results, data);
+        }).fail(function (jqXHR, textStatus) {
             if (textStatus == "timeout") {
-                showMessage ("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
+                showMessage("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
             } else {
-                showMessage ("Error completing request!");
+                showMessage("Error completing request!");
             }
         });
     loadingDialog(jqxhr);
@@ -1596,13 +1615,13 @@ function queryJSON(params) {
 
 // Get results as Excel
 function queryExcel(params) {
-    showMessage ("Downloading results as an Excel document<br>this will appear in your browsers download folder.");
+    showMessage("Downloading results as an Excel document<br>this will appear in your browsers download folder.");
     download(armsFimsRestRoot + "projects/query/excel/", params);
 }
 
 // Get results as Excel
 function queryKml(params) {
-    showMessage ("Downloading results as an KML document<br>If Google Earth does not open you can point to it directly");
+    showMessage("Downloading results as an KML document<br>If Google Earth does not open you can point to it directly");
     download(armsFimsRestRoot + "projects/query/kml/", params);
 }
 
@@ -1610,11 +1629,11 @@ function queryKml(params) {
 function download(url, data) {
     //url and data options are required
     if (url && data) {
-        var form = $('<form />', { action: url, method: 'POST'});
-        $.each(data, function(key, value) {
+        var form = $('<form />', {action: url, method: 'POST'});
+        $.each(data, function (key, value) {
             // if the value is an array, we need to create an input element for each value
             if (value instanceof Array) {
-                $.each(value, function(i, v) {
+                $.each(value, function (i, v) {
                     var input = $('<input />', {
                         type: 'hidden',
                         name: key,
@@ -1641,9 +1660,9 @@ var filterSelect = null;
 // populate a select with the filter values of a given project
 function getFilterOptions(projectId) {
     var jqxhr = $.getJSON(armsFimsRestRoot + "projects/" + projectId + "/filterOptions/")
-        .done(function(data) {
+        .done(function (data) {
             filterSelect = "<select id='uri' style='max-width:100px;'>";
-            $.each(data, function(k, v) {
+            $.each(data, function (k, v) {
                 filterSelect += "<option value=" + v.uri + ">" + v.column + "</option>";
             });
 
@@ -1678,7 +1697,7 @@ function getQueryPostParams() {
     var filterValues = $("input[name=filter_value]");
 
     // parse the filter keys and values and add them to the post params
-    $.each(filterKeys, function(index, e) {
+    $.each(filterKeys, function (index, e) {
         if (filterValues[index].value != "") {
             params[e.value] = filterValues[index].value;
         }
