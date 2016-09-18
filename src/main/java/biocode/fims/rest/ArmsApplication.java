@@ -1,5 +1,6 @@
 package biocode.fims.rest;
 
+import biocode.fims.rest.filters.CORSFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 /**
@@ -11,5 +12,6 @@ public class ArmsApplication extends FimsApplication {
         super();
         packages("biocode.fims.rest.services.rest");
         register(MultiPartFeature.class);
+        register(CORSFilter.class);
     }
 }
