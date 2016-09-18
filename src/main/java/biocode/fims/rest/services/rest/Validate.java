@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -253,13 +254,12 @@ public class Validate extends FimsService {
         CsvTabularDataConverter csvTabularDataConverter = new CsvTabularDataConverter(
                 tdr, destination, outputPrefix);
 
-        List<String> acceptableColumns = new LinkedList<>();
         List<String> acceptableColumnsInternal = new LinkedList<>();
-        for (Attribute attribute : processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName())) {
-            acceptableColumns.add(attribute.getColumn());
+        List<Attribute> attributes = processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName());
+        for (Attribute attribute : attributes) {
             acceptableColumnsInternal.add(attribute.getColumn_internal());
         }
-        csvTabularDataConverter.convert(acceptableColumns, p.getMapping().getDefaultSheetName());
+        csvTabularDataConverter.convert(attributes, p.getMapping().getDefaultSheetName());
 
         tdr.closeFile();
 

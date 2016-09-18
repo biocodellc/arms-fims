@@ -10,13 +10,13 @@ import java.util.List;
  * Enum containing the valid query operations
  */
 public enum Operator {
-    EQUALS(DataType.DATETIME, DataType.FLOAT, DataType.INTEGER, DataType.STRING),
+    EQUALS(DataType.DATETIME, DataType.DATE, DataType.TIME, DataType.FLOAT, DataType.INTEGER, DataType.STRING),
     CONTAINS(DataType.STRING),
     STARTS_WITH(DataType.STRING),
     ENDS_WITH(DataType.STRING),
     IN(DataType.STRING),
-    GREATER_THEN(DataType.DATETIME, DataType.FLOAT, DataType.INTEGER),
-    LESS_THEN(DataType.DATETIME, DataType.FLOAT, DataType.INTEGER);
+    GREATER_THEN(DataType.DATETIME, DataType.DATE, DataType.TIME, DataType.FLOAT, DataType.INTEGER),
+    LESS_THEN(DataType.DATETIME, DataType.DATE, DataType.TIME,DataType.FLOAT, DataType.INTEGER);
 
     private List<DataType> dataTypes = new ArrayList<>();
 

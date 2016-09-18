@@ -115,9 +115,8 @@ public class Projects extends FimsService {
             keys.add(attribute);
         }
 
-        JSONArray dataTypeOperators = new JSONArray();
+        JSONObject dataTypeOperators = new JSONObject();
         for (DataType dataType: DataType.values()) {
-            JSONObject dtOperators = new JSONObject();
             JSONArray operators = new JSONArray();
 
             for (Operator op : Operator.values()) {
@@ -125,8 +124,7 @@ public class Projects extends FimsService {
                     operators.add(op.name());
                 }
             }
-            dtOperators.put(dataType, operators);
-            dataTypeOperators.add(dtOperators);
+            dataTypeOperators.put(dataType, operators);
         }
 
         response.put("keys", keys);
