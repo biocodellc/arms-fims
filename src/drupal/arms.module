@@ -19,11 +19,6 @@ function arms_theme($existing, $type, $theme, $path) {
         'expedition' => NULL,
       ],
     ],
-    'arms_query_results' => [
-      'variables' => [
-        'deployments' => NULL,
-      ],
-    ],
     'block--carouselblock' => [
       'variables' => [
         'imgs' => NULL,
@@ -31,6 +26,9 @@ function arms_theme($existing, $type, $theme, $path) {
         'height' => NULL,
         'id' => NULL,
       ],
+    ],
+    'arms_search' => [
+      'variables' => [],
     ],
   ];
 }
