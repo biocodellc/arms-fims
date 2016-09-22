@@ -1,7 +1,7 @@
 var app = angular.module('armsSearchApp', []);
 
-app.controller('searchCtrl', ['$http', '$filter', '$window',
-    function ($http, $filter, $window) {
+app.controller('searchCtrl', ['$http', '$filter', '$window', '$scope',
+    function ($http, $filter, $window, $scope) {
         var defaultFilter = {
             attributeIndex: "0",
             operator: "",
@@ -35,6 +35,7 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
         vm.removeFilter = removeFilter;
         vm.addFilter = addFilter;
         vm.getOperators = getOperators;
+        vm.getList = getList;
         vm.query = query;
         vm.excel = excel;
         vm.map = map;
@@ -99,7 +100,7 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
             angular.forEach(vm.filters, function (filter, index) {
                 if (filter.value) {
                     var criteria = {
-                        "key": vm.filterOptions.attributes[filter.attributeIndex].column,
+                        "key": vm.filterOptions.attributes[filter.attributeIndex].column_internal,
                         "operator": filter.operator,
                         "value": filter.value,
                         "condition": "AND"
@@ -132,7 +133,16 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
 
         function getOperators(attributeIndex) {
             var dataType = vm.filterOptions.attributes[attributeIndex].datatype;
-            return displayOperators[dataType];
+            if (vm.filterOptions.attributes[attributeIndex].list) {
+                // if the attribute has a list, then we only want to return =
+                return {"EQUALS": "="}
+            } else {
+                return displayOperators[dataType];
+            }
+        }
+
+        function getList(attributeIndex) {
+            return vm.filterOptions.attributes[attributeIndex].list;
         }
 
         // We need to map the operators we fetched from fims into a map with the operators we want to display.

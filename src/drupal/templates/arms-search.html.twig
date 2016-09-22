@@ -5,9 +5,10 @@
 #}
 {{ attach_library('arms/search') }}
 {{ attach_library('arms/bootstrap-sortable') }}
-<div ng-app="armsSearchApp">
-    <div ng-cloak ng-controller="searchCtrl as vm">
-        <div class="col-sm-12 alert alert-error" role="alert" ng-show="vm.error"><strong>Error! </strong>{{ vm.error }}</div>
+<div ng-app="armsSearchApp" ng-cloak>
+    <div ng-controller="searchCtrl as vm">
+        <div class="col-sm-12 alert alert-error" role="alert" ng-show="vm.error"><strong>Error! </strong>{{ vm.error }}
+        </div>
         <form>
             <div class="form-group">
                 <label for="expeditionId">Projects</label>
@@ -36,7 +37,8 @@
                 <label>Filter(s)</label>
                 <div class="form-group row" ng-repeat="filter in vm.filters">
                     <div class="col-sm-4">
-                        <select class="form-control" name="filterColumn" ng-model="filter.attributeIndex">
+                        <select class="form-control" name="filterColumn" ng-model="filter.attributeIndex"
+                                ng-change="vm.filters[$index].value = ''">
                             <option ng-repeat="key in vm.filterOptions.attributes"
                                     value="{{ '{{ $index }}' }}">
                                 {{ '{{ key.column }}' }}
@@ -48,7 +50,14 @@
                                 ng-options="key as value for (key, value) in vm.getOperators(filter.attributeIndex)"></select>
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" ng-model="filter.value"/>
+                        <input ng-if="!vm.getList(filter.attributeIndex)" type="text" class="form-control"
+                               ng-model="filter.value"/>
+                        <select ng-if="vm.getList(filter.attributeIndex)" class="form-control" ng-model="filter.value">
+                            <option value="">Choose value</option>
+                            <option ng-repeat="value in vm.getList(filter.attributeIndex)" value="{{ '{{ value }}' }}">
+                                {{ '{{ value }}' }}
+                            </option>
+                        </select>
                     </div>
                     <button type="button" class="btn btn-danger" ng-show="vm.filters.length > 1"
                             ng-click="vm.removeFilter($index)">
