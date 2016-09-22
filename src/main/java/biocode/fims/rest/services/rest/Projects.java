@@ -98,21 +98,34 @@ public class Projects extends FimsService {
 
         Mapping mapping = new Mapping();
         mapping.addMappingRules(configFile);
-        ArrayList<Attribute> attributeArrayList = mapping.getAllAttributes(mapping.getDefaultSheetName());
+
+        Validation validation = new Validation();
+        validation.addValidationRules(configFile, mapping);
 
         JSONObject response = new JSONObject();
-        JSONArray keys = new JSONArray();
+        JSONArray attributes = new JSONArray();
 
-        Iterator it = attributeArrayList.iterator();
-        while (it.hasNext()) {
-            Attribute a = (Attribute) it.next();
+        for (Attribute a: mapping.getAllAttributes(mapping.getDefaultSheetName())) {
             JSONObject attribute = new JSONObject();
             attribute.put("column", a.getColumn());
             attribute.put("column_internal", a.getColumn_internal());
             attribute.put("datatype", a.getDatatype().name());
             attribute.put("dataformat", (!StringUtils.isBlank(a.getDataformat())) ? a.getDataformat() : null);
 
-            keys.add(attribute);
+            biocode.fims.digester.List list = validation.findListForColumn(a.getColumn(), mapping.getDefaultSheetName());
+            JSONArray fields = new JSONArray();
+            if (list != null && list.getFields() != null) {
+                fields.clear();
+                Iterator it = list.getFields().iterator();
+
+                while (it.hasNext()) {
+                    Field field = (Field) it.next();
+                    fields.add(field.getValue());
+                }
+            }
+            attribute.put("list", fields.size() > 0 ? fields : null);
+
+            attributes.add(attribute);
         }
 
         JSONObject dataTypeOperators = new JSONObject();
@@ -127,7 +140,7 @@ public class Projects extends FimsService {
             dataTypeOperators.put(dataType, operators);
         }
 
-        response.put("keys", keys);
+        response.put("attributes", attributes);
         response.put("operators", dataTypeOperators);
 
         return Response.ok(response.toJSONString()).build();
