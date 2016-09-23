@@ -1,7 +1,7 @@
-var app = angular.module('armsSearchApp', []);
+var app = angular.module('armsSearchApp', ['ui.bootstrap']);
 
-app.controller('searchCtrl', ['$http', '$filter', '$window', '$scope',
-    function ($http, $filter, $window, $scope) {
+app.controller('searchCtrl', ['$http', '$filter', '$window',
+    function ($http, $filter, $window) {
         var defaultFilter = {
             attributeIndex: "0",
             operator: "",
@@ -40,9 +40,25 @@ app.controller('searchCtrl', ['$http', '$filter', '$window', '$scope',
         vm.excel = excel;
         vm.map = map;
         vm.formatDateTime = formatDateTime;
+        vm.isDate = isDate;
+        vm.getDateFormat = getDateFormat;
+        vm.openDatePopup = openDatePopup;
+
+        function openDatePopup(filter) {
+            filter.datePopupOpened = true;
+        }
+
+        function getDateFormat(attributeIndex) {
+            // ISO8061 formats use capital Y and D, however uib dateparser uses lowercase y and d, so we need to replace
+            return vm.filterOptions.attributes[attributeIndex].dataformat.replace(/Y/g, "y").replace(/D/g, "d");
+        }
+
+        function isDate(attributeIndex) {
+            return vm.filterOptions.attributes[attributeIndex].datatype == "DATE";
+        }
 
         function map() {
-            var criterions = JSON.stringify({"criterion": getFilterCriterion()})
+            var criterions = JSON.stringify({"criterion": getFilterCriterion()});
             $http.post("/deployments/search/map", criterions).then(
                 function (response) {
                     if (response.data.url) {
@@ -73,10 +89,9 @@ app.controller('searchCtrl', ['$http', '$filter', '$window', '$scope',
             var value = "N/A";
 
             if (dateTime) {
-                angular.forEach(vm.filterOptions.attributes, function (attribute) {
+                angular.forEach(vm.filterOptions.attributes, function (attribute, index) {
                     if (attribute.column == column) {
-                        var format = attribute.dataformat;
-                        value = $filter('date')(dateTime, format);
+                        value = $filter('date')(dateTime, getDateFormat(index));
                     }
                 });
             }
@@ -97,15 +112,20 @@ app.controller('searchCtrl', ['$http', '$filter', '$window', '$scope',
 
         function getFilterCriterion() {
             var filters = [];
-            angular.forEach(vm.filters, function (filter, index) {
+            angular.forEach(vm.filters, function (filter) {
                 if (filter.value) {
-                    var criteria = {
+                    var value = filter.value;
+
+                    if (isDate(filter.attributeIndex)) {
+                        value = $filter('date')(value, getDateFormat(filter.attributeIndex));
+                    }
+
+                    filters.push({
                         "key": vm.filterOptions.attributes[filter.attributeIndex].column_internal,
                         "operator": filter.operator,
-                        "value": filter.value,
+                        "value": value,
                         "condition": "AND"
-                    };
-                    filters.push(criteria);
+                    });
                 }
             });
 
@@ -151,7 +171,7 @@ app.controller('searchCtrl', ['$http', '$filter', '$window', '$scope',
         function transformOperators() {
             angular.forEach(vm.filterOptions.operators, function (operators, dataType) {
                 var operatorsForDataType = {};
-                angular.forEach(operators, function (operator, index) {
+                angular.forEach(operators, function (operator) {
                     operatorsForDataType[operator] = (operatorMap[operator] ? operatorMap[operator] : operator);
                 });
                 displayOperators[dataType] = operatorsForDataType;
@@ -237,4 +257,6 @@ app.controller('searchCtrl', ['$http', '$filter', '$window', '$scope',
             );
 
         }).call();
-    }]);
+    }
+
+]);

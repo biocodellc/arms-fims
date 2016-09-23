@@ -7,7 +7,8 @@
 {{ attach_library('arms/bootstrap-sortable') }}
 <div ng-app="armsSearchApp" ng-cloak>
     <div ng-controller="searchCtrl as vm">
-        <div class="col-sm-12 alert alert-error" role="alert" ng-show="vm.error"><strong>Error! </strong>{{ vm.error }}
+        <div class="col-sm-12 alert alert-danger" role="alert" ng-show="vm.error">
+            <strong>Error! </strong>{{ '{{ vm.error }}' }}
         </div>
         <form>
             <div class="form-group">
@@ -49,15 +50,32 @@
                         <select class="form-control" name="filterOperator" ng-model="filter.operator"
                                 ng-options="key as value for (key, value) in vm.getOperators(filter.attributeIndex)"></select>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" ng-if="!vm.isDate(filter.attributeIndex)">
                         <input ng-if="!vm.getList(filter.attributeIndex)" type="text" class="form-control"
                                ng-model="filter.value"/>
-                        <select ng-if="vm.getList(filter.attributeIndex)" class="form-control" ng-model="filter.value">
+                        <select ng-if="vm.getList(filter.attributeIndex)" class="form-control"
+                                ng-model="filter.value">
                             <option value="">Choose value</option>
-                            <option ng-repeat="value in vm.getList(filter.attributeIndex)" value="{{ '{{ value }}' }}">
+                            <option ng-repeat="value in vm.getList(filter.attributeIndex)"
+                                    value="{{ '{{ value }}' }}">
                                 {{ '{{ value }}' }}
                             </option>
                         </select>
+                    </div>
+                    <div class="col-sm-4" ng-if="vm.isDate(filter.attributeIndex)">
+                        <p class="input-group">
+                            <input type="text" class="form-control"
+                                   uib-datepicker-popup="{{ '{{ vm.getDateFormat(filter.attributeIndex) }}' }}"
+                                   is-open="filter.datePopupOpened" ng-model="filter.value"
+                                   close-text="Close"
+                                   datepicker-options="{showWeeks:false}" />
+                            <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"
+                                            ng-click="vm.openDatePopup(filter)">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                        </p>
                     </div>
                     <button type="button" class="btn btn-danger" ng-show="vm.filters.length > 1"
                             ng-click="vm.removeFilter($index)">
