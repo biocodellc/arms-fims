@@ -52,6 +52,7 @@
                     </div>
                     <div class="col-sm-4" ng-if="!vm.isDate(filter.attributeIndex)">
                         <input ng-if="!vm.getList(filter.attributeIndex)" type="text" class="form-control"
+                               placeholder="{{ '{{ vm.getPlaceholder(filter.attributeIndex) }}' }}"
                                ng-model="filter.value"/>
                         <select ng-if="vm.getList(filter.attributeIndex)" class="form-control"
                                 ng-model="filter.value">
@@ -68,7 +69,8 @@
                                    uib-datepicker-popup="{{ '{{ vm.getDateFormat(filter.attributeIndex) }}' }}"
                                    is-open="filter.datePopupOpened" ng-model="filter.value"
                                    close-text="Close"
-                                   datepicker-options="{showWeeks:false}" />
+                                   datepicker-options="{showWeeks:false, minMode: vm.getDatePickerMode(filter.attributeIndex)}"
+                                   placeholder="{{ '{{ vm.getPlaceholder(filter.attributeIndex) }}' }}"/>
                             <span class="input-group-btn">
                                     <button type="button" class="btn btn-default"
                                             ng-click="vm.openDatePopup(filter)">

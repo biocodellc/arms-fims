@@ -43,6 +43,22 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
         vm.isDate = isDate;
         vm.getDateFormat = getDateFormat;
         vm.openDatePopup = openDatePopup;
+        vm.getDatePickerMode = getDatePickerMode;
+        vm.getPlaceholder = getPlaceholder;
+
+        function getPlaceholder(attributeIndex) {
+            if (vm.filterOptions.attributes[attributeIndex].dataformat) {
+                return "ex." + vm.filterOptions.attributes[attributeIndex].dataformat;
+            }
+            return "";
+        }
+
+        function getDatePickerMode(attributeIndex) {
+            if (getDateFormat(attributeIndex).indexOf("d") !== -1) {
+                return "day";
+            }
+            return "month";
+        }
 
         function openDatePopup(filter) {
             filter.datePopupOpened = true;
