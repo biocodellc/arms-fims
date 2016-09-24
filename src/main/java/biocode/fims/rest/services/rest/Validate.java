@@ -127,11 +127,8 @@ public class Validate extends FimsService {
         boolean configurationGood = true;
 
         if (!cFT.isValidConfig()) {
-//            String message = "<br>CONFIGURATION FILE ERROR...<br>Please talk to your project administrator to fix the following error:<br>\t\n";
-//            message += cFT.getMessages();
             processController.setHasErrors(true);
             processController.setValidated(false);
-//            processController.appendStatus(message + "<br>");
             configurationGood = false;
             retVal.append("{\"done\": ");
             JSONObject messages = new JSONObject();
