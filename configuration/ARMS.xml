@@ -9,6 +9,10 @@
         <entity worksheet="Samples" worksheetUniqueKey="deploymentID" conceptAlias="Event"
                 conceptURI="http://purl.org/dc/dcmitype/Event" entityID="1"
                 conceptForwardingAddress="http://arms.biocodellc.com/deployments/{ark}/{suffix}">
+            <attribute column='armsModel' column_internal='armsModel' uri='urn:armsModel' group='ARMS Details'
+                       defined_by='urn:armsModel' datatype="string">
+                <![CDATA[description of ARMS structure (e.g. 10 plates with scrubbie, 9 plates with scrubbie, 10 plates without scrubbie, 9 plates without scrubbie)]]>
+            </attribute>
             <attribute column='deploymentID' column_internal="deploymentId" uri='urn:deploymentID' group='ARMS Details'
                        defined_by='http://rs.tdwg.org/dwc/terms/eventID' datatype="string">
                 <![CDATA[An identifier unique to each ARMS deployed within a project (example: 2016_INDO_CE01)]]>
