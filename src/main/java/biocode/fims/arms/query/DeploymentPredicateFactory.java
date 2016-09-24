@@ -36,6 +36,10 @@ class DeploymentPredicateFactory {
                     return path.endsWith(criteria.getValue());
                 } else if (criteria.getOperator().equals(Operator.STARTS_WITH)) {
                     return path.startsWith(criteria.getValue());
+                } else if (criteria.getOperator().equals(Operator.GREATER_THEN)) {
+                    return path.gt(criteria.getValue());
+                } else if (criteria.getOperator().equals(Operator.LESS_THEN)) {
+                    return path.lt(criteria.getValue());
                 } else if (criteria.getOperator().equals(Operator.IN)) {
                     // split string removing any whitespace
                     return path.in(criteria.getValue().trim().split("\\s,\\s|,\\s|,"));

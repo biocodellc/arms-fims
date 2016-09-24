@@ -4,7 +4,6 @@ import biocode.fims.digester.Attribute;
 import biocode.fims.digester.Mapping;
 import biocode.fims.settings.*;
 import biocode.fims.utils.Timer;
-import org.apache.commons.digester3.Digester;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -32,7 +31,7 @@ public class DbBuilder {
 
     public void buildTable(String projectConfig) throws Exception {
         Mapping mapping = new Mapping();
-        mapping.addMappingRules(new Digester(), new File(projectConfig));
+        mapping.addMappingRules(new File(projectConfig));
 
         Statement stmt = conn.createStatement();
         stmt.addBatch("DROP TABLE IF EXISTS `dataset`;");

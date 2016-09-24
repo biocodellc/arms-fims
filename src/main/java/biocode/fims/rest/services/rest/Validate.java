@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -122,21 +123,18 @@ public class Validate extends FimsService {
         );
 
         // Test the configuration file to see that we're good to go...
-        ConfigurationFileTester cFT = new ConfigurationFileTester();
+        ConfigurationFileTester cFT = new ConfigurationFileTester(p.configFile);
         boolean configurationGood = true;
 
-        cFT.init(p.configFile);
-
-        if (!cFT.checkUniqueKeys()) {
-            String message = "<br>CONFIGURATION FILE ERROR...<br>Please talk to your project administrator to fix the following error:<br>\t\n";
-            message += cFT.getMessages();
+        if (!cFT.isValidConfig()) {
             processController.setHasErrors(true);
             processController.setValidated(false);
-            processController.appendStatus(message + "<br>");
             configurationGood = false;
-            retVal.append("{\"done\": \"");
-            retVal.append(processController.getStatusSB().toString());
-            retVal.append("\"}");
+            retVal.append("{\"done\": ");
+            JSONObject messages = new JSONObject();
+            messages.put("config", cFT.getMessages());
+            retVal.append(messages.toJSONString());
+            retVal.append("}");
         }
 
 
@@ -253,13 +251,12 @@ public class Validate extends FimsService {
         CsvTabularDataConverter csvTabularDataConverter = new CsvTabularDataConverter(
                 tdr, destination, outputPrefix);
 
-        List<String> acceptableColumns = new LinkedList<>();
         List<String> acceptableColumnsInternal = new LinkedList<>();
-        for (Attribute attribute : processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName())) {
-            acceptableColumns.add(attribute.getColumn());
+        List<Attribute> attributes = processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName());
+        for (Attribute attribute : attributes) {
             acceptableColumnsInternal.add(attribute.getColumn_internal());
         }
-        csvTabularDataConverter.convert(acceptableColumns, p.getMapping().getDefaultSheetName());
+        csvTabularDataConverter.convert(attributes, p.getMapping().getDefaultSheetName());
 
         tdr.closeFile();
 

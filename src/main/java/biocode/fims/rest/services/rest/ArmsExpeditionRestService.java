@@ -13,7 +13,6 @@ import biocode.fims.service.OAuthProviderService;
 import biocode.fims.service.ProjectService;
 import biocode.fims.settings.SettingsManager;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.apache.commons.digester3.Digester;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
@@ -58,7 +57,7 @@ public class ArmsExpeditionRestService extends FimsService {
 
         File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
         Mapping mapping = new Mapping();
-        mapping.addMappingRules(new Digester(), configFile);
+        mapping.addMappingRules(configFile);
 
         Expedition expedition = new Expedition.ExpeditionBuilder(expeditionCode)
                 .isPublic(isPublic)

@@ -49,8 +49,39 @@ arms.deployment.detailByIdentifier:
 arms.search:
   path: '/deployments/search'
   defaults:
-    _form: '\Drupal\arms\Form\ArmsSearchForm'
+    _controller: '\Drupal\arms\Controller\ArmsController::search'
     _title: 'ARMS Search'
+  requirements:
+    _permission: 'access content'
+
+arms.search.excel:
+  path: '/deployments/search/excel'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsController::queryExcel'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
+
+arms.search.excel.download:
+  path: '/deployments/search/excel/{file_uri}'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsController::downloadFile'
+  methods: [GET]
+  requirements:
+    _permission: 'access content'
+
+arms.search.map:
+  path: '/deployments/search/map'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsController::queryMap'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
+
+arms.settings.fimsREST:
+  path: '/settings/fims'
+  defaults:
+    _controller: '\Drupal\arms\Controller\ArmsController::fimsREST'
   requirements:
     _permission: 'access content'
 

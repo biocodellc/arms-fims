@@ -1,0 +1,144 @@
+{#
+/**
+ * @file
+ */
+#}
+{{ attach_library('arms/search') }}
+{{ attach_library('arms/bootstrap-sortable') }}
+<div ng-app="armsSearchApp" ng-cloak>
+    <div ng-controller="searchCtrl as vm">
+        <div class="col-sm-12 alert alert-danger" role="alert" ng-show="vm.error">
+            <strong>Error! </strong>{{ '{{ vm.error }}' }}
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="expeditionId">Projects</label>
+                <select class="form-control" id="expeditionId" name="expeditionId" ng-model="vm.expeditionId"
+                        ng-change="vm.updateDeployments()">
+                    <option value="">All Projects</option>
+                    <option ng-repeat="armsExpedition in vm.armsExpeditions"
+                            value="{{ '{{ armsExpedition.expeditionId }}' }}">
+                        {{ '{{ armsExpedition.expedition.expeditionTitle }}' }}
+                    </option>
+                </select>
+            </div>
+
+            <div ng-show="vm.deployments.length > 0" class="form-group">
+                <label for="deployments" class="control-label">Deployments</label>
+                <select multiple class="form-control" id="deployments" name="deployments" ng-model="vm.deploymentIds">
+                    <option value="all">All Deployments</option>
+                    <option ng-repeat="deployment in vm.deployments"
+                            value="{{ '{{ deployment.deploymentId }}' }}">
+                        {{ '{{ deployment.deploymentId }}' }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Filter(s)</label>
+                <div class="form-group row" ng-repeat="filter in vm.filters">
+                    <div class="col-sm-4">
+                        <select class="form-control" name="filterColumn" ng-model="filter.attributeIndex"
+                                ng-change="vm.filters[$index].value = ''">
+                            <option ng-repeat="key in vm.filterOptions.attributes"
+                                    value="{{ '{{ $index }}' }}">
+                                {{ '{{ key.column }}' }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" name="filterOperator" ng-model="filter.operator"
+                                ng-options="key as value for (key, value) in vm.getOperators(filter.attributeIndex)"></select>
+                    </div>
+                    <div class="col-sm-4" ng-if="!vm.isDate(filter.attributeIndex)">
+                        <input ng-if="!vm.getList(filter.attributeIndex)" type="text" class="form-control"
+                               placeholder="{{ '{{ vm.getPlaceholder(filter.attributeIndex) }}' }}"
+                               ng-model="filter.value"/>
+                        <select ng-if="vm.getList(filter.attributeIndex)" class="form-control"
+                                ng-model="filter.value">
+                            <option value="">Choose value</option>
+                            <option ng-repeat="value in vm.getList(filter.attributeIndex)"
+                                    value="{{ '{{ value }}' }}">
+                                {{ '{{ value }}' }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4" ng-if="vm.isDate(filter.attributeIndex)">
+                        <p class="input-group">
+                            <input type="text" class="form-control"
+                                   uib-datepicker-popup="{{ '{{ vm.getDateFormat(filter.attributeIndex) }}' }}"
+                                   is-open="filter.datePopupOpened" ng-model="filter.value"
+                                   close-text="Close"
+                                   datepicker-options="{showWeeks:false, minMode: vm.getDatePickerMode(filter.attributeIndex)}"
+                                   placeholder="{{ '{{ vm.getPlaceholder(filter.attributeIndex) }}' }}"/>
+                            <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"
+                                            ng-click="vm.openDatePopup(filter)">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                        </p>
+                    </div>
+                    <button type="button" class="btn btn-danger" ng-show="vm.filters.length > 1"
+                            ng-click="vm.removeFilter($index)">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-show="$last" ng-click="vm.addFilter()">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button class="button btn-default btn" name="query" ng-click="vm.query()">Table</button>
+                <button class="button btn-default btn" name="excel" ng-click="vm.excel()">Excel</button>
+                <button class="button btn-default btn" name="map" ng-click="vm.map()">Map</button>
+            </div>
+        </form>
+
+        <div class="panel panel-default top-buffer" ng-hide="vm.queryResults.length === undefined">
+            <table class="table table-condensed sortable">
+                <thead>
+                <th>Deployment Event ID</th>
+                <th data-dateformat>Estimated Deployment Date</th>
+                <th data-dateformat>Estimated Retrieval Date</th>
+                <th data-dateformat>Actual Deployment Date</th>
+                <th data-dateformat>Actual Retrieval Date</th>
+                <th>Lat/Lng</th>
+                <th>Depth</th>
+                <th>Habitat Type:</th>
+                <th>Station ID</th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="deployment in vm.queryResults">
+                    <td><a data-toggle="modal" data-target="#deploymentModal" href="#"
+                           data-deployment-id="{{ '{{ deployment.deploymentId }}' }}"
+                           data-load-url="/deployments/{{ '{{ deployment.expeditionId }}' }}/{{ '{{ deployment.deploymentId }}' }}">{{ '{{ deployment.deploymentId }}' }}</a>
+                    </td>
+                    <td>{{ '{{ vm.formatDateTime("intendedDeploymentDate", deployment.intendedDeploymentDate) }}' }}</td>
+                    <td>{{ '{{ vm.formatDateTime("intendedRecoveryDate", deployment.intendedRecoveryDate) }}' }}</td>
+                    <td>{{ '{{ vm.formatDateTime("actualDeploymentDate", deployment.actualDeploymentDate) }}' }}</td>
+                    <td>{{ '{{ vm.formatDateTime("actualRecoveryDate", deployment.actualRecoveryDate) }}' }}</td>
+                    <td>{{ '{{ deployment.decimalLatitude }}' }}/{{ '{{ deployment.decimalLongitude }}' }}</td>
+                    <td>{{ '{{ deployment.depthInMeters }}' }} meters</td>
+                    <td>{{ '{{ deployment.habitat }}' }}</td>
+                    <td>{{ '{{ deployment.stationId }}' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal fade" id="deploymentModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" style="text-align: center;"></h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

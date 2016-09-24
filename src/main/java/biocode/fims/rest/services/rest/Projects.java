@@ -1,6 +1,5 @@
 package biocode.fims.rest.services.rest;
 
-import biocode.fims.bcid.ExpeditionMinter;
 import biocode.fims.bcid.ProjectMinter;
 import biocode.fims.config.ConfigurationFileFetcher;
 import biocode.fims.digester.*;
@@ -19,7 +18,7 @@ import biocode.fims.service.OAuthProviderService;
 import biocode.fims.service.ProjectService;
 import biocode.fims.service.UserService;
 import biocode.fims.settings.SettingsManager;
-import org.apache.commons.digester3.Digester;
+import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -68,7 +67,7 @@ public class Projects extends FimsService {
             File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), true).getOutputFile();
 
             Mapping mapping = new Mapping();
-            mapping.addMappingRules(new Digester(), configFile);
+            mapping.addMappingRules(configFile);
             String defaultSheet = mapping.getDefaultSheetName();
             ArrayList<Attribute> attributeList = mapping.getAllAttributes(defaultSheet);
 
@@ -98,29 +97,51 @@ public class Projects extends FimsService {
         File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), true).getOutputFile();
 
         Mapping mapping = new Mapping();
-        mapping.addMappingRules(new Digester(), configFile);
-        ArrayList<Attribute> attributeArrayList = mapping.getAllAttributes(mapping.getDefaultSheetName());
+        mapping.addMappingRules(configFile);
+
+        Validation validation = new Validation();
+        validation.addValidationRules(configFile, mapping);
 
         JSONObject response = new JSONObject();
-        JSONArray keys = new JSONArray();
+        JSONArray attributes = new JSONArray();
 
-        Iterator it = attributeArrayList.iterator();
-        while (it.hasNext()) {
-            Attribute a = (Attribute) it.next();
+        for (Attribute a: mapping.getAllAttributes(mapping.getDefaultSheetName())) {
             JSONObject attribute = new JSONObject();
             attribute.put("column", a.getColumn());
             attribute.put("column_internal", a.getColumn_internal());
+            attribute.put("datatype", a.getDatatype().name());
+            attribute.put("dataformat", (!StringUtils.isBlank(a.getDataformat())) ? a.getDataformat() : null);
 
-            keys.add(attribute);
+            biocode.fims.digester.List list = validation.findListForColumn(a.getColumn(), mapping.getDefaultSheetName());
+            JSONArray fields = new JSONArray();
+            if (list != null && list.getFields() != null) {
+                fields.clear();
+                Iterator it = list.getFields().iterator();
+
+                while (it.hasNext()) {
+                    Field field = (Field) it.next();
+                    fields.add(field.getValue());
+                }
+            }
+            attribute.put("list", fields.size() > 0 ? fields : null);
+
+            attributes.add(attribute);
         }
 
-        JSONArray operators = new JSONArray();
-        for (Operator op: Operator.values()) {
-            operators.add(op.name());
+        JSONObject dataTypeOperators = new JSONObject();
+        for (DataType dataType: DataType.values()) {
+            JSONArray operators = new JSONArray();
+
+            for (Operator op : Operator.values()) {
+                if (op.getDataTypes().contains(dataType)) {
+                    operators.add(op.name());
+                }
+            }
+            dataTypeOperators.put(dataType, operators);
         }
 
-        response.put("keys", keys);
-        response.put("operators", operators);
+        response.put("attributes", attributes);
+        response.put("operators", dataTypeOperators);
 
         return Response.ok(response.toJSONString()).build();
     }
@@ -671,7 +692,7 @@ public class Projects extends FimsService {
         File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), true).getOutputFile();
 
         Mapping mapping = new Mapping();
-        mapping.addMappingRules(new Digester(), configFile);
+        mapping.addMappingRules(configFile);
 
         return Response.ok("{\"uniqueKey\":\"" + mapping.getDefaultSheetUniqueKey() + "\"}").build();
     }
