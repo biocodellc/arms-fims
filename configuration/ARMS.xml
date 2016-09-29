@@ -121,7 +121,7 @@
                 <dataFormat><![CDATA[Select from lookup list]]></dataFormat>
             </attribute>
             <attribute column='decimalLatitude' column_internal="decimalLatitude" uri='urn:decimalLatitude'
-                       group='location' defined_by='http://rs.tdwg.org/dwc/terms/decimalLatitude' datatype="string">
+                       group='location' defined_by='http://rs.tdwg.org/dwc/terms/decimalLatitude' datatype="float">
                 <![CDATA[The geographic latitude in decimal degrees where the ARMS was deployed]]>
                 <dataFormat><![CDATA[>=-90 <=90]]></dataFormat>
             </attribute>

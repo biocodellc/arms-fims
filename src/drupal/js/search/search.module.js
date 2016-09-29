@@ -79,6 +79,7 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
                 function (response) {
                     if (response.data.url) {
                         $window.open(response.data.url);
+                        resetError();
                     } else {
                         vm.error = "Error fetching query information for map";
                     }
@@ -93,6 +94,7 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
                 function (response) {
                     if (response.data.url) {
                         $window.open(response.data.url);
+                        resetError();
                     } else {
                         vm.error = "Error downloading query";
                     }
@@ -121,6 +123,7 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
                 function (response) {
                     vm.queryResults = response.data;
                     jQuery.bootstrapSortable();
+                    resetError();
                 }, function (response) {
                     vm.error = "Error fetching query results.";
                 });
@@ -162,6 +165,15 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
                     "condition": "AND"
                 };
                 filters.push(criteria);
+            }
+
+            if (vm.expeditionId && vm.expeditionId != "all") {
+                filters.push( {
+                    "key": "armsExpedition",
+                    "operator": "EQUALS",
+                    "value": vm.expeditionId,
+                    "condition": "AND"
+                });
             }
 
             return filters;
@@ -263,6 +275,10 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
                 jQuery(this).find('.modal-body').load(loadurl);
             });
         });
+
+        function resetError() {
+            vm.error = null;
+        }
 
         (function init() {
             getFimsRestUri().then(

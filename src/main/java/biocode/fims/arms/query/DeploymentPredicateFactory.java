@@ -1,5 +1,6 @@
 package biocode.fims.arms.query;
 
+import biocode.fims.arms.entities.QArmsExpedition;
 import biocode.fims.arms.entities.QDeployment;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 import biocode.fims.mysql.query.Operator;
@@ -16,36 +17,66 @@ class DeploymentPredicateFactory {
     static BooleanExpression getPredicate(SearchCriteria criteria) {
         try {
             Field field = QDeployment.class.getDeclaredField(criteria.getKey());
-            StringExpression path = null;
+            String criteriaValue = criteria.getValue();
             Path<?> val = (Path<?>) field.get(new QDeployment("deployment"));
-            if (val instanceof NumberPath) {
-                path = ((NumberPath) val).stringValue();
-            } else if (val instanceof StringPath) {
-                path = (StringExpression) val;
-            } else if (val instanceof DateTimePath) {
-                path = ((DateTimePath) val).stringValue();
-            } else if (val instanceof ComparablePath) {
-                throw new FimsRuntimeException("Invalid Query Key. Cannot query sql relations", 400);
+
+            // for now, if we see armsExpedition, then just assume we are querying the expeditionId. It would be nice
+            // to make this a generic method and pass in the QClass as a param, however I'm not sure how to do nested
+            // paths in the criteria.getKey() ex "armsExpedition.expeditionId". We would need to do some type of parsing
+            if (val instanceof QArmsExpedition) {
+                return ((QArmsExpedition) val).expeditionId.eq(Integer.valueOf(criteriaValue));
             }
-            if (path != null) {
+
+            if (val != null) {
                 if (criteria.getOperator().equals(Operator.EQUALS)) {
-                    return path.eq(criteria.getValue());
+                    if (val instanceof NumberPath) {
+                        return ((NumberPath) val).eq(Float.parseFloat(criteriaValue));
+                    } else if (val instanceof StringPath) {
+                        return ((StringPath) val).eq(criteriaValue);
+                    } else {
+                        throw new FimsRuntimeException("Invalid Query Operator for column.", 400);
+                    }
                 } else if (criteria.getOperator().equals(Operator.CONTAINS)) {
-                    return path.contains(criteria.getValue());
+                    if (val instanceof StringPath) {
+                        return ((StringPath) val).contains(criteriaValue);
+                    } else {
+                        throw new FimsRuntimeException("Invalid Query Operator for column.", 400);
+                    }
                 } else if (criteria.getOperator().equals(Operator.ENDS_WITH)) {
-                    return path.endsWith(criteria.getValue());
+                    if (val instanceof StringPath) {
+                        return ((StringPath) val).endsWith(criteriaValue);
+                    } else {
+                        throw new FimsRuntimeException("Invalid Query Operator for column.", 400);
+                    }
                 } else if (criteria.getOperator().equals(Operator.STARTS_WITH)) {
-                    return path.startsWith(criteria.getValue());
+                    if (val instanceof StringPath) {
+                        return ((StringPath) val).startsWith(criteriaValue);
+                    } else {
+                        throw new FimsRuntimeException("Invalid Query Operator for column.", 400);
+                    }
                 } else if (criteria.getOperator().equals(Operator.GREATER_THEN)) {
-                    return path.gt(criteria.getValue());
+                    if (val instanceof NumberPath) {
+                        return ((NumberPath) val).gt(Float.parseFloat(criteriaValue));
+                    } else if (val instanceof StringPath) {
+                        return ((StringPath) val).gt(criteriaValue);
+                    }
                 } else if (criteria.getOperator().equals(Operator.LESS_THEN)) {
-                    return path.lt(criteria.getValue());
+                    if (val instanceof NumberPath) {
+                        return ((NumberPath) val).lt(Float.parseFloat(criteriaValue));
+                    } else if (val instanceof StringPath) {
+                        return ((StringPath) val).lt(criteriaValue);
+                    }
                 } else if (criteria.getOperator().equals(Operator.IN)) {
                     // split string removing any whitespace
-                    return path.in(criteria.getValue().trim().split("\\s,\\s|,\\s|,"));
+                    if (val instanceof StringPath) {
+                        return ((StringPath) val).in(criteriaValue.trim().split("\\s,\\s|,\\s|,"));
+                    } else {
+                        throw new FimsRuntimeException("Invalid Query Operator for column.", 400);
+                    }
                 }
             }
-        } catch (IllegalAccessException|NoSuchFieldException ignored) {}
+        } catch (IllegalAccessException | NoSuchFieldException ignored) {
+        }
         return null;
     }
 }

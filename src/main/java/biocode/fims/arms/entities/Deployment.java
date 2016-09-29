@@ -1,6 +1,9 @@
 package biocode.fims.arms.entities;
 
 import com.fasterxml.jackson.annotation.*;
+import com.querydsl.core.annotations.PropertyType;
+import com.querydsl.core.annotations.QueryInit;
+import com.querydsl.core.annotations.QueryType;
 
 import javax.persistence.*;
 import java.net.URI;
@@ -253,6 +256,7 @@ public class Deployment {
         this.numReplicatesInSet = numReplicatesInSet;
     }
 
+    @QueryType(PropertyType.STRING)
     @Column(columnDefinition = "varchar(2083)")
     public URI getPhotoUrl() {
         return photoUrl;
