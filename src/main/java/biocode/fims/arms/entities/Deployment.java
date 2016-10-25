@@ -346,6 +346,7 @@ public class Deployment {
         this.county = county;
     }
 
+    @Column(columnDefinition = "decimal")
     public float getDecimalLatitude() {
         return decimalLatitude;
     }
@@ -354,6 +355,7 @@ public class Deployment {
         this.decimalLatitude = latitude;
     }
 
+    @Column(columnDefinition = "decimal")
     public float getDecimalLongitude() {
         return decimalLongitude;
     }

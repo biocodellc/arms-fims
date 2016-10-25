@@ -1,10 +1,9 @@
 package biocode.fims.arms.entities;
 
-import biocode.fims.arms.serializers.ArmsExpeditionSerializer;
 import biocode.fims.entities.Expedition;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import javax.persistence.*;
 import java.util.Set;
