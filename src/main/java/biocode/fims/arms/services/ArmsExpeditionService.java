@@ -4,11 +4,14 @@ import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.repositories.ArmsExpeditionRepository;
 import biocode.fims.digester.Mapping;
 import biocode.fims.entities.Expedition;
+import biocode.fims.entities.User;
 import biocode.fims.service.ExpeditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -73,13 +76,35 @@ public class ArmsExpeditionService {
         return armsExpedition;
     }
 
-    public Set<ArmsExpedition> findAll() {
-        Set<ArmsExpedition> armsExpeditions = armsExpeditionRepository.findAll();
+    public List<ArmsExpedition> getPublicExpeditions(int projectId) {
+        List<Expedition> publicExpeditions = expeditionService.getPublicExpeditions(projectId);
+
+        return getArmsExpeditions(publicExpeditions);
+    }
+
+    private List<ArmsExpedition> getArmsExpeditions(List<Expedition> expeditions) {
+        List<Integer> expeditionIds = new ArrayList<>();
+
+        for (Expedition expedition: expeditions) {
+            expeditionIds.add(expedition.getExpeditionId());
+        }
+
+        List<ArmsExpedition> armsExpeditions = armsExpeditionRepository.findByExpeditionIdIn(expeditionIds);
 
         for (ArmsExpedition armsExpedition: armsExpeditions) {
-            armsExpedition.setExpedition(expeditionService.getExpedition(armsExpedition.getExpeditionId()));
+            for (Expedition expedition: expeditions) {
+                if (armsExpedition.getExpeditionId() == expedition.getExpeditionId()) {
+                    armsExpedition.setExpedition(expedition);
+                }
+            }
         }
 
         return armsExpeditions;
+    }
+
+    public List<ArmsExpedition> getArmsExpeditions(int projectId, int userId, boolean includePublic) {
+        Set<Expedition> expeditions = expeditionService.getExpeditions(projectId, userId, includePublic);
+
+        return getArmsExpeditions((List<Expedition>) expeditions);
     }
 }

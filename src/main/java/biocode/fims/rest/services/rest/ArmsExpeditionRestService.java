@@ -19,6 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.util.List;
 
 /**
  * ARMS specific expedition services
@@ -79,8 +80,16 @@ public class ArmsExpeditionRestService extends FimsService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response list() {
-        return Response.ok(armsExpeditionService.findAll()).build();
+    public Response list(@QueryParam("includePublic") @DefaultValue("false") boolean includePublic) {
+        List<ArmsExpedition> expeditions;
+        Integer projectId = Integer.valueOf(settingsManager.retrieveValue("projectId"));
+
+        if (user != null) {
+            expeditions = armsExpeditionService.getArmsExpeditions(projectId, user.getUserId(), includePublic);
+        } else {
+            expeditions = armsExpeditionService.getPublicExpeditions(projectId);
+        }
+        return Response.ok(expeditions).build();
     }
 
     @GET

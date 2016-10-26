@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,4 +24,6 @@ public interface ArmsExpeditionRepository extends Repository<ArmsExpedition, Int
     ArmsExpedition findByExpeditionId(int armsExpeditionId);
 
     Set<ArmsExpedition> findAll();
+
+    List<ArmsExpedition> findByExpeditionIdIn(List<Integer> expeditionIds);
 }
