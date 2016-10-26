@@ -16,9 +16,9 @@
                 <select class="form-control" id="expeditionId" name="expeditionId" ng-model="vm.expeditionId"
                         ng-change="vm.updateDeployments()">
                     <option value="">All Projects</option>
-                    <option ng-repeat="armsExpedition in vm.armsExpeditions"
+                    <option ng-repeat="armsExpedition in vm.armsExpeditions | orderBy:['armsExpedition.geographicScope', 'armsExpedition.principalInvestigator', 'armsExpedition.expedition.expeditionCode']"
                             value="{{ '{{ armsExpedition.expeditionId }}' }}">
-                        {{ '{{ armsExpedition.expedition.expeditionTitle }}' }}
+                        {{ '{{ armsExpedition.geographicScope }}, {{ armsExpedition.principalInvestigator }}, {{ armsExpedition.expedition.expeditionCode }}' }}
                     </option>
                 </select>
             </div>
