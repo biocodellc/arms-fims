@@ -384,7 +384,7 @@ function loadExpeditions(id) {
     }
     // check if we've loaded this section, if not, load from service
     var divId = 'div#' + id
-    if ((id.indexOf("resources") != -1 || id.indexOf("datasets") != -1 || id.indexOf("configuration") != -1) &&
+    if ((id.indexOf("resources") != -1 || id.indexOf("configuration") != -1) &&
         ($(divId).children().length == 0)) {
         populateExpeditionSubsections(divId);
     } else if ($(divId).children().length == 0) {
@@ -414,8 +414,6 @@ function listExpeditions(divId) {
                 html += '<div id="{expedition}-configuration" class="toggle-content">Loading Expedition Metadata...</div>';
                 html += expandTemplate.replace('{text}', 'Expedition Resources').replace('{section}', 'resources');
                 html += '<div id="{expedition}-resources" class="toggle-content">Loading Expedition Resources...</div>';
-                html += expandTemplate.replace('{text}', 'Datasets associated with this expedition').replace('{section}', 'datasets');
-                html += '<div id="{expedition}-datasets" class="toggle-content">Loading Datasets associated wih this expedition...</div>';
                 html += '</div>\n';
 
                 // add current project to element id
@@ -423,7 +421,7 @@ function listExpeditions(divId) {
             });
             html = html.replace('<br>\n', '');
             if (html.indexOf("expand-content") == -1) {
-                html += 'You have no datasets in this project.';
+                html += 'You have no expeditions in this project.';
             }
             $(divId).html(html);
             $.each(data, function (index, e) {
@@ -434,7 +432,6 @@ function listExpeditions(divId) {
 
                 $('div#' + expedition + '-configuration').data('expeditionId', e.expeditionId);
                 $('div#' + expedition + '-resources').data('expeditionId', e.expeditionId);
-                $('div#' + expedition + '-datasets').data('expeditionId', e.expeditionId);
             });
 
             // remove previous click event and attach toggle function to each project
@@ -447,7 +444,7 @@ function listExpeditions(divId) {
         });
 }
 
-// function to populate the expedition resources, datasets, or configuration subsection of expeditions.html
+// function to populate the expedition resources, or configuration subsection of expeditions.html
 function populateExpeditionSubsections(divId) {
     // load config table from REST service
     var expeditionId = $(divId).data('expeditionId');
@@ -456,11 +453,6 @@ function populateExpeditionSubsections(divId) {
             armsFimsRestRoot + 'expeditions/' + expeditionId + '/resourcesAsTable/',
             divId,
             'Unable to load this expedition\'s resources from server.');
-    } else if (divId.indexOf("datasets") != -1) {
-        var jqxhr = populateDivFromService(
-            armsFimsRestRoot + 'expeditions/' + expeditionId + '/datasetsAsTable/',
-            divId,
-            'Unable to load this expedition\'s datasets from server.');
     } else {
         var jqxhr = populateDivFromService(
             armsFimsRestRoot + 'expeditions/' + expeditionId + '/metadataAsTable/',

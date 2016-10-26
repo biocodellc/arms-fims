@@ -49,7 +49,7 @@ public class Expeditions extends FimsService {
             JSONObject resource = (JSONObject) r;
             sb.append("\t<tr>\n");
             sb.append("\t\t<td>");
-            sb.append("<a href=\"" + appRoot + "lookup?id=");
+            sb.append("<a href=http://n2t.net/");
             sb.append(resource.get("identifier"));
             sb.append("\">");
             sb.append("http://n2t.net/");
@@ -68,49 +68,6 @@ public class Expeditions extends FimsService {
         }
 
         sb.append("\t</tbody>\n");
-        sb.append("</table>\n");
-        return Response.ok(sb.toString()).build();
-    }
-
-    @GET
-    @Authenticated
-    @Path("{expeditionId}/datasetsAsTable")
-    @Produces(MediaType.TEXT_HTML)
-    public Response listDatasetsAsTable(@PathParam("expeditionId") int expeditionId) {
-        ExpeditionMinter expeditionMinter = new ExpeditionMinter();
-
-        if (!ignoreUser && !expeditionMinter.userOwnsExpedition(user.getUserId(), expeditionId)) {
-            throw new ForbiddenRequestException("You must own this expedition in order to view its datasets.");
-        }
-
-        ArrayList<JSONObject> datasets = expeditionMinter.getDatasets(expeditionId);
-        StringBuilder sb = new StringBuilder();
-        sb.append("<table>\n");
-        sb.append("\t<tr>\n");
-        sb.append("\t\t<th>Date</th>\n");
-        sb.append("\t\t<th>Identifier</th>\n");
-        sb.append("\t</tr>\n");
-
-        if (!datasets.isEmpty()) {
-            for (Object d : datasets) {
-                JSONObject dataset = (JSONObject) d;
-                sb.append("\t<tr>\n");
-                sb.append("\t\t<td>");
-                sb.append(dataset.get("ts"));
-                sb.append("\t\t</td>");
-
-                sb.append("\t\t<td>");
-                sb.append("<a href=\"" + appRoot + "lookup?id=");
-                sb.append(dataset.get("identifier"));
-                sb.append("\">");
-                sb.append("http://n2t.net/");
-                sb.append(dataset.get("identifier"));
-                sb.append("</a>");
-                sb.append("\t\t</td>");
-                sb.append("\t</tr>\n");
-            }
-        }
-
         sb.append("</table>\n");
         return Response.ok(sb.toString()).build();
     }
@@ -137,7 +94,7 @@ public class Expeditions extends FimsService {
         sb.append("Identifier:");
         sb.append("\t\t</td>\n");
         sb.append("\t\t<td>");
-        sb.append("<a href=\"" + appRoot + "lookup?id=");
+        sb.append("<a href=http://n2t.net/");
         sb.append(metadata.get("identifier"));
         sb.append("\">");
         sb.append("http://n2t.net/");
