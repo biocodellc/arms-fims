@@ -1,11 +1,3 @@
-arms.expeditions:
-  path: 'projects'
-  defaults:
-    _form: '\Drupal\arms\Form\ArmsExpeditionSelectForm'
-    _title: 'Projects'
-  requirements:
-    _permission: 'access content'
-
 arms.expeditions.detail:
   path: '/projects/{scheme}/{naan}/{shoulder_plus_suffix}'
   defaults:

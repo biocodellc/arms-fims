@@ -26,24 +26,6 @@ class ArmsController extends ControllerBase {
     $this->rest_root = $this->config->get("arms_rest_uri");
   }
 
-  public function getExpeditions() {
-    $options = [];
-    try {
-      $result = $this->client->get($this->rest_root . 'arms/projects', ['Accept' => 'application/json']);
-      $expeditions = json_decode($result->getBody());
-
-      foreach ($expeditions as $value) {
-        $options[$value->expeditionId] = $this->t($value->expedition->expeditionTitle);
-      }
-    }
-    catch (RequestException $e) {
-      watchdog_exception('arms', $e);
-      drupal_set_message('Error fetching projects.', 'error');
-    }
-    return $options;
-  }
-
-
   public function deploymentDetail($project_id, $deployment_id) {
     $deployment = [];
     $expedition = [];
