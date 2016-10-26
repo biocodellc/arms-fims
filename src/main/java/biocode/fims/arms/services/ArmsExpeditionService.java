@@ -103,8 +103,8 @@ public class ArmsExpeditionService {
     }
 
     public List<ArmsExpedition> getArmsExpeditions(int projectId, int userId, boolean includePublic) {
-        Set<Expedition> expeditions = expeditionService.getExpeditions(projectId, userId, includePublic);
+        List<Expedition> expeditions = expeditionService.getExpeditions(projectId, userId, includePublic);
 
-        return getArmsExpeditions((List<Expedition>) expeditions);
+        return getArmsExpeditions(expeditions);
     }
 }

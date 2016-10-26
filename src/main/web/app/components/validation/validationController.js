@@ -28,7 +28,7 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 
             }
 
             function getArmsExpeditions(expeditionCode) {
-                ExpeditionFactory.getExpeditions()
+                ExpeditionFactory.getExpeditions(false)
                     .then(function(response) {
                         angular.extend(vm.armsExpeditions, response.data);
                         if (expeditionCode)

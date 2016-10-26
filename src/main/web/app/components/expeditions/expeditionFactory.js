@@ -8,8 +8,8 @@ angular.module('fims.expeditions')
 
     return expeditionFactory;
 
-    function getExpeditions() {
-        return $http.get(REST_ROOT + 'arms/projects/');
+    function getExpeditions(includePublic) {
+        return $http.get(REST_ROOT + 'arms/projects/?includePublic=' + includePublic);
     }
 
     function createExpedition(expedition) {
