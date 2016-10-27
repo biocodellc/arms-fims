@@ -33,8 +33,10 @@ class ArmsController extends ControllerBase {
       $expeditions = json_decode($result->getBody());
 
       foreach ($expeditions as $value) {
-        $options[$value->expeditionId] = $this->t($value->expedition->expeditionTitle);
+        $options[$value->expeditionId] = $value->geographicScope . ", " . $value->principalInvestigator . ", " . $value->expedition->expeditionCode;
       }
+
+      asort($options);
     }
     catch (RequestException $e) {
       watchdog_exception('arms', $e);
