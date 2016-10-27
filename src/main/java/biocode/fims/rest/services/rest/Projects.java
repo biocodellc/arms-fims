@@ -75,7 +75,7 @@ public class Projects extends FimsService {
 
             for (Attribute attribute : attributeList) {
                 // when we find the column corresponding to the definedBy for lat and long, add them to the response
-                if(decimalLatDefinedBy.equalsIgnoreCase(attribute.getDefined_by())) {
+                if (decimalLatDefinedBy.equalsIgnoreCase(attribute.getDefined_by())) {
                     response.put("lat_column", attribute.getColumn());
                 } else if (decimalLongDefinedBy.equalsIgnoreCase(attribute.getDefined_by())) {
                     response.put("long_column", attribute.getColumn());
@@ -105,7 +105,7 @@ public class Projects extends FimsService {
         JSONObject response = new JSONObject();
         JSONArray attributes = new JSONArray();
 
-        for (Attribute a: mapping.getAllAttributes(mapping.getDefaultSheetName())) {
+        for (Attribute a : mapping.getAllAttributes(mapping.getDefaultSheetName())) {
             JSONObject attribute = new JSONObject();
             attribute.put("column", a.getColumn());
             attribute.put("column_internal", a.getColumn_internal());
@@ -129,7 +129,7 @@ public class Projects extends FimsService {
         }
 
         JSONObject dataTypeOperators = new JSONObject();
-        for (DataType dataType: DataType.values()) {
+        for (DataType dataType : DataType.values()) {
             JSONArray operators = new JSONArray();
 
             for (Operator op : Operator.values()) {
@@ -150,7 +150,7 @@ public class Projects extends FimsService {
     @Path("/{projectId}/getDefinition/{columnName}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDefinitions(@PathParam("projectId") int projectId,
-                                  @PathParam("columnName") String columnName) {
+                                   @PathParam("columnName") String columnName) {
         TemplateProcessor t = new TemplateProcessor(projectId, uploadPath(), true);
         StringBuilder output = new StringBuilder();
 
@@ -248,7 +248,6 @@ public class Projects extends FimsService {
      * Print ruleMetadata
      *
      * @param sList We pass in a List of fields we want to associate with this rule
-     *
      * @return
      */
     private String printRuleMetadata(Rule r, biocode.fims.digester.List sList) {
@@ -568,7 +567,7 @@ public class Projects extends FimsService {
         sb.append("<table data-projectId=\"" + projectId + "\" data-projectTitle=\"" + response.get("projectTitle") + "\">\n");
         sb.append("\t<tr>\n");
 
-        for (User member: projectMembers) {
+        for (User member : projectMembers) {
             sb.append("\t<tr>\n");
             sb.append("\t\t<td>");
             sb.append(member.getUsername());
@@ -584,7 +583,7 @@ public class Projects extends FimsService {
         sb.append("<select name=userId>\n");
         sb.append("\t\t\t<option value=\"0\">Create New User</option>\n");
 
-        for (User user: allUsers) {
+        for (User user : allUsers) {
             sb.append("\t\t\t<option value=\"" + user.getUserId() + "\">" + user.getUsername() + "</option>\n");
         }
 
@@ -618,6 +617,18 @@ public class Projects extends FimsService {
 
         Project project = projectService.getProjectWithExpeditions(projectId);
 
+        // map for sorting expeditions by username
+        Map<String, List<Expedition>> userExpeditionMap = new TreeMap<>();
+        for (Expedition expedition : project.getExpeditions()) {
+            String username = expedition.getUser().getUsername();
+
+            if (userExpeditionMap.get(username) == null) {
+                userExpeditionMap.put(username, new ArrayList<Expedition>());
+            }
+
+            userExpeditionMap.get(username).add(expedition);
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("<form method=\"POST\">\n");
         sb.append("<table>\n");
@@ -628,22 +639,24 @@ public class Projects extends FimsService {
         sb.append("\t\t<th>Public</th>\n");
         sb.append("\t</tr>\n");
 
-        for (Expedition expedition: project.getExpeditions()) {
-            sb.append("\t<tr>\n");
-            sb.append("\t\t<td>");
-            sb.append(expedition.getUser().getUsername());
-            sb.append("</td>\n");
-            sb.append("\t\t<td>");
-            sb.append(expedition.getExpeditionTitle());
-            sb.append("</td>\n");
-            sb.append("\t\t<td><input name=\"");
-            sb.append(expedition.getExpeditionId());
-            sb.append("\" type=\"checkbox\"");
-            if (expedition.isPublic()) {
-                sb.append(" checked=\"checked\"");
+        for (Map.Entry<String, List<Expedition>> mapEntry : userExpeditionMap.entrySet()) {
+            for (Expedition expedition : mapEntry.getValue()) {
+                sb.append("\t<tr>\n");
+                sb.append("\t\t<td>");
+                sb.append(mapEntry.getKey());
+                sb.append("</td>\n");
+                sb.append("\t\t<td>");
+                sb.append(expedition.getExpeditionTitle());
+                sb.append("</td>\n");
+                sb.append("\t\t<td><input name=\"");
+                sb.append(expedition.getExpeditionId());
+                sb.append("\" type=\"checkbox\"");
+                if (expedition.isPublic()) {
+                    sb.append(" checked=\"checked\"");
+                }
+                sb.append("/></td>\n");
+                sb.append("\t</tr>\n");
             }
-            sb.append("/></td>\n");
-            sb.append("\t</tr>\n");
         }
 
         sb.append("\t<tr>\n");
