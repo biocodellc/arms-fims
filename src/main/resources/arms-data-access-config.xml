@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Repository and Service Layers-->
 
+<!--suppress SpringFacetInspection -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
@@ -52,13 +53,6 @@
     </bean>
 
     <bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
-
-    <bean id="mySqlUploader" class="biocode.fims.mysql.MySqlUploader">
-        <constructor-arg name="dataSource" ref="armsDataSource" />
-    </bean>
-    <bean id="mySqlDatasetTableValidator" class="biocode.fims.mysql.MySqlDatasetTableValidator">
-        <constructor-arg name="dataSource" ref="armsDataSource" />
-    </bean>
 
     <jpa:repositories base-package="biocode.fims.arms.repositories"
                       transaction-manager-ref="armsTransactionManager"

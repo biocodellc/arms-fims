@@ -34,20 +34,18 @@ public class DeploymentsWriter {
      *
      * @param deployments
      * @param outputDirectory
-     * @param validation
      * @param attributes the list of {@link Attribute} to be written
      * @param sheetName name of the sheet in the excel workbook where the data exists
      */
     public DeploymentsWriter(List<Deployment> deployments, String outputDirectory,
-                             Validation validation, ArrayList<Attribute> attributes, String sheetName) {
+                             ArrayList<Attribute> attributes, String sheetName) {
         this.outputDirectory = outputDirectory;
         this.deployments = deployments;
         this.attributes = attributes;
 
         queryWriter = new QueryWriter(
                 attributes,
-                sheetName,
-                validation
+                sheetName
         );
 
         addDataToQueryWriter();

@@ -14,6 +14,7 @@ import biocode.fims.service.ProjectService;
 import biocode.fims.settings.SettingsManager;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -25,6 +26,7 @@ import java.util.List;
  * ARMS specific expedition services
  */
 
+@Controller
 @Path("arms/projects")
 public class ArmsExpeditionRestService extends FimsService {
 

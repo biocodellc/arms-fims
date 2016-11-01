@@ -12,6 +12,7 @@ import biocode.fims.rest.FimsService;
 import biocode.fims.service.OAuthProviderService;
 import biocode.fims.settings.SettingsManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,6 +23,7 @@ import java.util.List;
 /**
  * Arms query REST services
  */
+@Controller
 @Path("deployments/query")
 public class QueryRestService extends FimsService {
     private final DeploymentService deploymentService;
@@ -53,15 +55,11 @@ public class QueryRestService extends FimsService {
         Mapping mapping = new Mapping();
         mapping.addMappingRules(configFile);
 
-        Validation validation = new Validation();
-        validation.addValidationRules(configFile, mapping);
-
         String defaultSheetName = mapping.getDefaultSheetName();
 
         DeploymentsWriter deploymentsWriter = new DeploymentsWriter(
                 deployments,
                 uploadPath(),
-                validation,
                 mapping.getAllAttributes(defaultSheetName),
                 defaultSheetName);
 
@@ -83,15 +81,11 @@ public class QueryRestService extends FimsService {
         Mapping mapping = new Mapping();
         mapping.addMappingRules(configFile);
 
-        Validation validation = new Validation();
-        validation.addValidationRules(configFile, mapping);
-
         String defaultSheetName = mapping.getDefaultSheetName();
 
         DeploymentsWriter deploymentsWriter = new DeploymentsWriter(
                 deployments,
                 uploadPath(),
-                validation,
                 BerkeleyMapperHelper.getAttributes(mapping.getAllAttributes(defaultSheetName)),
                 defaultSheetName);
 

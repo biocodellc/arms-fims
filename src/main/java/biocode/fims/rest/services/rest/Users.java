@@ -11,6 +11,7 @@ import biocode.fims.settings.SettingsManager;
 import biocode.fims.utils.SendEmail;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.Response;
 /**
  * REST services dealing with user management
  */
+@Controller
 @Path("users")
 public class Users extends FimsService {
     private final UserService userService;

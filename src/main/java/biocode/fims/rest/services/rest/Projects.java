@@ -24,6 +24,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -37,6 +38,7 @@ import java.util.List;
 /**
  * REST services dealing with projects
  */
+@Controller
 @Path("projects")
 public class Projects extends FimsService {
 

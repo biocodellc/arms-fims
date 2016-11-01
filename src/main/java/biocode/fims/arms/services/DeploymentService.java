@@ -1,6 +1,5 @@
 package biocode.fims.arms.services;
 
-import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.query.DeploymentPredicatesBuilder;
 import biocode.fims.arms.repositories.DeploymentRepository;
@@ -11,6 +10,8 @@ import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Service class for handling {@link Deployment} persistence
@@ -52,11 +53,23 @@ public class DeploymentService {
 
     }
 
+    public List<Deployment> findAll(int expeditionId) {
+        return deploymentRepository.findAllByArmsExpeditionExpeditionId(expeditionId);
+    }
+
     public Iterable<Deployment> query(Query query) {
         DeploymentPredicatesBuilder builder = new DeploymentPredicatesBuilder(query.getCriterion());
         Predicate predicate = builder.build();
 
         return deploymentRepository.findAll(predicate);
 
+    }
+
+    public void bulkUpload(int expeditionId, List<String> columnNames, String csvFilepath) {
+        deploymentRepository.bulkUpload(expeditionId, columnNames, csvFilepath);
+    }
+
+    public List<String> getTableColumns() {
+        return deploymentRepository.getTableColumns();
     }
 }
