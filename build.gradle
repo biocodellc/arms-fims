@@ -14,6 +14,7 @@ buildscript {
 }
 
 import groovy.io.FileType
+import org.ajoberstar.grgit.*
 
 apply plugin: "java"
 apply plugin: "war"
@@ -243,10 +244,12 @@ ext.remoteDeploy = { workingDir, remoteLibsDir, remoteWarDir ->
             // Remove the old war file
             execute "/bin/rm " + workingDir + war.archiveName
             // Need to remove the war file itself-- we instead just copy it into /tmp for safekeeping in case next step fails
+            execute "/bin/mv " + remoteWarDir + "arms.war " + " /tmp/arms.deployed.war.backup"
             // Need to execute zip command from the working Directory in order to get relative paths correct
             execute "cd " + workingDir + ";/usr/bin/zip -r " + remoteWarDir + "arms.war " + " ."
             // Cleanup
             execute "/bin/rm -rf " + workingDir
+            execute "/bin/rm /tmp/arms.deployed.war.backup"
         }
     }
 }
