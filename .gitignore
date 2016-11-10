@@ -2,6 +2,7 @@
 *.iml
 *.props
 *.properties
+!src/main/environment/*/log4j.properties
 dist/*
 build/*
 classes/*
