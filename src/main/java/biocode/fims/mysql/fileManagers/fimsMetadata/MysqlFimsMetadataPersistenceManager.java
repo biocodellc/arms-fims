@@ -1,19 +1,17 @@
-package biocode.fims.mysql.fileManagers.dataset;
+package biocode.fims.mysql.fileManagers.fimsMetadata;
 
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.services.DeploymentService;
 import biocode.fims.digester.Attribute;
 import biocode.fims.digester.Mapping;
 import biocode.fims.entities.Expedition;
-import biocode.fims.fileManagers.dataset.Dataset;
-import biocode.fims.fileManagers.dataset.DatasetPersistenceManager;
-import biocode.fims.reader.CsvDatasetConverter;
+import biocode.fims.fileManagers.fimsMetadata.FimsMetadataPersistenceManager;
+import biocode.fims.reader.CsvJsonConverter;
 import biocode.fims.renderers.Message;
 import biocode.fims.renderers.RowMessage;
 import biocode.fims.run.ProcessController;
 import biocode.fims.service.ExpeditionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,36 +20,36 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * {@link Fims} for mysql
+ * {@link FimsMetadataPersistenceManager} for mysql
  */
-public class MysqlDatasetPersistenceManager implements DatasetPersistenceManager {
+public class MysqlFimsMetadataPersistenceManager implements FimsMetadataPersistenceManager {
     private final ExpeditionService expeditionService;
     private final DeploymentService deploymentService;
 
-    private Dataset dataset;
+    private JSONArray fimsMetadata;
 
     @Autowired
-    public MysqlDatasetPersistenceManager(ExpeditionService expeditionService, DeploymentService deploymentService) {
+    public MysqlFimsMetadataPersistenceManager(ExpeditionService expeditionService, DeploymentService deploymentService) {
         this.expeditionService = expeditionService;
         this.deploymentService = deploymentService;
     }
 
     @Override
-    public void upload(ProcessController processController, Dataset dataset) {
-        this.dataset = dataset;
+    public void upload(ProcessController processController, JSONArray fimsMetadata) {
+        this.fimsMetadata = fimsMetadata;
         List<String> acceptableColumnsInternal = new LinkedList<>();
         List<Attribute> attributes = processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName());
         for (Attribute attribute : attributes) {
             acceptableColumnsInternal.add(attribute.getColumn_internal());
         }
 
-        CsvDatasetConverter datasetConverter = new CsvDatasetConverter(dataset, processController.getOutputFolder(), processController.getExpeditionCode() + "_output");
+        CsvJsonConverter datasetConverter = new CsvJsonConverter(fimsMetadata, processController.getOutputFolder(), processController.getExpeditionCode() + "_output");
         datasetConverter.convert(attributes);
 
         // TODO change to reference within deploymentService when we refactor the expeditions table to each fims instance
         Expedition expedition = expeditionService.getExpedition(processController.getExpeditionCode(), processController.getProjectId());
 
-        // upload the dataset
+        // upload the fimsMetadata
         deploymentService.bulkUpload(
                 expedition.getExpeditionId(),
                 acceptableColumnsInternal,
@@ -96,11 +94,9 @@ public class MysqlDatasetPersistenceManager implements DatasetPersistenceManager
     }
 
     @Override
-    public Dataset getDataset(ProcessController processController) {
-        if (dataset == null) {
-            List<String> columnNames = processController.getMapping().getColumnNamesForWorksheet(processController.getMapping().getDefaultSheetName());
-
-            JSONArray deployments = new JSONArray();
+    public JSONArray getDataset(ProcessController processController) {
+        if (fimsMetadata == null) {
+            JSONArray dataset = new JSONArray();
 
             Expedition expedition = expeditionService.getExpedition(
                     processController.getExpeditionCode(),
@@ -112,13 +108,13 @@ public class MysqlDatasetPersistenceManager implements DatasetPersistenceManager
 
                 ObjectMapper mapper = new ObjectMapper();
                 for (Deployment d: deploymentsList) {
-                    deployments.add(mapper.valueToTree(d));
+                    dataset.add(mapper.valueToTree(d));
                 }
             }
 
-            dataset = new Dataset(columnNames, deployments);
+            fimsMetadata = dataset;
         }
 
-        return dataset;
+        return fimsMetadata;
     }
 }

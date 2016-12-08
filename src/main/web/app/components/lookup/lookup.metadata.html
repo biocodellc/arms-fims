@@ -36,7 +36,7 @@
                 <th>Identifier</th>
             </tr>
 
-            <!-- loop through each dataset -->
+            <!-- loop through each fimsMetadata -->
             <tr ng-repeat="dataset in vm.metadata.datasets.datasets">
                 <td>{{ dataset.ts }}</td>
                 <td><a href="{{ vm.metadata.datasets.appRoot }}lookup?id={{ dataset.identifier }}">{{ dataset.identifier }}</a></td>

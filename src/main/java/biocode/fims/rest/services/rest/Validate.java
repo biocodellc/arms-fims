@@ -1,10 +1,8 @@
 package biocode.fims.rest.services.rest;
 
 import biocode.fims.config.ConfigurationFileFetcher;
-import biocode.fims.digester.Mapping;
 import biocode.fims.fileManagers.AuxilaryFileManager;
-import biocode.fims.fileManagers.dataset.Dataset;
-import biocode.fims.fileManagers.dataset.DatasetFileManager;
+import biocode.fims.fileManagers.fimsMetadata.FimsMetadataFileManager;
 import biocode.fims.fimsExceptions.*;
 import biocode.fims.fimsExceptions.BadRequestException;
 import biocode.fims.rest.FimsService;
@@ -17,8 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -28,26 +24,24 @@ import java.util.*;
 
 /**
  */
-@Controller
 @Path("validate")
 public class Validate extends FimsService {
 
     private final ExpeditionService expeditionService;
     private final List<AuxilaryFileManager> fileManagers;
-    private final DatasetFileManager datasetFileManager;
+    private final FimsMetadataFileManager fimsMetadataFileManager;
 
-    @Autowired
     Validate(ExpeditionService expeditionService,
-             DatasetFileManager datasetFileManager, List<AuxilaryFileManager> fileManagers,
+             FimsMetadataFileManager fimsMetadataFileManager, List<AuxilaryFileManager> fileManagers,
              OAuthProviderService providerService, SettingsManager settingsManager) {
         super(providerService, settingsManager);
         this.expeditionService = expeditionService;
-        this.datasetFileManager = datasetFileManager;
+        this.fimsMetadataFileManager = fimsMetadataFileManager;
         this.fileManagers = fileManagers;
     }
 
     /**
-     * service to validate a dataset against a project's rules
+     * service to validate a fimsMetadata against a project's rules
      *
      * @param projectId
      * @param expeditionCode
@@ -61,7 +55,7 @@ public class Validate extends FimsService {
                                @FormDataParam("expeditionCode") String expeditionCode,
                                @FormDataParam("upload") String upload,
                                @FormDataParam("public_status") String publicStatus,
-                               @FormDataParam("dataset") FormDataBodyPart dataset) {
+                               @FormDataParam("fimsMetadata") FormDataBodyPart fimsMetadata) {
         Map<String, Map<String, Object>> fmProps = new HashMap<>();
         JSONObject returnValue = new JSONObject();
         boolean closeProcess = true;
@@ -79,24 +73,24 @@ public class Validate extends FimsService {
             // update the status
             processController.appendStatus("Initializing...<br>");
 
-            // save the dataset and/or fasta files
-            if (dataset != null && dataset.getContentDisposition().getFileName() != null) {
-                String datasetFilename = dataset.getContentDisposition().getFileName();
-                processController.appendStatus("\nDataset filename = " + datasetFilename);
+            // save the fimsMetadata and/or fasta files
+            if (fimsMetadata != null && fimsMetadata.getContentDisposition().getFileName() != null) {
+                String datasetFilename = fimsMetadata.getContentDisposition().getFileName();
+                processController.appendStatus("\nFims Metadata filename = " + datasetFilename);
 
-                InputStream is = dataset.getEntityAs(InputStream.class);
+                InputStream is = fimsMetadata.getEntityAs(InputStream.class);
                 String tempFilename = saveFile(is, datasetFilename, "xls");
 
                 Map<String, Object> props = new HashMap<>();
                 props.put("filename", tempFilename);
 
-                fmProps.put("dataset", props);
+                fmProps.put(FimsMetadataFileManager.NAME, props);
             }
 
             File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
 
             // Create the process object --- this is done each time to orient the application
-            Process process = new Process.ProcessBuilder(datasetFileManager, processController)
+            Process process = new Process.ProcessBuilder(fimsMetadataFileManager, processController)
                     .addFileManagers(fileManagers)
                     .addFmProperties(fmProps)
                     .configFile(configFile)
@@ -150,7 +144,7 @@ public class Validate extends FimsService {
     }
 
     /**
-     * Service to upload a dataset to an expedition. The validate service must be called before this service.
+     * Service to upload a fimsMetadata to an expedition. The validate service must be called before this service.
      *
      * @return
      */
@@ -191,7 +185,7 @@ public class Validate extends FimsService {
     }
 
     /**
-     * Service used for getting the current status of the dataset validation/upload.
+     * Service used for getting the current status of the fimsMetadata validation/upload.
      *
      * @return
      */

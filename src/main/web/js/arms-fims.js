@@ -1141,7 +1141,7 @@ function validForm(expeditionCode) {
 
 
     if (!$("#" + datasetId).val()) {
-        message = "Please provide a dataset";
+        message = "Please provide a fimsMetadata";
         error = true;
     } else if ($('#project').val() == 0) {
         message = "Please select a project.";
@@ -1173,7 +1173,7 @@ function validForm(expeditionCode) {
     return true;
 }
 
-// submit dataset to be validated/uploaded
+// submit fimsMetadata to be validated/uploaded
 function validatorSubmit() {
     if (validForm($("#expeditionCode").val())) {
 
@@ -1261,7 +1261,7 @@ function validationFormToggle() {
         // Clear the resultsContainer
         $("#resultsContainer").empty();
 
-        // always need to set dataset and fasta id's
+        // always need to set fimsMetadata and fasta id's
         datasetId = this.id;
 
         // Check NAAN
@@ -1447,7 +1447,7 @@ function createExpedition() {
     var d = new $.Deferred();
     if ($("#" + datasetId).val().length < 1 &&
         $("#expeditionCode").is("select") && $("#expeditionCode").val() == 0) {
-        dialog("You must select an existing expedition code if you are not uploading a new dataset.", "Select an Expedition",
+        dialog("You must select an existing expedition code if you are not uploading a new fimsMetadata.", "Select an Expedition",
             {
                 "OK": function () {
                     d.reject();

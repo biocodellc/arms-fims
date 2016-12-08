@@ -67,13 +67,13 @@ class FimsValidationForm extends FormBase {
     $form['fims_dataset'] = [
       '#type' => 'file',
       '#title' => $this->t('FIMS Dataset'),
-      '#description' => $this->t('Your dataset to validate/upload.'),
+      '#description' => $this->t('Your fimsMetadata to validate/upload.'),
     ];
 
     $form['upload'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Upload'),
-      '#description' => $this->t('Upload your dataset to Biocode-Fims.'),
+      '#description' => $this->t('Upload your fimsMetadata to Biocode-Fims.'),
     ];
 
     $form['expeditionCode'] = [

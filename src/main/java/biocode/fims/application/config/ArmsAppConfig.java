@@ -3,7 +3,7 @@ package biocode.fims.application.config;
 import biocode.fims.arms.services.DeploymentService;
 import biocode.fims.fileManagers.fimsMetadata.FimsMetadataFileManager;
 import biocode.fims.fileManagers.fimsMetadata.FimsMetadataPersistenceManager;
-import biocode.fims.mysql.fileManagers.dataset.MysqlDatasetPersistenceManager;
+import biocode.fims.mysql.fileManagers.fimsMetadata.MysqlFimsMetadataPersistenceManager;
 import biocode.fims.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
@@ -31,7 +31,7 @@ public class ArmsAppConfig {
     @Bean
     @Scope("prototype")
     public FimsMetadataFileManager FimsMetadataFileManager() {
-        FimsMetadataPersistenceManager persistenceManager = new MysqlDatasetPersistenceManager(fimsAppConfig.expeditionService, deploymentService);
+        FimsMetadataPersistenceManager persistenceManager = new MysqlFimsMetadataPersistenceManager(fimsAppConfig.expeditionService, deploymentService);
         return new FimsMetadataFileManager(persistenceManager, fimsAppConfig.settingsManager, fimsAppConfig.expeditionService, fimsAppConfig.bcidService);
     }
 }
