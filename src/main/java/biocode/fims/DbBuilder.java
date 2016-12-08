@@ -1,11 +1,13 @@
 package biocode.fims;
 
+import biocode.fims.application.config.ArmsAppConfig;
 import biocode.fims.digester.Attribute;
 import biocode.fims.digester.Mapping;
 import biocode.fims.settings.*;
 import biocode.fims.utils.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
@@ -58,7 +60,7 @@ public class DbBuilder {
     }
 
     public static void main(String args[]) throws Exception {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("/applicationContext.xml");
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ArmsAppConfig.class);
         DbBuilder dbBuilder = applicationContext.getBean(DbBuilder.class);
         String projectConfig = "/Users/rjewing/IdeaProjects/biscicol-fims/src.main.web/tripleOutput/config.1.xml";
         dbBuilder.buildTable(projectConfig);

@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * {@link DatasetPersistenceManager} for mysql
+ * {@link Fims} for mysql
  */
 public class MysqlDatasetPersistenceManager implements DatasetPersistenceManager {
     private final ExpeditionService expeditionService;
