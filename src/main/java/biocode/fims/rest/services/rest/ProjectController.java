@@ -9,7 +9,6 @@ import biocode.fims.entities.User;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 import biocode.fims.fimsExceptions.ForbiddenRequestException;
 import biocode.fims.mysql.query.Operator;
-import biocode.fims.rest.FimsService;
 import biocode.fims.rest.filters.Admin;
 import biocode.fims.rest.filters.Authenticated;
 import biocode.fims.run.TemplateProcessor;
@@ -40,20 +39,15 @@ import java.util.List;
  */
 @Controller
 @Path("projects")
-public class Projects extends FimsService {
+public class ProjectController extends FimsAbstractProjectsController {
 
-    private static Logger logger = LoggerFactory.getLogger(Projects.class);
-
-    private final ExpeditionService expeditionService;
-    private final ProjectService projectService;
+    private static Logger logger = LoggerFactory.getLogger(ProjectController.class);
     private final UserService userService;
 
     @Autowired
-    Projects(ExpeditionService expeditionService, ProjectService projectService, UserService userService,
-             OAuthProviderService providerService, SettingsManager settingsManager) {
-        super(providerService, settingsManager);
-        this.expeditionService = expeditionService;
-        this.projectService = projectService;
+    ProjectController(ExpeditionService expeditionService, OAuthProviderService providerService,
+                      SettingsManager settingsManager, ProjectService projectService, UserService userService) {
+        super(expeditionService, providerService, settingsManager, projectService);
         this.userService = userService;
     }
 
@@ -153,7 +147,7 @@ public class Projects extends FimsService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDefinitions(@PathParam("projectId") int projectId,
                                    @PathParam("columnName") String columnName) {
-        TemplateProcessor t = new TemplateProcessor(projectId, uploadPath(), true);
+        TemplateProcessor t = new TemplateProcessor(projectId, uploadPath());
         StringBuilder output = new StringBuilder();
 
         Iterator attributes = t.getMapping().getAllAttributes(t.getMapping().getDefaultSheetName()).iterator();
@@ -314,7 +308,7 @@ public class Projects extends FimsService {
     @Path("/{projectId}/attributes")
     @Produces(MediaType.TEXT_HTML)
     public Response getAttributes(@PathParam("projectId") int projectId) {
-        TemplateProcessor t = new TemplateProcessor(projectId, uploadPath(), true);
+        TemplateProcessor t = new TemplateProcessor(projectId, uploadPath());
         LinkedList<String> requiredColumns = t.getRequiredColumns("error");
         LinkedList<String> desiredColumns = t.getRequiredColumns("warning");
         // Use TreeMap for natural sorting of groups
@@ -682,7 +676,7 @@ public class Projects extends FimsService {
             @FormParam("projectId") Integer projectId) {
 
         // Create the template processor which handles all functions related to the template, reading, generation
-        TemplateProcessor t = new TemplateProcessor(projectId, uploadPath(), true);
+        TemplateProcessor t = new TemplateProcessor(projectId, uploadPath());
 
         // Set the default sheet-name
         String defaultSheetname = t.getMapping().getDefaultSheetName();

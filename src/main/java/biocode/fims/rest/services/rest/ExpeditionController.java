@@ -2,8 +2,8 @@ package biocode.fims.rest.services.rest;
 
 import biocode.fims.bcid.ExpeditionMinter;
 import biocode.fims.fimsExceptions.ForbiddenRequestException;
-import biocode.fims.rest.FimsService;
 import biocode.fims.rest.filters.Authenticated;
+import biocode.fims.service.ExpeditionService;
 import biocode.fims.service.OAuthProviderService;
 import biocode.fims.settings.SettingsManager;
 import org.json.simple.JSONObject;
@@ -23,11 +23,11 @@ import java.util.ArrayList;
  */
 @Controller
 @Path("expeditions")
-public class Expeditions extends FimsService {
+public class ExpeditionController extends FimsAbstractExpeditionController {
 
     @Autowired
-    Expeditions(OAuthProviderService providerService, SettingsManager settingsManager) {
-        super(providerService, settingsManager);
+    public ExpeditionController(ExpeditionService expeditionService, OAuthProviderService providerService, SettingsManager settingsManager) {
+        super(expeditionService, providerService, settingsManager);
     }
 
     @GET

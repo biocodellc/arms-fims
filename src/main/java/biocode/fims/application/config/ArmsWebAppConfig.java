@@ -1,7 +1,7 @@
 package biocode.fims.application.config;
 
 import biocode.fims.fileManagers.AuxilaryFileManager;
-import biocode.fims.rest.services.rest.Validate;
+import biocode.fims.rest.services.rest.ValidateController;
 import biocode.fims.service.OAuthProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,8 +32,8 @@ public class ArmsWebAppConfig {
 
     @Bean
     @Scope("prototype")
-    public Validate validate() throws Exception {
-        return new Validate(armsAppConfig.fimsAppConfig.expeditionService, armsAppConfig.FimsMetadataFileManager(),
+    public ValidateController validate() throws Exception {
+        return new ValidateController(armsAppConfig.fimsAppConfig.expeditionService, armsAppConfig.FimsMetadataFileManager(),
                fileManagers(), providerService, armsAppConfig.fimsAppConfig.settingsManager);
     }
 }

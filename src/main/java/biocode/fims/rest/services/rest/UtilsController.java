@@ -17,10 +17,10 @@ import javax.ws.rs.core.Response;
  */
 @Controller
 @Path("utils/")
-public class ArmsUtils extends FimsService {
+public class UtilsController extends FimsService {
 
     @Autowired
-    ArmsUtils(OAuthProviderService providerService, SettingsManager settingsManager) {
+    UtilsController(OAuthProviderService providerService, SettingsManager settingsManager) {
         super(providerService, settingsManager);
     }
 

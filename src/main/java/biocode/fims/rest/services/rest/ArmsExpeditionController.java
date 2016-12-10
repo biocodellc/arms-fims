@@ -28,15 +28,15 @@ import java.util.List;
 
 @Controller
 @Path("arms/projects")
-public class ArmsExpeditionRestService extends FimsService {
+public class ArmsExpeditionController extends FimsService {
 
     private final ProjectService projectService;
     private final ArmsExpeditionService armsExpeditionService;
     private final BcidService bcidService;
 
     @Autowired
-    ArmsExpeditionRestService(ProjectService projectService, ArmsExpeditionService armsExpeditionService, BcidService bcidService,
-                              OAuthProviderService providerService, SettingsManager settingsManager) {
+    ArmsExpeditionController(ProjectService projectService, ArmsExpeditionService armsExpeditionService, BcidService bcidService,
+                             OAuthProviderService providerService, SettingsManager settingsManager) {
         super(providerService, settingsManager);
         this.projectService = projectService;
         this.armsExpeditionService = armsExpeditionService;

@@ -19,13 +19,13 @@ import javax.ws.rs.core.Response;
 
 @Controller
 @Path("deployments")
-public class ArmsDeploymentRestService extends FimsService {
+public class ArmsDeploymentController extends FimsService {
 
     private final DeploymentService deploymentService;
 
     @Autowired
-    ArmsDeploymentRestService(DeploymentService deploymentService,
-                              OAuthProviderService providerService, SettingsManager settingsManager) {
+    ArmsDeploymentController(DeploymentService deploymentService,
+                             OAuthProviderService providerService, SettingsManager settingsManager) {
         super(providerService, settingsManager);
         this.deploymentService = deploymentService;
     }

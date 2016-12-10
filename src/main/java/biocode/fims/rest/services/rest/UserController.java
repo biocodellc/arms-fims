@@ -2,14 +2,12 @@ package biocode.fims.rest.services.rest;
 
 import biocode.fims.entities.User;
 import biocode.fims.fimsExceptions.BadRequestException;
-import biocode.fims.rest.FimsService;
 import biocode.fims.rest.filters.Admin;
 import biocode.fims.rest.filters.Authenticated;
 import biocode.fims.service.OAuthProviderService;
 import biocode.fims.service.UserService;
 import biocode.fims.settings.SettingsManager;
-import biocode.fims.utils.SendEmail;
-import org.json.simple.JSONObject;
+import biocode.fims.utils.EmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -25,14 +23,11 @@ import javax.ws.rs.core.Response;
  */
 @Controller
 @Path("users")
-public class Users extends FimsService {
-    private final UserService userService;
+public class UserController extends FimsAbstractUserController {
 
     @Autowired
-    Users(UserService userService,
-          OAuthProviderService providerService, SettingsManager settingsManager) {
-        super(providerService, settingsManager);
-        this.userService = userService;
+    UserController(UserService userService, OAuthProviderService providerService, SettingsManager settingsManager) {
+        super(userService, providerService, settingsManager);
     }
 
     /**
@@ -59,14 +54,10 @@ public class Users extends FimsService {
                     "Thanks";
 
             // Send an Email that this completed
-            SendEmail sendEmail = new SendEmail(
-                    settingsManager.retrieveValue("mailUser"),
-                    settingsManager.retrieveValue("mailPassword"),
-                    settingsManager.retrieveValue("mailFrom"),
+            EmailUtils.sendEmail(
                     user.getEmail(),
                     "Reset Password Link",
                     emailBody);
-            sendEmail.start();
         }
 
         return Response.ok("{\"success\":\"A password reset token has be sent to your email.\"}").build();

@@ -25,15 +25,15 @@ import java.util.*;
 /**
  */
 @Path("validate")
-public class Validate extends FimsService {
+public class ValidateController extends FimsService {
 
     private final ExpeditionService expeditionService;
     private final List<AuxilaryFileManager> fileManagers;
     private final FimsMetadataFileManager fimsMetadataFileManager;
 
-    Validate(ExpeditionService expeditionService,
-             FimsMetadataFileManager fimsMetadataFileManager, List<AuxilaryFileManager> fileManagers,
-             OAuthProviderService providerService, SettingsManager settingsManager) {
+    ValidateController(ExpeditionService expeditionService,
+                       FimsMetadataFileManager fimsMetadataFileManager, List<AuxilaryFileManager> fileManagers,
+                       OAuthProviderService providerService, SettingsManager settingsManager) {
         super(providerService, settingsManager);
         this.expeditionService = expeditionService;
         this.fimsMetadataFileManager = fimsMetadataFileManager;

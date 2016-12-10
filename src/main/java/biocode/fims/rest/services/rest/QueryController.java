@@ -25,12 +25,12 @@ import java.util.List;
  */
 @Controller
 @Path("deployments/query")
-public class QueryRestService extends FimsService {
+public class QueryController extends FimsService {
     private final DeploymentService deploymentService;
 
     @Autowired
-    public QueryRestService(DeploymentService deploymentService,
-                            OAuthProviderService providerService, SettingsManager settingsManager) {
+    public QueryController(DeploymentService deploymentService,
+                           OAuthProviderService providerService, SettingsManager settingsManager) {
         super(providerService, settingsManager);
         this.deploymentService = deploymentService;
     }
