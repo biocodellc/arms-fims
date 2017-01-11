@@ -22,4 +22,5 @@ regions:
 
 libraries:
   - 'arms_theme/global-styling'
+  - 'arms_theme/bootstrap-scripts'
 
