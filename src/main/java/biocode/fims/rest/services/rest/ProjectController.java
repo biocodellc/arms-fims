@@ -45,9 +45,9 @@ public class ProjectController extends FimsAbstractProjectsController {
     private final UserService userService;
 
     @Autowired
-    ProjectController(ExpeditionService expeditionService, OAuthProviderService providerService,
-                      SettingsManager settingsManager, ProjectService projectService, UserService userService) {
-        super(expeditionService, providerService, settingsManager, projectService);
+    ProjectController(ExpeditionService expeditionService, SettingsManager settingsManager,
+                      ProjectService projectService, UserService userService) {
+        super(expeditionService, settingsManager, projectService);
         this.userService = userService;
     }
 
@@ -453,7 +453,7 @@ public class ProjectController extends FimsAbstractProjectsController {
     @Path("/{projectId}/metadata")
     public Response listMetadataAsTable(@PathParam("projectId") int projectId) {
         ProjectMinter project = new ProjectMinter();
-        JSONObject metadata = project.getMetadata(projectId, user.getUsername());
+        JSONObject metadata = project.getMetadata(projectId, userContext.getUser().getUsername());
         StringBuilder sb = new StringBuilder();
 
         sb.append("<table>\n");
@@ -496,7 +496,7 @@ public class ProjectController extends FimsAbstractProjectsController {
     public Response listMetadataEditorAsTable(@PathParam("projectId") int projectId) {
         StringBuilder sb = new StringBuilder();
         ProjectMinter project = new ProjectMinter();
-        JSONObject metadata = project.getMetadata(projectId, user.getUsername());
+        JSONObject metadata = project.getMetadata(projectId, userContext.getUser().getUsername());
 
         sb.append("<form id=\"submitForm\" method=\"POST\">\n");
         sb.append("<table>\n");
@@ -545,7 +545,7 @@ public class ProjectController extends FimsAbstractProjectsController {
     public Response listUsersAsTable(@PathParam("projectId") int projectId) {
         ProjectMinter p = new ProjectMinter();
 
-        if (!p.isProjectAdmin(user.getUsername(), projectId)) {
+        if (!p.isProjectAdmin(userContext.getUser().getUsername(), projectId)) {
             // only display system users to project admins
             throw new ForbiddenRequestException("You are not an admin to this project");
         }
@@ -607,7 +607,7 @@ public class ProjectController extends FimsAbstractProjectsController {
     @Produces(MediaType.TEXT_HTML)
     @Path("/{projectId}/admin/expeditions/")
     public Response listExpeditionsAsTable(@PathParam("projectId") int projectId) {
-        if (!projectService.isProjectAdmin(user, projectId)) {
+        if (!projectService.isProjectAdmin(userContext.getUser(), projectId)) {
             throw new ForbiddenRequestException("You must be this project's admin in order to view its expeditions.");
         }
 

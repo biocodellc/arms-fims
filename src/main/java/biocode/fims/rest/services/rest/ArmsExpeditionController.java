@@ -30,17 +30,12 @@ import java.util.List;
 @Path("arms/projects")
 public class ArmsExpeditionController extends FimsService {
 
-    private final ProjectService projectService;
     private final ArmsExpeditionService armsExpeditionService;
-    private final BcidService bcidService;
 
     @Autowired
-    ArmsExpeditionController(ProjectService projectService, ArmsExpeditionService armsExpeditionService, BcidService bcidService,
-                             OAuthProviderService providerService, SettingsManager settingsManager) {
-        super(providerService, settingsManager);
-        this.projectService = projectService;
+    ArmsExpeditionController(ArmsExpeditionService armsExpeditionService, SettingsManager settingsManager) {
+        super(settingsManager);
         this.armsExpeditionService = armsExpeditionService;
-        this.bcidService = bcidService;
     }
 
     @POST
@@ -75,7 +70,7 @@ public class ArmsExpeditionController extends FimsService {
                 .leadOrganization(leadOrganization)
                 .build();
 
-        armsExpeditionService.create(armsExpedition, user.getUserId(), projectId, mapping);
+        armsExpeditionService.create(armsExpedition, userContext.getUser().getUserId(), projectId, mapping);
 
         return Response.ok(armsExpedition).build();
     }
@@ -86,8 +81,8 @@ public class ArmsExpeditionController extends FimsService {
         List<ArmsExpedition> expeditions;
         Integer projectId = Integer.valueOf(settingsManager.retrieveValue("projectId"));
 
-        if (user != null) {
-            expeditions = armsExpeditionService.getArmsExpeditions(projectId, user.getUserId(), includePublic);
+        if (userContext.getUser() != null) {
+            expeditions = armsExpeditionService.getArmsExpeditions(projectId, userContext.getUser().getUserId(), includePublic);
         } else {
             expeditions = armsExpeditionService.getPublicExpeditions(projectId);
         }

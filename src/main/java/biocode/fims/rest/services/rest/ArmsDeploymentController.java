@@ -24,9 +24,8 @@ public class ArmsDeploymentController extends FimsService {
     private final DeploymentService deploymentService;
 
     @Autowired
-    ArmsDeploymentController(DeploymentService deploymentService,
-                             OAuthProviderService providerService, SettingsManager settingsManager) {
-        super(providerService, settingsManager);
+    ArmsDeploymentController(DeploymentService deploymentService, SettingsManager settingsManager) {
+        super(settingsManager);
         this.deploymentService = deploymentService;
     }
 

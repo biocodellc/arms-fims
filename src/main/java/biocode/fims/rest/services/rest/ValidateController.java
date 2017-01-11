@@ -15,6 +15,8 @@ import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -24,6 +26,8 @@ import java.util.*;
 
 /**
  */
+@Scope("prototype")
+@Controller
 @Path("validate")
 public class ValidateController extends FimsService {
 
@@ -31,10 +35,9 @@ public class ValidateController extends FimsService {
     private final List<AuxilaryFileManager> fileManagers;
     private final FimsMetadataFileManager fimsMetadataFileManager;
 
-    ValidateController(ExpeditionService expeditionService,
-                       FimsMetadataFileManager fimsMetadataFileManager, List<AuxilaryFileManager> fileManagers,
-                       OAuthProviderService providerService, SettingsManager settingsManager) {
-        super(providerService, settingsManager);
+    ValidateController(ExpeditionService expeditionService, FimsMetadataFileManager fimsMetadataFileManager,
+                       List<AuxilaryFileManager> fileManagers, SettingsManager settingsManager) {
+        super(settingsManager);
         this.expeditionService = expeditionService;
         this.fimsMetadataFileManager = fimsMetadataFileManager;
         this.fileManagers = fileManagers;
@@ -99,11 +102,11 @@ public class ValidateController extends FimsService {
             processController.setProcess(process);
 
             if (process.validate() && StringUtils.equalsIgnoreCase(upload, "on")) {
-                if (user == null) {
+                if (userContext.getUser() == null) {
                     throw new UnauthorizedRequestException("You must be logged in to upload.");
                 }
 
-                processController.setUserId(user.getUserId());
+                processController.setUserId(userContext.getUser().getUserId());
 
                 // set public status to true in processController if user wants it on
                 if (StringUtils.equalsIgnoreCase(publicStatus, "on")) {

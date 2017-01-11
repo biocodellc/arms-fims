@@ -97,7 +97,7 @@ public class DeploymentsWriter {
             logger.warn("Unable to open Workbook", e);
         }
 
-        TemplateProcessor t = new TemplateProcessor(projectId, outputDirectory, false, justData);
+        TemplateProcessor t = new TemplateProcessor(projectId, outputDirectory, justData);
         return new File(t.createExcelFileFromExistingSources("Samples", outputDirectory).getAbsolutePath());
     }
 

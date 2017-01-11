@@ -5,12 +5,14 @@ import biocode.fims.arms.services.DeploymentService;
 import biocode.fims.digester.Attribute;
 import biocode.fims.digester.Mapping;
 import biocode.fims.entities.Expedition;
+import biocode.fims.fileManagers.fimsMetadata.AbstractFimsMetadataPersistenceManager;
 import biocode.fims.fileManagers.fimsMetadata.FimsMetadataPersistenceManager;
 import biocode.fims.reader.CsvJsonConverter;
 import biocode.fims.renderers.Message;
 import biocode.fims.renderers.RowMessage;
 import biocode.fims.run.ProcessController;
 import biocode.fims.service.ExpeditionService;
+import biocode.fims.settings.SettingsManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +24,22 @@ import java.util.List;
 /**
  * {@link FimsMetadataPersistenceManager} for mysql
  */
-public class MysqlFimsMetadataPersistenceManager implements FimsMetadataPersistenceManager {
+public class MysqlFimsMetadataPersistenceManager extends AbstractFimsMetadataPersistenceManager implements FimsMetadataPersistenceManager {
     private final ExpeditionService expeditionService;
     private final DeploymentService deploymentService;
 
     private JSONArray fimsMetadata;
 
     @Autowired
-    public MysqlFimsMetadataPersistenceManager(ExpeditionService expeditionService, DeploymentService deploymentService) {
+    public MysqlFimsMetadataPersistenceManager(ExpeditionService expeditionService, DeploymentService deploymentService,
+                                               SettingsManager settingsManager) {
+        super(settingsManager);
         this.expeditionService = expeditionService;
         this.deploymentService = deploymentService;
     }
 
     @Override
-    public void upload(ProcessController processController, JSONArray fimsMetadata) {
+    public void upload(ProcessController processController, JSONArray fimsMetadata, String filename) {
         this.fimsMetadata = fimsMetadata;
         List<String> acceptableColumnsInternal = new LinkedList<>();
         List<Attribute> attributes = processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName());

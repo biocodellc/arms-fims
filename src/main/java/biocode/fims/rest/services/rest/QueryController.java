@@ -29,9 +29,8 @@ public class QueryController extends FimsService {
     private final DeploymentService deploymentService;
 
     @Autowired
-    public QueryController(DeploymentService deploymentService,
-                           OAuthProviderService providerService, SettingsManager settingsManager) {
-        super(providerService, settingsManager);
+    public QueryController(DeploymentService deploymentService, SettingsManager settingsManager) {
+        super(settingsManager);
         this.deploymentService = deploymentService;
     }
 

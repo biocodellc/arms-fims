@@ -26,8 +26,8 @@ import java.util.ArrayList;
 public class ExpeditionController extends FimsAbstractExpeditionController {
 
     @Autowired
-    public ExpeditionController(ExpeditionService expeditionService, OAuthProviderService providerService, SettingsManager settingsManager) {
-        super(expeditionService, providerService, settingsManager);
+    public ExpeditionController(ExpeditionService expeditionService, SettingsManager settingsManager) {
+        super(expeditionService, settingsManager);
     }
 
     @GET
@@ -81,7 +81,7 @@ public class ExpeditionController extends FimsAbstractExpeditionController {
     public Response listMetadataAsTable(@PathParam("expeditionId") int expeditionId) {
         ExpeditionMinter e = new ExpeditionMinter();
 
-        if (!ignoreUser && !e.userOwnsExpedition(user.getUserId(), expeditionId)) {
+        if (!ignoreUser && !e.userOwnsExpedition(userContext.getUser().getUserId(), expeditionId)) {
             throw new ForbiddenRequestException("You must own this expedition in order to view its datasets.");
         }
 

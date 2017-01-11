@@ -19,21 +19,10 @@ import java.util.List;
 @Import({ArmsAppConfig.class, FimsWebAppConfig.class})
 public class ArmsWebAppConfig {
 
-    @Autowired
-    private ArmsAppConfig armsAppConfig;
-    @Autowired
-    private OAuthProviderService providerService;
-
     @Bean
     @Scope("prototype")
     public List<AuxilaryFileManager> fileManagers() {
         return new ArrayList<>();
     }
 
-    @Bean
-    @Scope("prototype")
-    public ValidateController validate() throws Exception {
-        return new ValidateController(armsAppConfig.fimsAppConfig.expeditionService, armsAppConfig.FimsMetadataFileManager(),
-               fileManagers(), providerService, armsAppConfig.fimsAppConfig.settingsManager);
-    }
 }

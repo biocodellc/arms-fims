@@ -20,8 +20,8 @@ import javax.ws.rs.core.Response;
 public class UtilsController extends FimsService {
 
     @Autowired
-    UtilsController(OAuthProviderService providerService, SettingsManager settingsManager) {
-        super(providerService, settingsManager);
+    UtilsController(SettingsManager settingsManager) {
+        super(settingsManager);
     }
 
     @GET
