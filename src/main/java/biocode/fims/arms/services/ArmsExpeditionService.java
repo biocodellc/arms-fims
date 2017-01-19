@@ -4,7 +4,6 @@ import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.repositories.ArmsExpeditionRepository;
 import biocode.fims.digester.Mapping;
 import biocode.fims.entities.Expedition;
-import biocode.fims.entities.User;
 import biocode.fims.service.ExpeditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Service class for handling {@link biocode.fims.arms.entities.ArmsExpedition} persistence

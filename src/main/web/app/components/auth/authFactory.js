@@ -1,7 +1,7 @@
 angular.module('fims.auth')
 
-.factory('AuthFactory', ['$http', '$q', '$window', '$location', '$state', 'oAuth', 'REST_ROOT', 'APP_ROOT',
-    function ($http, $q, $window, $location, $state, oAuth, REST_ROOT, APP_ROOT) {
+.factory('AuthFactory', ['$http', '$q', '$rootScope', '$window', 'oAuth', 'REST_ROOT', 'APP_ROOT',
+    function ($http, $q, $rootScope, $window, oAuth, REST_ROOT, APP_ROOT) {
         var triedToRefresh = false;
 
         var authFactory = {
@@ -10,10 +10,20 @@ angular.module('fims.auth')
             logout: logout,
             refreshAccessToken: refreshAccessToken,
             isTokenExpired: isTokenExpired,
-            getAccessToken: getAccessToken
+            getAccessToken: getAccessToken,
+            sendResetPasswordToken: sendResetPassswordToken,
+            resetPassword: resetPassword
         };
 
         return authFactory;
+
+        function resetPassword(password, resetToken) {
+            return $http.post(REST_ROOT + "users/resetPassword", {password: password, resetToken: resetToken});
+        }
+
+        function sendResetPassswordToken(username) {
+            return $http.get(REST_ROOT + "users/" + username + "/sendResetToken");
+        }
 
         function checkAuthenticated() {
             return !isTokenExpired() && !angular.isUndefined(getAccessToken());
@@ -31,7 +41,7 @@ angular.module('fims.auth')
 
             return false;
         }
-        
+
         function getAccessToken() {
             var armsSessionStorage = JSON.parse($window.sessionStorage.arms);
             return armsSessionStorage.accessToken;
@@ -47,9 +57,6 @@ angular.module('fims.auth')
                     grant_type: 'password',
                     username: username,
                     password: password
-                },
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
                 }
             };
 

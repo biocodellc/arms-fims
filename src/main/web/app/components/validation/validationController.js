@@ -7,8 +7,6 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 
             vm.isAuthenticated = AuthFactory.isAuthenticated;
             vm.expeditionCode = "0";
             vm.armsExpeditions = [];
-            // vm.isPublicExpedition = false;
-            // vm.updateIsPublicExpedition = updateIsPublicExpedition();
             vm.createExpedition = createExpedition;
 
             function createExpedition() {
@@ -28,7 +26,7 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 
             }
 
             function getArmsExpeditions(expeditionCode) {
-                ExpeditionFactory.getExpeditions(false)
+                ExpeditionFactory.getArmsExpeditions(true)
                     .then(function(response) {
                         angular.extend(vm.armsExpeditions, response.data);
                         if (expeditionCode)
@@ -38,17 +36,6 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 
                     })
             }
             
-            function updateIsPublicExpedition() {
-                if (vm.expeditionCode != 0) {
-                    for (expedition in vm.armsExpeditions) {
-                        if (expedition.expeditionCode == vm.expeditionCode) {
-                            vm.isPublicExpedition = expedition.public;
-                            break;
-                        }
-                    }
-                }
-                
-            }
 
             angular.element(document).ready(function() {
                 fimsBrowserCheck($('#warning'));
@@ -107,7 +94,7 @@ angular.module('fims.validation', ['fims.users', 'fims.modals', 'ui.bootstrap', 
 
             if ($scope.expeditionForm.$invalid) { return; }
 
-            ExpeditionFactory.createExpedition(vm.expedition)
+            ExpeditionFactory.createArmsExpedition(vm.expedition)
                 .then(function() {
                     // handle success response
                     $uibModalInstance.close(vm.expedition.expeditionCode);

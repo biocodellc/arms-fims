@@ -8,9 +8,7 @@ import biocode.fims.digester.Mapping;
 import biocode.fims.entities.Expedition;
 import biocode.fims.rest.FimsService;
 import biocode.fims.rest.filters.Authenticated;
-import biocode.fims.service.BcidService;
-import biocode.fims.service.OAuthProviderService;
-import biocode.fims.service.ProjectService;
+import biocode.fims.serializers.Views;
 import biocode.fims.settings.SettingsManager;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +36,7 @@ public class ArmsExpeditionController extends FimsService {
         this.armsExpeditionService = armsExpeditionService;
     }
 
+    @JsonView(Views.Detailed.class)
     @POST
     @Authenticated
     public Response create(@FormParam("principalInvestigator") String principalInvestigator,
@@ -75,6 +74,7 @@ public class ArmsExpeditionController extends FimsService {
         return Response.ok(armsExpedition).build();
     }
 
+    @JsonView(Views.Detailed.class)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response list(@QueryParam("includePublic") @DefaultValue("false") boolean includePublic) {

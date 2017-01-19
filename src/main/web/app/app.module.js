@@ -1,12 +1,14 @@
 var app = angular.module('armsApp', [
     'ui.router',
+    'ui.bootstrap',
     'fims.auth',
     'fims.templates',
     'fims.validation',
     'fims.projects',
     'fims.users',
     'utils.autofocus',
-    'ui.bootstrap.showErrors'
+    'ui.bootstrap.showErrors',
+    'angularSpinner'
 ]);
 
 var currentUser = {};
@@ -87,14 +89,14 @@ app.controller('NavCtrl', ['$rootScope', '$scope', '$location', '$state', 'AuthF
 
 // register an interceptor to convert objects to a form-data like string for $http data attributes and
 // set the appropriate header
-app.factory('postInterceptor', ['$injector', '$httpParamSerializerJQLike',
-    function ($injector, $httpParamSerializerJQLike) {
+app.factory('postInterceptor', [
+    function () {
         return {
             request: function (config) {
-                if (config.method == "POST") {
+                if (config.method == "POST" && !config.keepJson) {
                     config.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
                     if (config.data instanceof Object)
-                        config.data = $httpParamSerializerJQLike(config.data);
+                        config.data = config.paramSerializer(config.data);
                 }
                 return config;
             }

@@ -2,6 +2,8 @@ package biocode.fims.arms.entities;
 
 import biocode.fims.entities.Expedition;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
+import biocode.fims.serializers.Views;
+import biocode.fims.serializers.Views.Detailed;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -18,7 +20,7 @@ import java.util.Set;
         attributeNodes = @NamedAttributeNode("deployments"))
 public class ArmsExpedition {
 
-    public interface withDeploymentsView {}
+    public static class withDeploymentsView extends Detailed {}
 
     private int expeditionId;
     private String principalInvestigator;
@@ -119,6 +121,7 @@ public class ArmsExpedition {
         this.leadOrganization = builder.leadOrganization;
     }
 
+    @JsonView(Views.Summary.class)
     @Id
     @Column(nullable = false)
     public int getExpeditionId() {
@@ -130,6 +133,7 @@ public class ArmsExpedition {
             this.expeditionId = id;
     }
 
+    @JsonView(Views.Detailed.class)
     @Column(nullable = false)
     public String getPrincipalInvestigator() {
         return principalInvestigator;
@@ -139,6 +143,7 @@ public class ArmsExpedition {
         this.principalInvestigator = principalInvestigator;
     }
 
+    @JsonView(Views.Detailed.class)
     @Column(nullable = false)
     public String getContactName() {
         return contactName;
@@ -148,6 +153,7 @@ public class ArmsExpedition {
         this.contactName = contactName;
     }
 
+    @JsonView(Views.Detailed.class)
     @Column(nullable = false)
     public String getContactEmail() {
         return contactEmail;
@@ -157,6 +163,7 @@ public class ArmsExpedition {
         this.contactEmail = contactEmail;
     }
 
+    @JsonView(Views.Detailed.class)
     @Column(nullable = false)
     public String getFundingSource() {
         return fundingSource;
@@ -166,6 +173,7 @@ public class ArmsExpedition {
         this.fundingSource = fundingSource;
     }
 
+    @JsonView(Views.Detailed.class)
     @Column(nullable = false)
     public int getEnvisionedDuration() {
         return envisionedDuration;
@@ -175,6 +183,7 @@ public class ArmsExpedition {
         this.envisionedDuration = envisionedDuration;
     }
 
+    @JsonView(Views.Detailed.class)
     @Column(nullable = false)
     public String getGeographicScope() {
         return geographicScope;
@@ -184,6 +193,7 @@ public class ArmsExpedition {
         this.geographicScope = geographicScope;
     }
 
+    @JsonView(Views.Detailed.class)
     @Column(columnDefinition = "text not null")
     public String getGoals() {
         return goals;
@@ -193,6 +203,7 @@ public class ArmsExpedition {
         this.goals = goals;
     }
 
+    @JsonView(Views.Detailed.class)
     @Column(nullable = false)
     public String getLeadOrganization() {
         return leadOrganization;
@@ -202,6 +213,7 @@ public class ArmsExpedition {
         this.leadOrganization = leadOrganization;
     }
 
+    @JsonView(Views.Summary.class)
     @Transient
     public Expedition getExpedition() {
         return expedition;
@@ -233,33 +245,12 @@ public class ArmsExpedition {
 
         ArmsExpedition that = (ArmsExpedition) o;
 
-        if (this.getExpeditionId() != 0 && that.getExpeditionId() != 0)
-            return this.getExpeditionId() == that.getExpeditionId();
-
-        if (getEnvisionedDuration() != that.getEnvisionedDuration()) return false;
-        if (!getPrincipalInvestigator().equals(that.getPrincipalInvestigator())) return false;
-        if (!getContactName().equals(that.getContactName())) return false;
-        if (!getContactEmail().equals(that.getContactEmail())) return false;
-        if (!getFundingSource().equals(that.getFundingSource())) return false;
-        if (!getGeographicScope().equals(that.getGeographicScope())) return false;
-        if (!getGoals().equals(that.getGoals())) return false;
-        if (!getLeadOrganization().equals(that.getLeadOrganization())) return false;
-        return getExpedition() != null ? getExpedition().equals(that.getExpedition()) : that.getExpedition() == null;
-
+        return this.getExpedition().equals(that.getExpedition());
     }
 
     @Override
     public int hashCode() {
-        int result = getPrincipalInvestigator().hashCode();
-        result = 31 * result + getContactName().hashCode();
-        result = 31 * result + getContactEmail().hashCode();
-        result = 31 * result + getFundingSource().hashCode();
-        result = 31 * result + getEnvisionedDuration();
-        result = 31 * result + getGeographicScope().hashCode();
-        result = 31 * result + getGoals().hashCode();
-        result = 31 * result + getLeadOrganization().hashCode();
-        result = 31 * result + (getExpedition() != null ? getExpedition().hashCode() : 0);
-        return result;
+        return getExpedition().hashCode();
     }
 
     @Override

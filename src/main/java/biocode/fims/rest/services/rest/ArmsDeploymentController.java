@@ -32,7 +32,7 @@ public class ArmsDeploymentController extends FimsService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{expeditionId}/{deploymentId}")
-    public Response getExpedition(@PathParam("expeditionId") int expeditionId,
+    public Response getDeployment(@PathParam("expeditionId") int expeditionId,
                                   @PathParam("deploymentId") String deploymentId) {
         Deployment deployment = deploymentService.getDeployment(expeditionId, deploymentId);
         if (deployment == null)
@@ -43,7 +43,7 @@ public class ArmsDeploymentController extends FimsService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{identifier: .+}")
-    public Response getExpedition(@PathParam("identifier") String identifierString) {
+    public Response getDeployment(@PathParam("identifier") String identifierString) {
         String divider = settingsManager.retrieveValue("divider");
         Identifier identifier = new Identifier(identifierString, divider);
 
