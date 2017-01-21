@@ -14,10 +14,10 @@
 @import "component/table-drag";
 @import "component/tabs";
 @import "component/toolbar";
-
 // jQuery UI style overrides.
 @import "jquery-ui/autocomplete";
 
+$featured-slideshow-max-height: 400px !default;
 ol, ul {
   padding-left: 1.5em;
   .popover &:last-child {
@@ -25,9 +25,12 @@ ol, ul {
   }
 }
 
-// Page header.
-.page-header {
-  margin-top: 0;
+.page-node-type-home-page .page-header {
+  display: none;
+}
+
+.carousel {
+  margin-bottom: $navbar-margin-bottom;
 }
 
 // Footer.
@@ -57,7 +60,6 @@ p:last-child,
   }
 }
 
-
 .help-block, .control-group .help-inline {
   color: $gray-light;
   font-size: 12px;
@@ -84,25 +86,77 @@ p:last-child,
   font-weight: bold;
 }
 
-.navbar {
-  min-height: 40px;
-  border-radius: 3px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
+//
+//.navbar {
+//  min-height: 40px;
+//  border-radius: 3px;
+//  padding-left: 0px;
+//  padding-right: 0px;
+//}
 
 .navbar-collapse {
   padding-left: 0px;
 }
 
-#front-page-carousel {
-  margin-top: -15px;
-  margin-bottom: 20px;
+//#front-page-carousel {
+//  margin-top: -15px;
+//  margin-bottom: 20px;
+//}
+
+//.carousel-inner > .item > img,
+//.carousel-inner > .item > a > img {
+//  border-radius: 3px;
+//}
+
+@mixin aspect-ratio($width, $height) {
+
+  > .item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 }
 
-.carousel-inner > .item > img,
-.carousel-inner > .item > a > img {
-  border-radius: 3px;
+#featured_slideshow {
+  margin-top: -$navbar-margin-bottom;
+
+  .carousel-inner {
+    position: relative;
+
+    &:before {
+      display: block;
+      content: "";
+      width: 100%;
+      padding-top: ceil(percentage($featured-slideshow-max-height / $container-lg));
+    }
+
+    > .item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      img {
+        margin: auto;
+
+        @media (max-width: $screen-sm-min - 1) {
+          max-height: 100%;
+        }
+        @media (min-width: $screen-sm-min) {
+          max-height: ceil($featured-slideshow-max-height * ($container-sm / $container-lg));
+        }
+        @media (min-width: $screen-md-min) {
+          max-height: ceil($featured-slideshow-max-height * ($container-md / $container-lg));
+        }
+        @media (min-width: $screen-lg-min) {
+          max-height: $featured-slideshow-max-height;
+        }
+      }
+    }
+  }
 }
 
 @media (min-width: 768px) {

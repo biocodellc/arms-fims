@@ -43,14 +43,18 @@ body {
     }
   }
 }
-.navbar.container {
-  @media #{$tablet} {
-    max-width: (($container-sm - $grid-gutter-width));
-  }
-  @media #{$normal} {
-    max-width: (($container-md - $grid-gutter-width));
-  }
-  @media #{$wide} {
-    max-width: (($container-lg - $grid-gutter-width));
+.navbar {
+  font-weight: 300;
+
+  &.container {
+    @media #{$tablet} {
+      max-width: (($container-sm - $grid-gutter-width));
+    }
+    @media #{$normal} {
+      max-width: (($container-md - $grid-gutter-width));
+    }
+    @media #{$wide} {
+      max-width: (($container-lg - $grid-gutter-width));
+    }
   }
 }

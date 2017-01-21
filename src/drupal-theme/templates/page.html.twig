@@ -57,21 +57,19 @@
  */
 #}
 {% set container = theme.settings.fluid_container ? 'container-fluid' : 'container' %}
-{%  if page.arms_page_top %}
+{% if page.arms_page_top %}
     <div class="page-top {{ container }}">
-    {{  page.arms_page_top }}
+        {{ page.arms_page_top }}
     </div>
 {% endif %}
 {# Navbar #}
 {% if page.navigation or page.navigation_collapsible %}
     {% block navbar %}
-        {%
-        set navbar_classes = [
+        {% set navbar_classes = [
         'navbar',
         theme.settings.navbar_inverse ? 'navbar-inverse' : 'navbar-default',
         theme.settings.navbar_position ? 'navbar-' ~ theme.settings.navbar_position|clean_class : container,
-        ]
-        %}
+        ] %}
         <header{{ navbar_attributes.addClass(navbar_classes) }} id="navbar" role="banner">
             <div class="navbar-header">
                 {{ page.navigation }}
@@ -110,6 +108,13 @@
                 {% endblock %}
             {% endif %}
 
+            {# Slideshow #}
+            {% if node.field_slideshow %}
+                <div class="col-sm-12">
+                    {% include 'field--node--field-slideshow.html.twig' with {'slideshow': node.field_slideshow} only %}
+                </div>
+            {% endif %}
+
             {# Sidebar First #}
             {% if page.sidebar_first %}
                 {% block sidebar_first %}
@@ -120,14 +125,12 @@
             {% endif %}
 
             {# Content #}
-            {%
-            set content_classes = [
+            {% set content_classes = [
             page.sidebar_first and page.sidebar_second ? 'col-sm-6',
             page.sidebar_first and page.sidebar_second is empty ? 'col-sm-9',
             page.sidebar_second and page.sidebar_first is empty ? 'col-sm-9',
             page.sidebar_first is empty and page.sidebar_second is empty ? 'col-sm-12'
-            ]
-            %}
+            ] %}
             <section{{ content_attributes.addClass(content_classes) }}>
 
                 {# Highlighted #}
