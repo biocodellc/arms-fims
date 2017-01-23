@@ -17,7 +17,19 @@
 // jQuery UI style overrides.
 @import "jquery-ui/autocomplete";
 
-$featured-slideshow-max-height: 400px !default;
+$featured-slideshow-max-height: 425px !default;
+$wrapper-max-width: 1250px !default;
+
+//== angular
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+body {
+  background-image: url(../images/f40171d6.png);
+  margin-top: 0px;
+}
+
 ol, ul {
   padding-left: 1.5em;
   .popover &:last-child {
@@ -25,12 +37,8 @@ ol, ul {
   }
 }
 
-.page-node-type-home-page .page-header {
+.page-header {
   display: none;
-}
-
-.carousel {
-  margin-bottom: $navbar-margin-bottom;
 }
 
 // Footer.
@@ -70,6 +78,107 @@ p:last-child,
   }
 }
 
+//== wrapper
+.wrapper {
+  background-color: #fff;
+
+  @media #{$tablet} {
+    width: 100%;
+  }
+  @media #{$normal} {
+    width: 90%;
+    max-width: $wrapper-max-width;
+  }
+
+  margin: 0 auto;
+  margin-bottom: 40px;
+  padding: 15px 0;
+  overflow: hidden;
+  border: 1px solid white;
+  border-color: rgba(255, 255, 255, 0.5);
+  -webkit-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5), 0px 0px 50px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5), 0px 0px 50px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5), 0px 0px 50px rgba(0, 0, 0, 0.1) inset;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+//== carousel
+.carousel-control {
+  background: none !important;
+  opacity: 0;
+
+  &:focus {
+    opacity: 0;
+  }
+  &:hover{
+    @include opacity(.9);
+  }
+}
+
+.carousel-caption {
+  padding-bottom: 0px;
+
+  > p {
+    margin: 0;
+  }
+
+  @media #{$mobile} {
+    font-size: $font-size-small;
+  }
+
+  @media #{$tablet} {
+    padding-bottom: 10px;
+  }
+}
+
+.carousel-copyright{
+  font-size: $font-size-xsmall;
+  @media #{$tablet} {
+    font-size: $font-size-small;
+  }
+}
+
+//== featured slideshow
+#featured_slideshow {
+  margin-top: 0;
+  margin-bottom: $navbar-margin-bottom;
+
+  @media #{$normal} {
+    margin-top: -$navbar-margin-bottom;
+  }
+
+  .carousel-inner {
+    position: relative;
+
+    &:before {
+      display: block;
+      content: "";
+      width: 100%;
+      padding-top: percentage($featured-slideshow-max-height / $wrapper-max-width);
+    }
+
+    > .item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #f2f2f4;
+      box-shadow: inset 0px 11px 8px -10px #CCC,
+      inset 0px -11px 8px -10px #CCC;
+
+      img {
+        margin: auto;
+        height: 100%;
+        max-height: $featured-slideshow-max-height;
+      }
+    }
+  }
+}
+
+
 // Existing style.css
 .form-group-sm select.form-control {
   line-height: inherit;
@@ -86,92 +195,8 @@ p:last-child,
   font-weight: bold;
 }
 
-//
-//.navbar {
-//  min-height: 40px;
-//  border-radius: 3px;
-//  padding-left: 0px;
-//  padding-right: 0px;
-//}
-
-.navbar-collapse {
-  padding-left: 0px;
-}
-
-//#front-page-carousel {
-//  margin-top: -15px;
-//  margin-bottom: 20px;
-//}
-
-//.carousel-inner > .item > img,
-//.carousel-inner > .item > a > img {
-//  border-radius: 3px;
-//}
-
-@mixin aspect-ratio($width, $height) {
-
-  > .item {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-}
-
-#featured_slideshow {
-  margin-top: -$navbar-margin-bottom;
-
-  .carousel-inner {
-    position: relative;
-
-    &:before {
-      display: block;
-      content: "";
-      width: 100%;
-      padding-top: ceil(percentage($featured-slideshow-max-height / $container-lg));
-    }
-
-    > .item {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      img {
-        margin: auto;
-
-        @media (max-width: $screen-sm-min - 1) {
-          max-height: 100%;
-        }
-        @media (min-width: $screen-sm-min) {
-          max-height: ceil($featured-slideshow-max-height * ($container-sm / $container-lg));
-        }
-        @media (min-width: $screen-md-min) {
-          max-height: ceil($featured-slideshow-max-height * ($container-md / $container-lg));
-        }
-        @media (min-width: $screen-lg-min) {
-          max-height: $featured-slideshow-max-height;
-        }
-      }
-    }
-  }
-}
-
-@media (min-width: 768px) {
-  .navbar-nav > li > a {
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-}
-
 .form-group-sm .form-control {
   padding: 5px 25px 5px 10px;
-}
-
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
 }
 
 .top-buffer {

@@ -1,10 +1,10 @@
 /**
  * Navbar styling.
  */
-$mobile:  "screen and (max-width: #{$screen-xs-max})";
-$tablet:  "screen and (min-width: #{$screen-sm-min})";
-$normal:  "screen and (min-width: #{$screen-md-min})";
-$wide:    "screen and (min-width: #{$screen-lg-min})";
+$mobile: "screen and (max-width: #{$screen-xs-max})";
+$tablet: "screen and (min-width: #{$screen-sm-min})";
+$normal: "screen and (min-width: #{$screen-md-min})";
+$wide: "screen and (min-width: #{$screen-lg-min})";
 
 body {
   // Fix horizontal scrolling on iOS devices.
@@ -43,8 +43,10 @@ body {
     }
   }
 }
+
 .navbar {
   font-weight: 300;
+  border: none;
 
   &.container {
     @media #{$tablet} {
@@ -55,6 +57,82 @@ body {
     }
     @media #{$wide} {
       max-width: (($container-lg - $grid-gutter-width));
+    }
+  }
+
+  &-collapse,
+  &-nav {
+    clear: left
+  }
+
+  .account-menu {
+    clear: none;
+    margin-right: 0;
+  }
+
+  &-header {
+    padding-top: $navbar-padding-vertical;
+  }
+
+  &-brand {
+    font-size: 30px;
+  }
+
+  .nav {
+    li {
+      a {
+        padding: 9px 15px;
+        @media #{$normal} {
+          padding: 25px 15px;
+        }
+      }
+    }
+
+    .dropdown-menu {
+      > li {
+        > a {
+          @media #{$normal} {
+            padding: 3px 20px;
+          }
+          padding-left: 40px;
+          &:hover,
+          &:focus {
+            background-color: $navbar-default-link-hover-color !important;
+            color: #fff !important;
+          }
+        }
+      }
+    }
+  }
+
+  .logo {
+    padding-left: ($navbar-padding-horizontal + 15px);
+  }
+
+  @media #{$mobile} {
+    .navbar-header {
+
+      .logo {
+        width: 100%;
+        padding-left: 0;
+
+        img {
+          display: block;
+          margin: 5px auto;
+        }
+      }
+
+      .navbar-brand {
+        width: 100%;
+        text-align: center;
+        margin: 5px;
+      }
+
+      .navbar-toggle {
+        display: block;
+        margin: 3px auto 10px auto;
+        float: none;
+      }
     }
   }
 }
