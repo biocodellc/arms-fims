@@ -37,8 +37,17 @@ angularjs:
 
 search:
   version: 1.x
+  css:
+      theme:
+        css/leaflet.css: {}
+        css/MarkerCluster.css: {}
+        css/MarkerCluster.Default.css: {}
   js:
-    js/search/search.module.js: {}
+    js/leaflet.js: {}
+    js/leaflet.markercluster.js: {}
+    js/spin.min.js: {}
+    js/leaflet.spin.min.js: {}
     js/ui-bootstrap-tpls-2.1.3.min.js: {}
+    js/search/search.module.js: {}
   dependencies:
     - arms/angularjs

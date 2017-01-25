@@ -7,12 +7,29 @@
 {{ attach_library('arms/bootstrap-sortable') }}
 <div ng-app="armsSearchApp" ng-cloak>
     <div ng-controller="searchCtrl as vm">
-        <div class="col-sm-12 alert alert-danger" role="alert" ng-show="vm.error">
+        <!-- map -->
+        <div class="search-map" ng-controller="searchMapCtrl as searchVm">
+            <div class="col-sm-12 alert alert-danger alert-dismissable" role="alert" ng-show="searchVm.error">
+                <button type="button" class="close" aria-label="Close"
+                        ng-click="searchVm.error = null">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+                <strong>Error! </strong>{{ '{{ searchVm.error }}' }}
+            </div>
+            <div class="angular-leaflet-map" id="searchMap"></div>
+            {#<leaflet ng-if="searchVm.showMap" tiles="searchVm.tiles" markers="searchVm.markers" id="searchMap"></leaflet>#}
+        </div>
+
+        <div class="col-sm-12 alert alert-danger alert-dismissable" role="alert" ng-show="vm.error">
+            <button type="button" class="close" aria-label="Close"
+                    ng-click="vm.error = null">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </button>
             <strong>Error! </strong>{{ '{{ vm.error }}' }}
         </div>
         <form>
             <div class="form-group">
-                <label for="expeditionId">Projects</label>
+                <label for="expeditionId">Select a Project:</label>
                 <select class="form-control" id="expeditionId" name="expeditionId" ng-model="vm.expeditionId"
                         ng-change="vm.updateDeployments()">
                     <option value="">All Projects</option>
@@ -35,7 +52,7 @@
             </div>
 
             <div class="form-group">
-                <label>Filter(s)</label>
+                <label>Filter by:</label>
                 <div class="form-group row" ng-repeat="filter in vm.filters">
                     <div class="col-sm-4">
                         <select class="form-control" name="filterColumn" ng-model="filter.attributeIndex"
@@ -90,9 +107,16 @@
             </div>
 
             <div class="form-group">
-                <button class="button btn-default btn" name="query" ng-click="vm.query()">Table</button>
-                <button class="button btn-default btn" name="excel" ng-click="vm.excel()">Excel</button>
-                <button class="button btn-default btn" name="map" ng-click="vm.map()">Map</button>
+                <label class="control-label">View results as:</label>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <button class="btn-primary btn btn-block" name="query" ng-click="vm.query()">Table
+                        </button>
+                    </div>
+                    <div class="col-xs-2">
+                        <button class="btn-primary btn btn-block" name="map" ng-click="vm.map()">Map</button>
+                    </div>
+                </div>
             </div>
         </form>
 
@@ -107,7 +131,7 @@
                 <th>Lat/Lng</th>
                 <th>Depth</th>
                 <th>Habitat Type:</th>
-                <th>Station ID</th>
+                <th>PI</th>
                 </thead>
                 <tbody>
                 <tr ng-repeat="deployment in vm.queryResults">
@@ -122,7 +146,7 @@
                     <td>{{ '{{ deployment.decimalLatitude }}' }}/{{ '{{ deployment.decimalLongitude }}' }}</td>
                     <td>{{ '{{ deployment.depthInMeters }}' }} meters</td>
                     <td>{{ '{{ deployment.habitat }}' }}</td>
-                    <td>{{ '{{ deployment.stationId }}' }}</td>
+                    <td>{{ '{{ vm.getPI(deployment.expeditionId) }}' }}</td>
                 </tr>
                 </tbody>
             </table>

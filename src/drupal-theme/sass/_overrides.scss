@@ -19,6 +19,7 @@
 
 $featured-slideshow-max-height: 425px !default;
 $wrapper-max-width: 1250px !default;
+$wrapper-padding-horizontal: (40px - ($grid-gutter-width / 2));
 
 //== angular
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -92,7 +93,7 @@ p:last-child,
 
   margin: 0 auto;
   margin-bottom: 40px;
-  padding: 15px 0;
+  padding: 15px $wrapper-padding-horizontal;
   overflow: hidden;
   border: 1px solid white;
   border-color: rgba(255, 255, 255, 0.5);
@@ -112,7 +113,7 @@ p:last-child,
   &:focus {
     opacity: 0;
   }
-  &:hover{
+  &:hover {
     @include opacity(.9);
   }
 }
@@ -133,7 +134,7 @@ p:last-child,
   }
 }
 
-.carousel-copyright{
+.carousel-copyright {
   font-size: $font-size-xsmall;
   @media #{$tablet} {
     font-size: $font-size-small;
@@ -178,6 +179,17 @@ p:last-child,
   }
 }
 
+//== search projects
+.search-map {
+  margin-left: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
+  margin-right: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
+  margin-bottom: $navbar-margin-bottom;
+  margin-top: 0;
+
+  #searchMap {
+    height: $featured-slideshow-max-height;
+  }
+}
 
 // Existing style.css
 .form-group-sm select.form-control {

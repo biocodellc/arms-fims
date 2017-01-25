@@ -1,7 +1,7 @@
 var app = angular.module('armsSearchApp', ['ui.bootstrap']);
 
-app.controller('searchCtrl', ['$http', '$filter', '$window',
-    function ($http, $filter, $window) {
+app.controller('searchCtrl', ['$scope', '$filter', '$window', 'DataFactory',
+    function ($scope, $filter, $window, DataFactory) {
         var defaultFilter = {
             attributeIndex: "0",
             operator: "",
@@ -45,6 +45,17 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
         vm.openDatePopup = openDatePopup;
         vm.getDatePickerMode = getDatePickerMode;
         vm.getPlaceholder = getPlaceholder;
+        vm.getPI = getPI;
+
+        function getPI(expeditionId) {
+            angular.forEach(vm.armsExpeditions, function(expedition) {
+                if (expedition.expeditionId == expeditionId) {
+                    return expedition.principalInvestigator;
+                }
+            })
+
+            return "";
+        }
 
         function getPlaceholder(attributeIndex) {
             if (vm.filterOptions.attributes[attributeIndex].dataformat) {
@@ -75,32 +86,34 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
 
         function map() {
             var criterions = JSON.stringify({"criterion": getFilterCriterion()});
-            $http.post("/deployments/search/map", criterions).then(
-                function (response) {
-                    if (response.data.url) {
-                        $window.open(response.data.url);
-                        resetError();
-                    } else {
+            DataFactory.queryMap(criterions)
+                .then(
+                    function (response) {
+                        if (response.data.url) {
+                            $window.open(response.data.url);
+                            resetError();
+                        } else {
+                            vm.error = "Error fetching query information for map";
+                        }
+                    }, function (response) {
                         vm.error = "Error fetching query information for map";
-                    }
-                }, function (response) {
-                    vm.error = "Error fetching query information for map";
-                });
+                    });
         }
 
         function excel() {
             var criterions = JSON.stringify({"criterion": getFilterCriterion()})
-            $http.post("/deployments/search/excel", criterions).then(
-                function (response) {
-                    if (response.data.url) {
-                        $window.open(response.data.url);
-                        resetError();
-                    } else {
+            DataFactory.queryExcel(criterions)
+                .then(
+                    function (response) {
+                        if (response.data.url) {
+                            $window.open(response.data.url);
+                            resetError();
+                        } else {
+                            vm.error = "Error downloading query";
+                        }
+                    }, function (response) {
                         vm.error = "Error downloading query";
-                    }
-                }, function (response) {
-                    vm.error = "Error downloading query";
-                });
+                    });
         }
 
         function formatDateTime(column, dateTime) {
@@ -118,15 +131,16 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
         }
 
         function query() {
-            var criterions = JSON.stringify({"criterion": getFilterCriterion()})
-            $http.post(vm.restUri + "deployments/query/json", criterions).then(
-                function (response) {
-                    vm.queryResults = response.data;
-                    jQuery.bootstrapSortable();
-                    resetError();
-                }, function (response) {
-                    vm.error = "Error fetching query results.";
-                });
+            var criterions = JSON.stringify({"criterion": getFilterCriterion()});
+            DataFactory.queryJson(criterions)
+                .then(
+                    function (response) {
+                        vm.queryResults = response.data;
+                        jQuery.bootstrapSortable();
+                        resetError();
+                    }, function (response) {
+                        vm.error = "Error fetching query results.";
+                    });
         }
 
         function getFilterCriterion() {
@@ -168,7 +182,7 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
             }
 
             if (vm.expeditionId && vm.expeditionId != "all") {
-                filters.push( {
+                filters.push({
                     "key": "armsExpedition",
                     "operator": "EQUALS",
                     "value": vm.expeditionId,
@@ -220,45 +234,36 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
 
         function updateDeployments() {
             if (vm.expeditionId) {
-                $http.get(vm.restUri + 'arms/projects/' + vm.expeditionId).then(
-                    function (response) {
-                        angular.extend(vm.deployments, response.data.deployments);
-                    },
-                    function (response) {
-                        vm.error = "Error fetching deployments";
-                    }
-                )
+                DataFactory.getDeployments(vm.expeditionId)
+                    .then(
+                        function (response) {
+                            angular.extend(vm.deployments, response.data.deployments);
+                        },
+                        function (response) {
+                            vm.error = "Error fetching deployments";
+                        }
+                    )
             } else {
                 vm.deployments.length = 0;
             }
         }
 
-        function getFimsRestUri() {
-            return $http.get('/settings/fims/').then(
-                function (response) {
-                    vm.restUri = response.data.uri;
-                },
-                function (response) {
-                    vm.error = "Error fetching configuration.";
-                }
-            )
-        }
-
         function getFilterOptions() {
-            $http.get(vm.restUri + "projects/filterOptions").then(
-                function (response) {
-                    vm.filterOptions = response.data;
-                    transformOperators();
-                    addFilter();
-                },
-                function (response) {
-                    vm.error = "Error fetching filter options";
-                }
-            )
+            DataFactory.getFilterOptions()
+                .then(
+                    function (response) {
+                        vm.filterOptions = response.data;
+                        transformOperators();
+                        addFilter();
+                    },
+                    function (response) {
+                        vm.error = "Error fetching filter options";
+                    }
+                )
         }
 
         function getArmsExpeditions() {
-            $http.get(vm.restUri + 'arms/projects/')
+            DataFactory.getArmsExpeditions()
                 .then(function (response) {
                     angular.extend(vm.armsExpeditions, response.data);
                 }, function (response, status) {
@@ -280,15 +285,168 @@ app.controller('searchCtrl', ['$http', '$filter', '$window',
             vm.error = null;
         }
 
-        (function init() {
-            getFimsRestUri().then(
-                function (response) {
-                    getFilterOptions();
-                    getArmsExpeditions();
-                }
-            );
+        $scope.$watch(function () {
+            return DataFactory.error
+        }, function (value) {
+            vm.error = value;
+        });
 
-        }).call();
+        $scope.$watch(function () {
+            return DataFactory.ready
+        }, function (ready) {
+            if (ready) {
+                getFilterOptions();
+                getArmsExpeditions();
+            }
+        });
+
     }
-
 ]);
+
+app.controller('searchMapCtrl', ['$scope', 'DataFactory',
+    function ($scope, DataFactory) {
+        var LATITUDE_COLUMN = 'decimalLatitude';
+        var LONGITUDE_COLUMN = 'decimalLongitude';
+        // var map = null;
+
+        var vm = this;
+        vm.map = null;
+        vm.error
+
+        function getAccessToken() {
+            DataFactory.getMapboxAccessToken()
+                .then(
+                    function (response) {
+                        createMap(response.data.accessToken);
+                    }, function (response) {
+                        vm.error = response.data.error || response.data.usrMessage || "Error loading map!";
+                    }
+                );
+        }
+
+        function getMarkers() {
+            DataFactory.queryJson({"criterion": []})
+                .then(
+                    function (response) {
+                        addDeploymentsToMap(response.data);
+                    }, function (response) {
+                        vm.error = response.data.error || response.data.usrMessage || "Error loading deployments!";
+                        vm.map.spin(false);
+                    }
+                )
+        }
+
+        function createMap(accessToken) {
+            vm.map = L.map('searchMap', {
+                center: [0, 0],
+                zoom: 1
+            });
+            vm.map.spin(true);
+            L.tileLayer('https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token={access_token}',
+                {access_token: accessToken})
+                .addTo(vm.map);
+        }
+
+        function addDeploymentsToMap(deployments) {
+            var markers = [];
+            angular.forEach(deployments, function (deployment) {
+                var lat = deployment[LATITUDE_COLUMN];
+                var lng = deployment[LONGITUDE_COLUMN];
+
+                var deploymentMarker = L.marker([lat, lng]);
+                var detailsUrl = '/deployments/' + deployment.expeditionId + '/' + deployment.deploymentId;
+                deploymentMarker.bindPopup(
+                    "ProjectID: " + deployment.expeditionId +
+                    "<br>DeploymentID: " + deployment.deploymentId +
+                    "<br><a href='" + detailsUrl + "'>deployment details</a>"
+                );
+
+                markers.push(deploymentMarker);
+            });
+
+            var clusterLayer = L.markerClusterGroup()
+                .addLayers(markers);
+            var bounds = clusterLayer.getBounds();
+
+            vm.map
+                .addLayer(clusterLayer)
+                .fitBounds(bounds)
+                .setMaxBounds(bounds)
+                .setMinZoom(1)
+                .spin(false);
+        }
+
+        $scope.$watch(function () {
+            return DataFactory.ready
+        }, function (ready) {
+            if (ready) {
+                getAccessToken();
+                getMarkers();
+            }
+        });
+    }
+]);
+
+app.factory('DataFactory', ['$http',
+    function ($http) {
+        var REST_ROOT;
+
+        (function init() {
+            getFimsRestRoot();
+        }).call(this);
+
+        var DataFactory = {
+            getMapboxAccessToken: getMapboxAccessToken,
+            getArmsExpeditions: getArmsExpeditions,
+            getFilterOptions: getFilterOptions,
+            getDeployments: getDeployments,
+            queryJson: queryJson,
+            queryMap: queryMap,
+            queryExcel: queryExcel,
+            error: null,
+            ready: false
+        };
+
+        return DataFactory;
+
+        function getFimsRestRoot() {
+            return $http.get('/settings/fims/').then(
+                function (response) {
+                    REST_ROOT = response.data.uri;
+                    DataFactory.ready = true;
+                },
+                function (response) {
+                    DataFactory.error = "Error fetching configuration.";
+                    DataFactory.ready = false;
+                }
+            )
+        }
+
+        function getMapboxAccessToken() {
+            return $http.get(REST_ROOT + 'utils/getMapboxToken');
+        }
+
+        function getArmsExpeditions() {
+            return $http.get(REST_ROOT + 'arms/projects');
+        }
+
+        function getFilterOptions() {
+            return $http.get(REST_ROOT + "projects/filterOptions");
+        }
+
+        function getDeployments(expeditionId) {
+            return $http.get(REST_ROOT + 'arms/projects/' + expeditionId);
+        }
+
+        function queryJson(criterions) {
+            return $http.post(REST_ROOT + "deployments/query/json", criterions);
+        }
+
+        function queryMap(criterions) {
+            return $http.post("/deployments/search/map", criterions);
+        }
+
+        function queryExcel(criterions) {
+            return $http.post("/deployments/search/excel", criterions);
+        }
+    }]);

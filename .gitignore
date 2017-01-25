@@ -14,3 +14,4 @@ javadocs/
 src/main/web/WEB-INF/web.xml
 src/main/generated/
 out/
+.sass-cache/
