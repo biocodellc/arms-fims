@@ -16,9 +16,9 @@
 @import "component/bootstrap/toolbar";
 // jQuery UI style overrides.
 @import "jquery-ui/autocomplete";
-
 @import "component/login";
 @import "component/resetPass";
+@import "component/projects";
 
 $featured-slideshow-max-height: 425px !default;
 $wrapper-max-width: 1250px !default;
@@ -212,16 +212,29 @@ p:last-child,
 //== pwindicator
 .pw-label, .pw-weak .label, .pw-good .label, .pw-strong .label {
   font-size: 100%;
-  display: block; }
+  display: block;
+}
 
 .pw-weak .label {
-  color: #b94a48; }
+  color: #b94a48;
+}
 
 .pw-good .label {
-  color: #3c761e; }
+  color: #3c761e;
+}
 
 .pw-strong .label {
-  color: #3c761e; }
+  color: #3c761e;
+}
+
+//== showErrors directive
+.form-group .help-block {
+  display: none;
+}
+
+.form-group.has-error .help-block {
+  display: block;
+}
 
 //== search projects
 .search-map {
@@ -258,3 +271,15 @@ p:last-child,
 //.top-buffer {
 //  margin-top: 15px;
 //}
+
+// can be removed after expedition manager refactor
+div.toggle-content {
+  display:none;
+  margin: 0px 20px;
+}
+
+.img-arrow {
+  vertical-align:middle;
+  height:20px;
+  border:none;
+}

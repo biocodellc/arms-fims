@@ -62,7 +62,11 @@ body {
 
   &-collapse,
   &-nav {
-    clear: left
+    clear: left;
+
+    .navbar-right {
+      clear: none;
+    }
   }
 
   .account-menu {
@@ -91,10 +95,23 @@ body {
     .dropdown-menu {
       > li {
         > a {
+          padding-left: 40px;
+
+          &.disabled {
+            color: $gray;
+            cursor: default;
+
+            &:hover,
+            &:focus {
+              background-color: inherit !important;
+              color: inherit !important;
+            }
+          }
+
           @media #{$normal} {
             padding: 3px 20px;
           }
-          padding-left: 40px;
+
           &:hover,
           &:focus {
             background-color: $navbar-default-link-hover-color !important;

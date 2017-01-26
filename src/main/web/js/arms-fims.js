@@ -126,7 +126,7 @@ function listProjects(username, url, expedition) {
             var html = '<h1>Expedition Manager (' + username + ')</h2>\n';
         }
         var expandTemplate = '<br>\n<a class="expand-content" id="{project}-{section}" href="javascript:void(0);">\n'
-            + '\t <img src="' + appRoot + 'images/right-arrow.png" id="arrow" class="img-arrow">{text}'
+            + '\t <img src="' + appRoot + 'css/images/right-arrow.png" id="arrow" class="img-arrow">{text}'
             + '</a>\n';
         $.each(data, function (index, element) {
             key = element.projectId;
@@ -316,7 +316,7 @@ function listExpeditions(divId) {
         .done(function (data) {
             var html = '';
             var expandTemplate = '<br>\n<a class="expand-content" id="{expedition}-{section}" href="javascript:void(0);">\n'
-                + '\t <img src="' + appRoot + 'images/right-arrow.png" id="arrow" class="img-arrow">{text}'
+                + '\t <img src="' + appRoot + 'css/images/right-arrow.png" id="arrow" class="img-arrow">{text}'
                 + '</a>\n';
             $.each(data, function (index, e) {
                 var expedition = e.expeditionTitle.replace(new RegExp('[#. ():]', 'g'), '_') + '_' + e.expeditionId;
