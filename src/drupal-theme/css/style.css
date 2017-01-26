@@ -6435,6 +6435,15 @@ ol, ul {
   .popover ol:last-child, .popover ul:last-child {
     margin-bottom: 0; }
 
+@font-face {
+  font-family: 'walkway_semiboldregular';
+  src: url("../fonts/Walkway_SemiBold-webfont.eot");
+  src: url("../fonts/Walkway_SemiBold-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/Walkway_SemiBold-webfont.woff") format("woff"), url("../fonts/Walkway_SemiBold-webfont.ttf") format("truetype"), url("../fonts/Walkway_SemiBold-webfont.svg#walkway_semiboldregular") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+.navbar-brand {
+  font-family: 'walkway_semiboldregular'; }
+
 .page-header {
   display: none; }
 
@@ -6514,6 +6523,8 @@ p:last-child,
 
 #featured_slideshow {
   margin-top: 0;
+  margin-left: -40px;
+  margin-right: -40px;
   margin-bottom: 20px; }
   @media screen and (min-width: 992px) {
     #featured_slideshow {
@@ -6535,8 +6546,13 @@ p:last-child,
       box-shadow: inset 0px 11px 8px -10px #CCC, inset 0px -11px 8px -10px #CCC; }
       #featured_slideshow .carousel-inner > .item img {
         margin: auto;
-        height: 100%;
-        max-height: 425px; }
+        height: 100%; }
+
+.figure {
+  display: inline-block; }
+
+.caption {
+  width: 100%; }
 
 .search-map {
   margin-left: -40px;
