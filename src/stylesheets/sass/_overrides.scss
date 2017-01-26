@@ -1,21 +1,24 @@
 // @todo these should be their own CSS files and only included when
 // specific Drupal libraries are used.
-@import "component/alert";
-@import "component/ajax";
-@import "component/field";
-@import "component/file";
-@import "component/filter";
-@import "component/form";
-@import "component/icon";
-@import "component/navbar";
-@import "component/node";
-@import "component/panel";
-@import "component/progress-bar";
-@import "component/table-drag";
-@import "component/tabs";
-@import "component/toolbar";
+@import "component/bootstrap/alert";
+@import "component/bootstrap/ajax";
+@import "component/bootstrap/field";
+@import "component/bootstrap/file";
+@import "component/bootstrap/filter";
+@import "component/bootstrap/form";
+@import "component/bootstrap/icon";
+@import "component/bootstrap/navbar";
+@import "component/bootstrap/node";
+@import "component/bootstrap/panel";
+@import "component/bootstrap/progress-bar";
+@import "component/bootstrap/table-drag";
+@import "component/bootstrap/tabs";
+@import "component/bootstrap/toolbar";
 // jQuery UI style overrides.
 @import "jquery-ui/autocomplete";
+
+@import "component/login";
+@import "component/resetPass";
 
 $featured-slideshow-max-height: 425px !default;
 $wrapper-max-width: 1250px !default;
@@ -206,6 +209,20 @@ p:last-child,
   width: 100%;
 }
 
+//== pwindicator
+.pw-label, .pw-weak .label, .pw-good .label, .pw-strong .label {
+  font-size: 100%;
+  display: block; }
+
+.pw-weak .label {
+  color: #b94a48; }
+
+.pw-good .label {
+  color: #3c761e; }
+
+.pw-strong .label {
+  color: #3c761e; }
+
 //== search projects
 .search-map {
   margin-left: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
@@ -238,6 +255,6 @@ p:last-child,
   padding: 5px 25px 5px 10px;
 }
 
-.top-buffer {
-  margin-top: 15px;
-}
+//.top-buffer {
+//  margin-top: 15px;
+//}

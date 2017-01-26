@@ -294,9 +294,9 @@ function populateExpeditionPage(username) {
 // function to load the expeditions.html subsections
 function loadExpeditions(id) {
     if ($('.toggle-content#' + id).is(':hidden')) {
-        $('.img-arrow', '#' + id).attr("src", appRoot + "images/down-arrow.png");
+        $('.img-arrow', '#' + id).attr("src", appRoot + "css/images/down-arrow.png");
     } else {
-        $('.img-arrow', '#' + id).attr("src", appRoot + "images/right-arrow.png");
+        $('.img-arrow', '#' + id).attr("src", appRoot + "css/images/right-arrow.png");
     }
     // check if we've loaded this section, if not, load from service
     var divId = 'div#' + id

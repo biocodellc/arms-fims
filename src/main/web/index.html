@@ -7,34 +7,39 @@
     <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/alerts.css"/>
-    <link rel="stylesheet" type="text/css" href="css/biscicol.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="css/biscicol.css"/>-->
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
 
-    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet' />
-    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css' rel='stylesheet' />
-    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet'/>
+    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css'
+          rel='stylesheet'/>
+    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css'
+          rel='stylesheet'/>
 
 
-
-    <link rel="short icon" href="docs/fimsicon.png" />
+    <link rel="short icon" href="docs/fimsicon.png"/>
 </head>
 <body ng-cloak>
-<div class="container">
+<div class="wrapper">
+    <div class="container-fluid">
 
-    <header ng-include="'app/partials/header-nav.html'"></header>
-    <div class="alert-container"><div id="alerts"></div></div>
-    <div ng-show="error" class="alert alert-error alert-dismissable" ng-click="error=null" role="alert">
-        <button type="button" class="close" aria-label="Close">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-        </button>
-        {{ error }}
+        <header ng-include="'app/partials/header-nav.html'"></header>
+        <div class="alert-container">
+            <div id="alerts"></div>
+        </div>
+        <div ng-show="error" class="alert alert-error alert-dismissable" ng-click="error=null" role="alert">
+            <button type="button" class="close" aria-label="Close">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </button>
+            {{ error }}
+        </div>
+
+        <div ui-view></div>
+
+        <div id="dialogContainer"></div>
     </div>
-
-    <div ui-view></div>
-
-    <div id="dialogContainer"></div>
-    <div class="clearfooter"></div>
-</div> <!—-End Container—>
-
+    <!—-End Container—>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 <script
         src="https://code.jquery.com/jquery-1.11.1.min.js"

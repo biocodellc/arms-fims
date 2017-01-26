@@ -10,6 +10,7 @@ buildscript {
         classpath "org.ajoberstar:gradle-git:1.4.2"
         classpath "com.github.marceloemanoel:gradle-environments-plugin:0.1"
         classpath "org.hidetake:gradle-ssh-plugin:2.0.0"
+        classpath 'com.github.fgiannesini.libsass.gradle.plugin:libsass-gradle-plugin:+'
     }
 }
 
@@ -29,6 +30,7 @@ apply plugin: "idea"
 apply plugin: "environments"
 apply plugin: "org.hidetake.ssh"
 apply plugin: "com.eriwen.gradle.js"
+apply plugin: 'com.github.fgiannesini.libsass.gradle.plugin'
 
 targetCompatibility = 1.8
 sourceCompatibility = 1.8
@@ -149,6 +151,16 @@ javascript.source {
     }
 }
 
+libSassParameters {
+    inputFilePath = "${projectDir}/src/stylesheets/style.scss"
+    outputFilePath = "${buildDir}/css/style.css"
+    watchedDirectoryPath = "${projectDir}/src/stylesheets"
+    sourceMapEmbed = true
+    libSassProductionParameters {
+        outputStyle "compressed"
+    }
+}
+
 webAppDirName = "src/main/web"
 libsDirName = "../dist"
 
@@ -178,9 +190,11 @@ allprojects {
 }
 
 war {
-    webInf {
-        from "${buildDir}/js"
+    from ("${buildDir}/js") {
         into "/js/"
+    }
+    from ("${buildDir}/css") {
+        into "/css/"
     }
 }
 
@@ -347,8 +361,12 @@ task fatWar(type: War) {
     classpath configurations.compile
 
     webInf {
-        from "${buildDir}/js"
-        into "/js/"
+        from ("${buildDir}/js") {
+            into "/js/"
+        }
+        from ("${buildDir}/css") {
+            into "/css/"
+        }
     }
 }
 
