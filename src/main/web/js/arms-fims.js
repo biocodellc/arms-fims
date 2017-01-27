@@ -377,54 +377,6 @@ function populateExpeditionSubsections(divId) {
     }
 }
 
-// function to edit an expedition
-function editExpedition(projectId, expeditionCode, e) {
-    var currentPublic;
-    var searchId = $(e).closest("div")[0].id.replace("-configuration", "");
-    var title = "Editing " + $("a#" + searchId)[0].textContent.trim();
-
-    if (e.parentElement.textContent.startsWith("yes")) {
-        currentPublic = true;
-    } else {
-        currentPublic = false;
-    }
-
-    var message = "<table><tr><td>Public:</td><td><input type='checkbox' name='public'";
-    if (currentPublic) {
-        message += " checked='checked'";
-    }
-    message += "></td></tr></table>";
-
-    var buttons = {
-        "Update": function () {
-            var public = $("[name='public']")[0].checked;
-
-            $.get(armsFimsRestRoot + "expeditions/updateStatus/" + projectId + "/" + expeditionCode + "/" + public
-            ).done(function () {
-                var b = {
-                    "Ok": function () {
-                        $(this).dialog("close");
-                        location.reload();
-                    }
-                }
-                dialog("Successfully updated the public status.", "Success!", b);
-            }).fail(function (jqXHR) {
-                $("#dialogContainer").addClass("error");
-                var b = {
-                    "Ok": function () {
-                        $("#dialogContainer").removeClass("error");
-                        $(this).dialog("close");
-                    }
-                }
-                dialog("Error updating expedition's public status!<br><br>" + JSON.stringify($.parseJSON(jqxhr.responseText).usrMessage), "Error!", buttons)
-            });
-        },
-        "Cancel": function () {
-            $(this).dialog("close");
-        }
-    }
-    dialog(message, title, buttons);
-}
 /* ====== profile.html Functions ======= */
 
 // function to submit the user's profile editor form
