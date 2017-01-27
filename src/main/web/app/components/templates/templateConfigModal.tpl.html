@@ -1,5 +1,6 @@
 <div class="modal-header">
-    <h3 class="modal-title">Remove Template Generator Configuration</h3>
+    <h3 ng-show="!vm.new" class="modal-title">Remove Template Configuration</h3>
+    <h3 ng-show="vm.new" class="modal-title">Save Template Configuration</h3>
 </div>
 <div class="modal-body">
     <form class="form-horizontal" name="vm.configForm" ng-show="vm.new">
@@ -19,7 +20,7 @@
             You can not remove the Default configuration
         </p>
         <p ng-show="vm.config.toUpperCase() != 'Default'.toUpperCase()">
-            Are you sure you want to remove the {{vm.config}} configuration?
+            Are you sure you want to remove the <strong>{{vm.config}}</strong> configuration?
         </p>
     </div>
 </div>

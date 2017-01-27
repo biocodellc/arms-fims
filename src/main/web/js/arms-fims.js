@@ -102,20 +102,6 @@ function isTokenExpired() {
     return false;
 }
 
-// function for displaying a loading dialog while waiting for a response from the server
-function loadingDialog(promise) {
-    var dialogContainer = $("#dialogContainer");
-    var msg = "Loading ...";
-    dialog(msg, "", null);
-
-    // close the dialog when the ajax call has returned only if the html is the same
-    promise.always(function () {
-        if (dialogContainer.html() == msg) {
-            dialogContainer.dialog("close");
-        }
-    });
-}
-
 // function to retrieve a user's projects and populate the page
 function listProjects(username, url, expedition) {
     var jqxhr = $.getJSON(url
@@ -212,24 +198,6 @@ function populateDivFromService(url, elementID, failMessage) {
         });
 }
 
-function failError(jqxhr) {
-    var buttons = {
-        "OK": function () {
-            $("#dialogContainer").removeClass("error");
-            $(this).dialog("close");
-        }
-    }
-    $("#dialogContainer").addClass("error");
-
-    var message;
-    if (jqxhr.responseJSON) {
-        message = jqxhr.responseJSON.usrMessage;
-    } else {
-        message = "Server Error!";
-    }
-    dialog(message, "Error", buttons);
-}
-
 // function to open a new or update an already open jquery ui dialog box
 function dialog(msg, title, buttons) {
     var dialogContainer = $("#dialogContainer");
@@ -257,24 +225,10 @@ function dialog(msg, title, buttons) {
 // A short message
 function showMessage(message) {
     $('#alerts').append(
-        '<div class="fims-alert alert-dismissable">' +
+        '<div class="fims-alert alert alert-dismissable" role="alert">' +
         '<button type="button" class="close" data-dismiss="alert">' +
         '&times;</button>' + message + '</div>');
 }
-
-// A big message
-function showBigMessage(message) {
-    $('#alerts').append(
-        '<div class="fims-alert" style="height:400px">' +
-        '<button type="button" class="close" data-dismiss="alert">' +
-        '&times;</button>' + message + '</div>');
-}
-
-// Get the projectID
-function getProjectID() {
-    return $('#project').val();
-}
-
 
 /* ====== expeditions.html Functions ======= */
 
@@ -459,7 +413,7 @@ function populate_bottom() {
     });
 }
 
-function download_file() {
+function download_file(projectId) {
     var url = armsFimsRestRoot + 'projects/createExcel/';
     var input_string = '';
     // Loop through CheckBoxes and find ones that are checked
@@ -467,16 +421,14 @@ function download_file() {
         if ($(this).is(':checked'))
             input_string += '<input type="hidden" name="fields" value="' + $(this).val() + '" />';
     });
-    input_string += '<input type="hidden" name="projectId" value="' + getProjectID() + '" />';
+    input_string += '<input type="hidden" name="projectId" value="' + projectId + '" />';
 
     // Pass the form to the server and submit
     $('<form action="' + url + '" method="post">' + input_string + '</form>').appendTo('body').submit().remove();
 }
 
 // for template generator, get the definitions when the user clicks on DEF
-function populateDefinitions(column) {
-    var projectId = getProjectID();
-
+function populateDefinitions(column, projectId) {
     theUrl = armsFimsRestRoot + "projects/" + projectId + "/getDefinition/" + column;
 
     var jqxhr = $.ajax({
@@ -509,7 +461,7 @@ function populateColumns(targetDivId, projectId) {
         });
 
         $(".def_link").click(function () {
-            populateDefinitions($(this).attr('name'));
+            populateDefinitions($(this).attr('name'), projectId);
         });
     }
 }
@@ -534,12 +486,11 @@ function populateAbstract(targetDivId, projectId) {
     });
 }
 
-function updateCheckedBoxes() {
-    var configName = $("#configs").val();
+function updateCheckedBoxes(configName, projectId) {
     if (configName == "Default") {
-        populateColumns("#cat1");
+        populateColumns("#cat1", projectId);
     } else {
-        $.getJSON(armsFimsRestRoot + "projects/" + $("#project").val() + "/getTemplateConfig/" + configName.replace(/\//g, "%2F")).done(function (data) {
+        $.getJSON(armsFimsRestRoot + "projects/" + projectId + "/getTemplateConfig/" + configName.replace(/\//g, "%2F")).done(function (data) {
             if (data.error != null) {
                 showMessage(data.error);
                 return;

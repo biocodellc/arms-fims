@@ -13,7 +13,7 @@ angular.module('fims.templates')
             $scope.saveTemplateConfig = saveTemplateConfig;
 
             function updateCheckedBoxesAngular() {
-                updateCheckedBoxes(vm.config);
+                updateCheckedBoxes(vm.config, PROJECT_ID);
             }
 
             function showRemoveConfig() {
@@ -133,7 +133,7 @@ angular.module('fims.templates')
                     li_list.push($(this).text());
                 });
                 if (li_list.length > 0) {
-                    download_file();
+                    download_file(PROJECT_ID);
                 }
                 else {
                     showMessage('You must select at least 1 field in order to export a spreadsheet.');
