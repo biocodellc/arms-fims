@@ -77,12 +77,12 @@ public class ArmsExpeditionController extends FimsService {
     @JsonView(Views.Detailed.class)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response list(@QueryParam("includePublic") @DefaultValue("false") boolean includePublic) {
+    public Response list(@QueryParam("includePrivate") @DefaultValue("false") boolean includePrivate) {
         List<ArmsExpedition> expeditions;
         Integer projectId = Integer.valueOf(settingsManager.retrieveValue("projectId"));
 
         if (userContext.getUser() != null) {
-            expeditions = armsExpeditionService.getArmsExpeditions(projectId, userContext.getUser().getUserId(), includePublic);
+            expeditions = armsExpeditionService.getArmsExpeditions(projectId, userContext.getUser().getUserId(), includePrivate);
         } else {
             expeditions = armsExpeditionService.getPublicExpeditions(projectId);
         }

@@ -225,14 +225,66 @@ p:last-child,
 .pw-strong .label {
   color: #3c761e;
 }
+// Buttons ============================================
+.btn {
+  @include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base * .8, $btn-border-radius-base);
+}
 
-//== showErrors directive
+// Forms ==============================================
+.has-warning {
+  .help-block,
+  .control-label,
+  .radio,
+  .checkbox,
+  .radio-inline,
+  .checkbox-inline,
+  &.radio label,
+  &.checkbox label,
+  &.radio-inline label,
+  &.checkbox-inline label,
+  .form-control-feedback {
+    color: $brand-warning;
+  }
+
+  .form-control,
+  .form-control:focus {
+    border-color: $brand-warning;
+  }
+}
+
+.has-error {
+  .help-block,
+  .control-label,
+  .radio,
+  .checkbox,
+  .radio-inline,
+  .checkbox-inline,
+  &.radio label,
+  &.checkbox label,
+  &.radio-inline label,
+  &.checkbox-inline label,
+  .form-control-feedback {
+    color: $brand-danger;
+  }
+
+  .form-control,
+  .form-control:focus {
+    border-color: $brand-danger;
+  }
+}
+
 .form-group .help-block {
   display: none;
 }
 
 .form-group.has-error .help-block {
   display: block;
+}
+
+form {
+  hr {
+    margin: 15px 0;
+  }
 }
 
 //== search projects
@@ -245,6 +297,21 @@ p:last-child,
   #searchMap {
     height: $featured-slideshow-max-height;
   }
+}
+
+//== validate.html
+.tab-content {
+  margin-top: 15px;
+}
+
+.group-message {
+  padding-bottom: $form-group-margin-bottom;
+}
+
+#map {
+  position: relative;
+  height: $featured-slideshow-max-height;
+  width: 100%;
 }
 
 // Existing style.css

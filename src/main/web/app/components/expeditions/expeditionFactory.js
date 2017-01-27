@@ -14,8 +14,8 @@ angular.module('fims.expeditions')
 
             return expeditionFactory;
 
-            function getArmsExpeditions(includePublic) {
-                return $http.get(REST_ROOT + 'arms/projects?includePublic=' + includePublic)    ;
+            function getArmsExpeditions(includePrivate) {
+                return $http.get(REST_ROOT + 'arms/projects?includePrivate=' + includePrivate)    ;
             }
 
             function getExpeditionsForUser(includePrivate) {

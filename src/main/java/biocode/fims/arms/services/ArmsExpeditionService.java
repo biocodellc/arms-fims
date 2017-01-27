@@ -100,8 +100,8 @@ public class ArmsExpeditionService {
         return armsExpeditions;
     }
 
-    public List<ArmsExpedition> getArmsExpeditions(int projectId, int userId, boolean includePublic) {
-        List<Expedition> expeditions = expeditionService.getExpeditionsForUser(projectId, userId, includePublic);
+    public List<ArmsExpedition> getArmsExpeditions(int projectId, int userId, boolean includePrivate) {
+        List<Expedition> expeditions = expeditionService.getExpeditionsForUser(projectId, userId, includePrivate);
 
         return getArmsExpeditions(expeditions);
     }

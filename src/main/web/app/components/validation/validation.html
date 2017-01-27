@@ -1,59 +1,77 @@
-<div id="validation" class="section">
-    <div id="warning"></div>
+<div id="warning"></div>
+<div class="row">
+    <h3 class="page-header">Validate and Load Data</h3>
 
-    <div class="sectioncontent">
+    <div class="col-xs-12">
+        <uib-tabset active="vm.activeTab">
+            <uib-tab index="-1" heading="" disable="true" classes="col-xs-offset-1 hidden-tab"></uib-tab>
 
-        <h2>Validate and Load Data</h2>
-
-        <div class="col-sm-12">
-            <form method="POST">
-                <div class="col-md-8">
-                    <table class="table">
-                        <tr>
-                            <td align="right">&nbsp;&nbsp;Deployments Spreadsheet&nbsp;&nbsp;</td>
-                            <td><input type="file" class="btn btn-default btn-xs" name="file" id="file1" /></td>
-                        </tr>
-
-                        <tr class="toggle-content" id="projects_toggle" project-select></tr>
-
-                        <tr>
-                            <td align="right">Upload&nbsp;&nbsp;</td>
-                            <td style="font-size:11px;" colspan=2>
-                                <span ng-show="!vm.isAuthenticated">
-                                    <input ng-show="!vm.isAuthenticated" type="checkbox" disabled="disabled" /> (login to upload)
-                                </span>
-                                <input ng-show="vm.isAuthenticated" type="checkbox" id="upload" name="upload" />
-                            </td>
-                        </tr>
+            <!-- Validation Tab -->
+            <uib-tab index="0" heading="Validate">
+                <form role="form" name="validateForm" class="form-horizontal"
+                      ng-submit="vm.fimsMetadata && vm.validate()">
 
 
-                        <tr class="toggle-content-upload toggle-content" id="expeditionCode_toggle">
-                            <!--Arms Project is equivalent to biocode Expeditions-->
-                            <td align="right">Arms Project&nbsp;&nbsp;</td>
-                            <td colspan=2>
-                                <select id="expeditionCode" name="expeditionCode" ng-model="vm.expeditionCode" ng-change="vm.updateIsPublicExpedition" style="width:300px">
-                                    <option value="0">Select a project</option>
-                                    <option ng-repeat="armsExpedition in vm.armsExpeditions"
-                                            value="{{ armsExpedition.expedition.expeditionCode}}">
-                                        {{ armsExpedition.expedition.expeditionTitle }}
-                                    </option>
-                                </select>
-                                <button type="button" class="btn btn-default" ng-click="vm.createExpedition()">New Project</button>
-                            </td>
-                        </tr>
+                    <fims-data ng-model="vm.fimsMetadata" change="vm.fimsMetadataChange()"></fims-data>
+                    <div class="form-group">
+                        <div class="col-xs-1 col-xs-offset-9">
+                            <button type="submit" class="btn btn-default pull-right">Validate</button>
+                        </div>
+                    </div>
+                </form>
+            </uib-tab>
 
-                        <tr>
-                            <td></td>
-                            <td><input type="hidden" value="{{ vm.projectId }}" name="projectId" id="project"></td>
-                            <td><input type="button" id="validationSubmit" value="Submit" class="btn btn-default btn-xs"></td>
-                        </tr>
-                    </table>
+            <!-- Upload Tab -->
+            <uib-tab index="1" heading="Upload" disable="!vm.isAuthenticated">
+
+                <form role="form" name="vm.uploadForm" class="form-horizontal" novalidate ng-submit="vm.upload()">
+
+                    <fims-data ng-model="vm.fimsMetadata"
+                               is-required="true"
+                               change="vm.fimsMetadataChange()"></fims-data>
+
+                    <hr class="separator"/>
+
+                    <div class="form-group" show-errors>
+                        <label for="expeditionCode" class="col-xs-3 control-label">ARMS Project</label>
+                        <div class="col-xs-7">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <select id="expeditionCode" name="expeditionCode"
+                                            ng-model="vm.expeditionCode"
+                                            ng-options="armsProject.expedition.expeditionCode as armsProject.expedition.expeditionTitle for armsProject in vm.expeditions | orderBy: 'expedition.expeditionTitle'"
+                                            required
+                                            class="form-control">
+                                        <option value="">-- Select an Project--</option>
+                                    </select>
+                                </div>
+                                <div class="col-xs-3">
+                                    <button type="button" class="btn btn-default pull-right" ng-click="vm.createExpedition()">New
+                                        Project
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-1 col-xs-offset-9">
+                            <button type="submit" class="btn btn-primary pull-right">Upload</button>
+                        </div>
+                    </div>
+
+                </form>
+            </uib-tab>
+
+            <!-- Results Tab -->
+            <uib-tab index="2" heading="Results" disable="!vm.displayResults">
+                <div class="col-xs-11 col-xs-offset-1"
+                     ng-include="'app/components/validation/results/results.tpl.html'">
                 </div>
-            </form>
-        </div>
+            </uib-tab>
+        </uib-tabset>
 
-        <div id=resultsContainer class="col-sm-12" style='overflow:auto; display:none;'></div>
 
-        <div id='map' style="height:400px;width:600px;"></div>
+        <div id='map'></div>
     </div>
 </div>

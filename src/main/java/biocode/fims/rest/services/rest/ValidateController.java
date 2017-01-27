@@ -56,8 +56,8 @@ public class ValidateController extends FimsService {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public JSONObject validate(@FormDataParam("projectId") Integer projectId,
                                @FormDataParam("expeditionCode") String expeditionCode,
-                               @FormDataParam("upload") String upload,
-                               @FormDataParam("public_status") String publicStatus,
+                               @FormDataParam("public") @DefaultValue("false") boolean isPublic,
+                               @FormDataParam("upload") @DefaultValue("false") boolean upload,
                                @FormDataParam("fimsMetadata") FormDataBodyPart fimsMetadata) {
         Map<String, Map<String, Object>> fmProps = new HashMap<>();
         JSONObject returnValue = new JSONObject();
@@ -101,7 +101,7 @@ public class ValidateController extends FimsService {
 
             processController.setProcess(process);
 
-            if (process.validate() && StringUtils.equalsIgnoreCase(upload, "on")) {
+            if (process.validate() && upload) {
                 if (userContext.getUser() == null) {
                     throw new UnauthorizedRequestException("You must be logged in to upload.");
                 }
@@ -109,9 +109,7 @@ public class ValidateController extends FimsService {
                 processController.setUserId(userContext.getUser().getUserId());
 
                 // set public status to true in processController if user wants it on
-                if (StringUtils.equalsIgnoreCase(publicStatus, "on")) {
-                    processController.setPublicStatus(true);
-                }
+                processController.setPublicStatus(isPublic);
 
                 // if there were validation warnings and user would like to upload, we need to ask the user to continue
                 if (processController.getHasWarnings()) {
