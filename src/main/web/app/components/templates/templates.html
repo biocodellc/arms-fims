@@ -1,57 +1,55 @@
-<div id="template" class="section">
-<div class="sectioncontent">
+<div class="row">
+    <h3 class="page-header">Generate Template</h3>
 
-<h2>Generate Template</h2>
-
-        <form class="form-horizontal">
-            <input type="hidden" value="{{ vm.projectId }}" id="project">
-
+    <div class="col-sm-offset-3 col-sm-6" id="template-form">
+        <form class="form">
             <div class="form-group">
-                <label for="configs" class="col-sm-3 col-md-3 control-label">Choose Template Config:</label>
-                <div class="input-group col-sm-10 col-md-4">
-                    <select class="form-control" id="configs" onChange="updateCheckedBoxes();">
-                        <option value="0">Default</option>
+                <div ng-class="{'input-group': templateVm.showRemoveConfig()}">
+                    <select class="form-control" id="configs" ng-model="templateVm.config"
+                            ng-change="templateVm.updateCheckedBoxes()"
+                            ng-options="config for config in templateVm.configs">
                     </select>
-                    <div class="input-group-btn">
-                        <button class="btn btn-primary hidden" id="removeConfig">Remove</button>
+                    <span class="input-group-btn" ng-show="templateVm.showRemoveConfig()">
+                        <button class="btn btn-danger"
+                                ng-click="templateVm.removeConfig()" id="removeConfig">Remove</button>
+                    </span>
+                    <div class="col-sm-12 alert alert-error alert-dismissable" role="alert" ng-show="templateVm.error">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                        <strong>Error!</strong> {{ templateVm.error }}
                     </div>
                 </div>
             </div>
         </form>
+    </div>
+
+</div>
+
+<div class="row col-sm-12">
 
     <div id="templateInfo" style='min-height:200px;'>
 
-        <div style="width: 45%; float:left;border-right: 1px solid gray; ">
-
+        <div class="col-xs-6">
             <h2>Available Columns</h2>
 
             <p>Check available column headings to include in your customized FIMS
                 spreadsheet.</p>
-
             <div id="cat1"></div>
 
+            <button type='button' id='excel_button' class="btn btn-primary">Export Excel</button>
         </div>
 
-
-        <div style="width: 45%; float:left;margin-left:5px;">
-
+        <div class="col-xs-6">
             <div id='abstract'></div>
 
-            <h2>Definition</h2>
+            <h3>Definition</h3>
 
-            <p>Click on the "DEF" link next to any of the headings to see its definition in this pane.</p>
+            <p>Click on "DEF" next to any of the headings to see the definition of the term.</p>
 
             <div id='definition'></div>
         </div>
 
     </div>
 
-    <div style="clear:both;"></div>
-
-    <p>
-
-    <button type='button' id='excel_button' class="btn btn-default">Export Excel</button>
-
-
-</div>
 </div>

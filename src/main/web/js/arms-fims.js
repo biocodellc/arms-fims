@@ -494,18 +494,6 @@ function getProfileEditor(username) {
 
 /* ====== templates.html Functions ======= */
 
-function showTemplateInfo() {
-    if ($('#abstract').is(':hidden')) {
-        $('#abstract').show(400);
-    }
-    if ($('#definition').is(':hidden')) {
-        $('#definition').show(400);
-    }
-    if ($('#cat1').is(':hidden')) {
-        $('#cat1').show(400);
-    }
-}
-
 function populate_bottom() {
     var selected = new Array();
     var listElement = document.createElement("ul");
@@ -549,8 +537,7 @@ function populateDefinitions(column) {
         });
 }
 
-function populateColumns(targetDivId) {
-    var projectId = getProjectID();
+function populateColumns(targetDivId, projectId) {
 
     if (projectId != 0) {
         theUrl = armsFimsRestRoot + "projects/" + projectId + "/attributes/";
@@ -575,10 +562,8 @@ function populateColumns(targetDivId) {
     }
 }
 
-function populateAbstract(targetDivId) {
+function populateAbstract(targetDivId, projectId) {
     $(targetDivId).html("Loading ...");
-
-    var projectId = getProjectID();
 
     theUrl = armsFimsRestRoot + "projects/" + projectId + "/abstract/";
 
@@ -595,98 +580,6 @@ function populateAbstract(targetDivId) {
             showMessage("Error completing request!");
         }
     });
-}
-
-var savedConfig;
-function saveTemplateConfig() {
-    var message = "<table><tr><td>Configuration Name:</td><td><input type='text' name='configName' /></td></tr></table>";
-    var title = "Save Template Generator Configuration";
-    var buttons = {
-        "Save": function () {
-            var checked = [];
-            var configName = $("input[name='configName']").val();
-
-            if (configName.toUpperCase() == "Default".toUpperCase()) {
-                $("#dialogContainer").addClass("error");
-                dialog("Talk to the project admin to change the default configuration.<br><br>" + message, title, buttons);
-                return;
-            }
-
-            $("#cat1 input[type='checkbox']:checked").each(function () {
-                checked.push($(this).data().uri);
-            });
-
-            savedConfig = configName;
-            $.post(armsFimsRestRoot + "projects/" + $("#project").val() + "/saveTemplateConfig", $.param(
-                {
-                    "configName": configName,
-                    "checkedOptions": checked,
-                    "projectId": $("#project").val()
-                }, true)
-            ).done(function (data) {
-                if (data.error != null) {
-                    $("#dialogContainer").addClass("error");
-                    var m = data.error + "<br><br>" + message;
-                    dialog(m, title, buttons);
-                } else {
-                    $("#dialogContainer").removeClass("error");
-                    populateConfigs();
-                    var b = {
-                        "Ok": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                    dialog(data.success + "<br><br>", "Success!", b);
-                }
-            }).fail(function (jqXHR) {
-                failError(jqXHR);
-            });
-        },
-        "Cancel": function () {
-            $("#dialogContainer").removeClass("error");
-            $(this).dialog("close");
-        }
-    }
-
-    dialog(message, title, buttons);
-}
-
-function populateConfigs() {
-    var projectId = $("#project").val();
-    if (projectId == 0) {
-        $("#configs").html("<option value=0>Select a Project</option>");
-    } else {
-        var el = $("#configs");
-        el.empty();
-        el.append($("<option></option>").attr("value", 0).text("Loading configs..."));
-        var jqxhr = $.getJSON(armsFimsRestRoot + "projects/" + projectId + "/getTemplateConfigs").done(function (data) {
-            var listItems = "";
-
-            el.empty();
-            data.forEach(function (configName) {
-                el.append($("<option></option>").attr("value", configName).text(configName));
-            });
-
-            if (savedConfig != null) {
-                $("#configs").val(savedConfig);
-            }
-
-            // if there are more then the default config, show the remove link
-            if (data.length > 1) {
-                $("#removeConfig").removeClass("hidden");
-                $("#removeConfig").click(removeConfig);
-            } else {
-                $("#removeConfig").addClass("hidden");
-            }
-
-        }).fail(function (jqXHR, textStatus) {
-            if (textStatus == "timeout") {
-                showMessage("Timed out waiting for response! Try again later or reduce the number of graphs you are querying. If the problem persists, contact the System Administrator.");
-            } else {
-                showMessage("Error fetching template configurations!");
-            }
-        });
-    }
 }
 
 function updateCheckedBoxes() {
@@ -715,51 +608,6 @@ function updateCheckedBoxes() {
             }
         });
     }
-}
-
-function removeConfig() {
-    var configName = $("#configs").val();
-    if (configName == "Default") {
-        var buttons = {
-            "Ok": function () {
-                $(this).dialog("close");
-            }
-        }
-        dialog("You can not remove the Default configuration", title, buttons);
-        return;
-    }
-
-    var message = "Are you sure you want to remove " + configName + " configuration?";
-    var title = "Warning";
-    var buttons = {
-        "OK": function () {
-            var buttons = {
-                "Ok": function () {
-                    $(this).dialog("close");
-                }
-            }
-            var title = "Remove Template Generator Configuration";
-
-            $.getJSON(armsFimsRestRoot + "projects/" + $("#project").val() + "/removeTemplateConfig/" + configName.replace("/\//g", "%2F")).done(function (data) {
-                if (data.error != null) {
-                    showMessage(data.error);
-                    return;
-                }
-
-                savedConfig = null;
-                populateConfigs();
-                dialog(data.success, title, buttons);
-            }).fail(function (jqXHR) {
-                failError(jqXHR);
-            });
-        },
-        "Cancel": function () {
-            $("#dialogContainer").removeClass("error");
-            $(this).dialog("close");
-        }
-    }
-
-    dialog(message, title, buttons);
 }
 
 /* ====== validation.html Functions ======= */
