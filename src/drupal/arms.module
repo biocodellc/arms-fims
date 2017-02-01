@@ -31,3 +31,10 @@ function arms_theme($existing, $type, $theme, $path) {
 function arms_page_attachments(array &$attachments) {
   $attachments['#attached']['library'][] = 'arms/redirect-command';
 }
+
+/**
+ * Implements hook_editor_js_settings_alter().
+ */
+function arms_editor_js_settings_alter(array &$settings) {
+  $t = $settings;
+}

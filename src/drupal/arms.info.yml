@@ -8,3 +8,7 @@ core: 8.x
 dependencies:
 
 hidden: false
+
+libraries-extend:
+  core/drupal.ckeditor:
+    - arms/ckeditor.templates

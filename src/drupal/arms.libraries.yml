@@ -51,3 +51,8 @@ search:
     js/search/search.module.js: {}
   dependencies:
     - arms/angularjs
+
+
+ckeditor.templates:
+  js:
+    js/templates.js: {}

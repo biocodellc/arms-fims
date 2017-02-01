@@ -24,3 +24,7 @@ libraries:
   - 'arms_theme/global-styling'
   - 'arms_theme/bootstrap-scripts'
 
+ckeditor_stylesheets:
+  - css/style.css
+  - css/ckEditor.css
+
