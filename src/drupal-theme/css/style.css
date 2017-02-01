@@ -6616,6 +6616,12 @@ p:last-child,
 
 .figure {
   display: inline-block; }
+  .figure.align-center {
+    width: 100%; }
+    .figure.align-center img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; }
 
 .caption {
   width: 100%; }
@@ -6671,6 +6677,28 @@ p:last-child,
 
 form hr {
   margin: 15px 0; }
+
+.illustrations {
+  padding-top: 15px; }
+
+@media screen and (max-width: 767px) {
+  .illustrations img {
+    float: none !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 15px; } }
+@media screen and (min-width: 768px) {
+  .illustrations {
+    display: table;
+    width: 100%; }
+
+  .illustrations [class*="col-"] {
+    float: none;
+    display: table-cell;
+    vertical-align: top; } }
+.illustration-caption {
+  vertical-align: middle !important; }
 
 .search-map {
   margin-left: -40px;

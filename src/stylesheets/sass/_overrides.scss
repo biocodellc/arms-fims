@@ -202,6 +202,16 @@ p:last-child,
 
 .figure {
   display: inline-block;
+
+  &.align-center {
+    width: 100%;
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 }
 
 .caption {
@@ -225,6 +235,7 @@ p:last-child,
 .pw-strong .label {
   color: #3c761e;
 }
+
 // Buttons ============================================
 .btn {
   @include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base * .8, $btn-border-radius-base);
@@ -287,6 +298,40 @@ form {
   }
 }
 
+//== drupal protocols page content type
+.illustrations {
+  padding-top: 15px;
+}
+
+@media #{$mobile} {
+  .illustrations {
+    img {
+      float: none !important;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 15px;
+    }
+  }
+}
+
+@media #{$tablet} {
+  .illustrations {
+    display: table;
+    width: 100%;
+  }
+
+  .illustrations [class*="col-"] {
+    float: none;
+    display: table-cell;
+    vertical-align: top;
+  }
+}
+
+.illustration-caption {
+  vertical-align: middle !important;
+}
+
 //== search projects
 .search-map {
   margin-left: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
@@ -340,12 +385,12 @@ form {
 
 // can be removed after expedition manager refactor
 div.toggle-content {
-  display:none;
+  display: none;
   margin: 0px 20px;
 }
 
 .img-arrow {
-  vertical-align:middle;
-  height:20px;
-  border:none;
+  vertical-align: middle;
+  height: 20px;
+  border: none;
 }

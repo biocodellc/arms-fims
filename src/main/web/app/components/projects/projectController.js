@@ -21,21 +21,6 @@ angular.module('fims.projects')
                 getProjects();
             }).call(this);
 
-            angular.element(document).ready(function () {
-                // populateProjectPage(UserFactory.user.username);
-
-                fimsBrowserCheck($('#warning'));
-
-                $(document).ajaxStop(function () {
-                    if ($(".pwcheck").length > 0) {
-                        $(".pwcheck").pwstrength({
-                            texts: ['weak', 'good', 'good', 'strong', 'strong'],
-                            classes: ['pw-weak', 'pw-good', 'pw-good', 'pw-strong', 'pw-strong']
-                        });
-                    }
-                });
-            });
-
         }])
 
     .controller('ProjectManagerProjectCtrl', ['$scope', '$uibModal', 'UserFactory', 'ProjectFactory', 'ExpeditionFactory',
@@ -56,6 +41,8 @@ angular.module('fims.projects')
             vm.members = [];
             vm.updateProject = updateProject;
             vm.setProject = setProject;
+            vm.editExpedition = editExpedition;
+            vm.deleteExpedition = deleteExpedition;
             vm.updateExpeditions = updateExpeditions;
             vm.updateModifiedExpeditions = updateModifiedExpeditions;
             vm.removeMember = removeMember;
@@ -144,6 +131,60 @@ angular.module('fims.projects')
                 vm.project = project;
                 getExpeditions();
                 getMembers();
+            }
+
+            function editExpedition(expedition) {
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'app/components/expeditions/editExpeditionModal.tpl.html',
+                    size: 'md',
+                    controller: 'EditExpeditionModalCtrl',
+                    controllerAs: 'vm',
+                    windowClass: 'app-modal-window',
+                    backdrop: 'static',
+                    resolve: {
+                        expedition: function () {
+                            return expedition;
+                        }
+                    }
+                });
+
+            }
+
+            function deleteExpedition(expeditionCode) {
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'app/components/expeditions/deleteExpeditionConformationModal.tpl.html',
+                    size: 'md',
+                    controller: 'DeleteExpeditionConformationModalCtrl',
+                    controllerAs: 'vm',
+                    windowClass: 'app-modal-window',
+                    backdrop: 'static',
+                    resolve: {
+                        expeditionCode: function () {
+                            return expeditionCode;
+                        }
+                    }
+                });
+
+                modalInstance.result
+                    .then(
+                        function () {
+                            _deleteExpedition(expeditionCode);
+                        }, function () {
+                            // if here, the user canceled
+                        }
+                    )
+            }
+
+            function _deleteExpedition(expeditionCode) {
+                ExpeditionFactory.deleteExpedition(expeditionCode)
+                    .then(
+                        function () {
+                            vm.messages.success.expeditions= "Successfully deleted expedition";
+                            getExpeditions();
+                        }, function (response) {
+                            vm.messages.error.expeditions = response.data.error || response.data.usrMessage || "Server Error!";
+                        }
+                    )
             }
 
             function updateExpeditions() {

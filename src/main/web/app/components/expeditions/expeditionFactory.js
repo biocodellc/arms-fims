@@ -8,6 +8,8 @@ angular.module('fims.expeditions')
                 getExpedition: getExpedition,
                 getExpeditionsForAdmin: getExpeditionsForAdmin,
                 updateExpeditions: updateExpeditions,
+                updateExpedition: updateExpedition,
+                deleteExpedition: deleteExpedition,
                 createArmsExpedition: createArmsExpedition,
                 getArmsExpeditions: getArmsExpeditions
             };
@@ -33,6 +35,10 @@ angular.module('fims.expeditions')
                 return $http.get(REST_ROOT + 'projects/' + PROJECT_ID + '/expeditions/' + expeditionCode);
             }
 
+            function deleteExpedition(expeditionCode) {
+                return $http.delete(REST_ROOT + 'projects/' + PROJECT_ID + '/expeditions/' + expeditionCode);
+            }
+
             function createArmsExpedition(armsExpedition) {
                 return $http.post(REST_ROOT + 'arms/projects', armsExpedition);
             }
@@ -46,6 +52,15 @@ angular.module('fims.expeditions')
                     method: 'PUT',
                     url: REST_ROOT + 'projects/' + projectId + "/expeditions",
                     data: expeditions,
+                    keepJson: true
+                });
+            }
+
+            function updateExpedition(projectId, expedition) {
+                return $http({
+                    method: 'PUT',
+                    url: REST_ROOT + 'projects/' + projectId + "/expeditions/" + expedition.expeditionCode,
+                    data: expedition,
                     keepJson: true
                 });
             }

@@ -10,11 +10,12 @@ import biocode.fims.fileManagers.fimsMetadata.FimsMetadataPersistenceManager;
 import biocode.fims.reader.CsvJsonConverter;
 import biocode.fims.renderers.Message;
 import biocode.fims.renderers.RowMessage;
+import biocode.fims.rest.SpringObjectMapper;
 import biocode.fims.run.ProcessController;
 import biocode.fims.service.ExpeditionService;
 import biocode.fims.settings.SettingsManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.JSONArray;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class MysqlFimsMetadataPersistenceManager extends AbstractFimsMetadataPer
     private final ExpeditionService expeditionService;
     private final DeploymentService deploymentService;
 
-    private JSONArray fimsMetadata;
+    private ArrayNode fimsMetadata;
 
     @Autowired
     public MysqlFimsMetadataPersistenceManager(ExpeditionService expeditionService, DeploymentService deploymentService,
@@ -39,7 +40,7 @@ public class MysqlFimsMetadataPersistenceManager extends AbstractFimsMetadataPer
     }
 
     @Override
-    public void upload(ProcessController processController, JSONArray fimsMetadata, String filename) {
+    public void upload(ProcessController processController, ArrayNode fimsMetadata, String filename) {
         this.fimsMetadata = fimsMetadata;
         List<String> acceptableColumnsInternal = new LinkedList<>();
         List<Attribute> attributes = processController.getMapping().getAllAttributes(processController.getMapping().getDefaultSheetName());
@@ -98,9 +99,10 @@ public class MysqlFimsMetadataPersistenceManager extends AbstractFimsMetadataPer
     }
 
     @Override
-    public JSONArray getDataset(ProcessController processController) {
+    public ArrayNode getDataset(ProcessController processController) {
         if (fimsMetadata == null) {
-            JSONArray dataset = new JSONArray();
+            ObjectMapper objectMapper = new SpringObjectMapper();
+            ArrayNode dataset = objectMapper.createArrayNode();
 
             Expedition expedition = expeditionService.getExpedition(
                     processController.getExpeditionCode(),
@@ -110,15 +112,24 @@ public class MysqlFimsMetadataPersistenceManager extends AbstractFimsMetadataPer
             if (expedition != null) {
                 List<Deployment> deploymentsList = deploymentService.findAll(expedition.getExpeditionId());
 
-                ObjectMapper mapper = new ObjectMapper();
-                for (Deployment d: deploymentsList) {
-                    dataset.add(mapper.valueToTree(d));
-                }
+                dataset.addAll((ArrayNode) objectMapper.valueToTree(deploymentsList));
             }
 
             fimsMetadata = dataset;
         }
 
         return fimsMetadata;
+    }
+
+    @Override
+    public void deleteDataset(ProcessController processController) {
+        Expedition expedition = expeditionService.getExpedition(
+                processController.getExpeditionCode(),
+                processController.getProjectId()
+        );
+
+        if (expedition != null) {
+            deploymentService.deleteAll(expedition.getExpeditionId());
+        }
     }
 }

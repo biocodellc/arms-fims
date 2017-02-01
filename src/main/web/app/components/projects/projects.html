@@ -109,6 +109,10 @@
                                                        ng-click="pmProjectVm.updateModifiedExpeditions(expedition)"
                                                        ng-disabled="!pmProjectVm.editExpeditions">
                                             </td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-xs" ng-click="pmProjectVm.editExpedition(expedition)">Edit</button>
+                                                <button type="button" class="btn btn-danger btn-xs" ng-click="pmProjectVm.deleteExpedition(expedition.expeditionCode)">Delete</button>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
