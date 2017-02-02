@@ -1,6 +1,7 @@
 package biocode.fims.rest.services.rest;
 
 import biocode.fims.config.ConfigurationFileFetcher;
+import biocode.fims.entities.Project;
 import biocode.fims.fileManagers.AuxilaryFileManager;
 import biocode.fims.fileManagers.fimsMetadata.FimsMetadataFileManager;
 import biocode.fims.fimsExceptions.*;
@@ -34,13 +35,15 @@ public class ValidateController extends FimsService {
     private final ExpeditionService expeditionService;
     private final List<AuxilaryFileManager> fileManagers;
     private final FimsMetadataFileManager fimsMetadataFileManager;
+    private final ProjectService projectService;
 
     ValidateController(ExpeditionService expeditionService, FimsMetadataFileManager fimsMetadataFileManager,
-                       List<AuxilaryFileManager> fileManagers, SettingsManager settingsManager) {
+                       List<AuxilaryFileManager> fileManagers, SettingsManager settingsManager, ProjectService projectService) {
         super(settingsManager);
         this.expeditionService = expeditionService;
         this.fimsMetadataFileManager = fimsMetadataFileManager;
         this.fileManagers = fileManagers;
+        this.projectService = projectService;
     }
 
     /**
@@ -63,6 +66,12 @@ public class ValidateController extends FimsService {
         JSONObject returnValue = new JSONObject();
         boolean closeProcess = true;
         boolean removeController = true;
+
+        Project project = projectService.getProject(projectId, appRoot);
+
+        if (project == null) {
+            throw new BadRequestException("Project not found");
+        }
 
         // create a new processController
         ProcessController processController = new ProcessController(projectId, expeditionCode);
