@@ -62,10 +62,22 @@ body {
 
   &-collapse,
   &-nav {
+    padding-left: 0px;
+    padding-right: 0px;
     clear: left;
+    background-color: #1D317A;
+
+    border: 1px solid #1D317A;
 
     .navbar-right {
       clear: none;
+    }
+
+    // Uncollapse the nav
+    @media (min-width: $grid-float-breakpoint) {
+      > li {
+        float: none;
+      }
     }
   }
 
@@ -76,6 +88,8 @@ body {
 
   &-header {
     padding-top: $navbar-padding-vertical;
+    padding-bottom: $navbar-padding-vertical;
+    //margin-bottom: $navbar-margin-bottom;
   }
 
   &-brand {
@@ -87,7 +101,7 @@ body {
       a {
         padding: 9px 15px;
         @media #{$normal} {
-          padding: 25px 15px;
+          padding: 15px 5px;
         }
       }
     }
@@ -120,18 +134,56 @@ body {
         }
       }
     }
+
+    // Justified nav links
+    // -------------------------
+
+    //@media #{$tablet} {
+    //.nav-justified {
+    //  width: 100%;
+    //
+    //  > li {
+    //    float: none;
+    //    > a {
+    //      text-align: center;
+    //      margin-bottom: 5px;
+    //    }
+    //  }
+    //
+    //  > .dropdown .dropdown-menu {
+    //    top: auto;
+    //    left: auto;
+    //  }
+    //}}
+
+      //@media #{$normal} {
+      //  > li {
+      //    display: table-cell;
+      //    width: 1%;
+      //    > a {
+      //      margin-bottom: 0;
+      //    }
+      //  }
+      //}
+    //}
   }
 
   .logo {
-    padding-left: ($navbar-padding-horizontal + 15px);
+    //padding-left: ($navbar-padding-horizontal + 15px);
+    //padding-top: $navbar-padding-vertical;
+    //padding-bottom: $navbar-padding-vertical;
+
+    img {
+      max-height: 100px;
+    }
   }
 
   @media #{$mobile} {
     .navbar-header {
 
       .logo {
-        width: 100%;
-        padding-left: 0;
+        //width: 100%;
+        //padding-left: 0;
 
         img {
           display: block;
@@ -139,17 +191,28 @@ body {
         }
       }
 
-      .navbar-brand {
-        width: 100%;
-        text-align: center;
-        margin: 5px;
-      }
+      //.navbar-brand {
+      //  width: 100%;
+      //  text-align: center;
+      //  margin: 5px;
+      //}
 
-      .navbar-toggle {
-        display: block;
-        margin: 3px auto 10px auto;
-        float: none;
-      }
+      //.navbar-toggle {
+      //  display: block;
+      //  margin: 3px auto 10px auto;
+      //  float: none;
+      //}
+    }
+  }
+  .navbar-toggle {
+    display: block;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+
+    @media #{$normal} {
+      display: none;
     }
   }
 }
@@ -157,5 +220,11 @@ body {
 @media #{$normal} {
   ul.nav li.dropdown:hover > ul.dropdown-menu {
     display: block;
+  }
+}
+
+.navbar-header {
+  @media (min-width: $grid-float-breakpoint) {
+    float: none;
   }
 }

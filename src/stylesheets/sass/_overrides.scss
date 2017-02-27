@@ -30,7 +30,7 @@ $wrapper-padding-horizontal: (40px - ($grid-gutter-width / 2));
 }
 
 body {
-  background-image: url(../images/f40171d6.png);
+  //background-image: url(../images/f40171d6.png);
   margin-top: 0px;
 }
 
@@ -163,13 +163,13 @@ p:last-child,
 
 //== featured slideshow
 #featured_slideshow {
-  margin-top: 0;
-  margin-left: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
-  margin-right: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
+  //margin-top: 0;
+  //margin-left: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
+  //margin-right: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
   margin-bottom: $navbar-margin-bottom;
 
   @media #{$normal} {
-    margin-top: -$navbar-margin-bottom;
+    //margin-top: -$navbar-margin-bottom;
   }
 
   .carousel-inner {
@@ -188,9 +188,9 @@ p:last-child,
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #f2f2f4;
-      box-shadow: inset 0px 11px 8px -10px #CCC,
-      inset 0px -11px 8px -10px #CCC;
+      //background-color: #f2f2f4;
+      //box-shadow: inset 0px 11px 8px -10px #CCC,
+      //inset 0px -11px 8px -10px #CCC;
 
       img {
         margin: auto;

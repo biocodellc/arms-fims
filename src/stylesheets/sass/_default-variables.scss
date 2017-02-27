@@ -44,7 +44,8 @@ $brand-danger:          #c12424 !default;
 //** Background color for `<body>`.
 $body-bg:               #fff !default;
 //** Global text color on `<body>`.
-$text-color:            $gray-dark !default;
+//$text-color:            $gray-dark !default;
+$text-color:            #142255 !default;
 
 //** Global textual link color.
 $link-color:            $brand-primary !default;
@@ -58,11 +59,12 @@ $link-hover-decoration: underline !default;
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-$font-family-sans-serif:  "News Cycle", "Arial Narrow Bold", sans-serif !default;
+$font-family-sans-serif:  Assistant, "News Cycle", "Arial Narrow Bold", sans-serif !default;
 $font-family-serif:       Georgia, "Times New Roman", Times, serif !default;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace !default;
-$font-family-base:        $font-family-serif !default;
+//$font-family-base:        $font-family-serif !default;
+$font-family-base:        $font-family-sans-serif !default;
 
 $font-size-base:          15px !default;
 $font-size-large:         ceil(($font-size-base * 1.25)) !default; // ~18px
@@ -375,7 +377,7 @@ $container-lg:                 $container-large-desktop !default;
 //##
 
 // Basics of a navbar
-$navbar-height:                    40px !default;
+$navbar-height:                    54px !default;
 $navbar-margin-bottom:             ceil($line-height-computed * .75) !default;
 $navbar-border-radius:             $border-radius-base !default;
 $navbar-padding-horizontal:        floor(($grid-gutter-width / 2)) !default;
@@ -387,8 +389,10 @@ $navbar-default-bg:                rgba(255, 255, 255, 0) !default;
 $navbar-default-border:            darken($navbar-default-bg, 6.5%) !default;
 
 // Navbar links
-$navbar-default-link-color:                #000 !default;
+$navbar-default-link-color:                #fff !default;
+//$navbar-default-link-color:                #000 !default;
 $navbar-default-link-hover-color:          #2e5077 !default;
+$navbar-default-link-hover-bg:             #fff !default;
 $navbar-default-link-hover-bg:             #fff !default;
 $navbar-default-link-active-color:         #2e5077 !default;
 $navbar-default-link-active-bg:            #fff !default;
