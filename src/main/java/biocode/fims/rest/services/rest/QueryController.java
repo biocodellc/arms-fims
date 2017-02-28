@@ -50,7 +50,7 @@ public class QueryController extends FimsService {
         int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
         List<Deployment> deployments = (List<Deployment>) deploymentService.query(query);
 
-        File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
+        File configFile = new ConfigurationFileFetcher(projectId, defaultOutputDirectory(), false).getOutputFile();
         Mapping mapping = new Mapping();
         mapping.addMappingRules(configFile);
 
@@ -58,7 +58,7 @@ public class QueryController extends FimsService {
 
         DeploymentsWriter deploymentsWriter = new DeploymentsWriter(
                 deployments,
-                uploadPath(),
+                defaultOutputDirectory(),
                 mapping.getAllAttributes(defaultSheetName),
                 defaultSheetName);
 
@@ -76,7 +76,7 @@ public class QueryController extends FimsService {
         int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
         List<Deployment> deployments = (List<Deployment>) deploymentService.query(query);
 
-        File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
+        File configFile = new ConfigurationFileFetcher(projectId, defaultOutputDirectory(), false).getOutputFile();
         Mapping mapping = new Mapping();
         mapping.addMappingRules(configFile);
 
@@ -84,7 +84,7 @@ public class QueryController extends FimsService {
 
         DeploymentsWriter deploymentsWriter = new DeploymentsWriter(
                 deployments,
-                uploadPath(),
+                defaultOutputDirectory(),
                 BerkeleyMapperHelper.getAttributes(mapping.getAllAttributes(defaultSheetName)),
                 defaultSheetName);
 

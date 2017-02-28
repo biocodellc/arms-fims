@@ -245,12 +245,12 @@ public class ArmsExpedition {
 
         ArmsExpedition that = (ArmsExpedition) o;
 
-        return this.getExpedition().equals(that.getExpedition());
+        return getExpeditionId() == that.getExpeditionId();
     }
 
     @Override
     public int hashCode() {
-        return getExpedition().hashCode();
+        return getExpeditionId();
     }
 
     @Override

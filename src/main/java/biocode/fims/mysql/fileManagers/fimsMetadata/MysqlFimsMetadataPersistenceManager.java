@@ -80,7 +80,7 @@ public class MysqlFimsMetadataPersistenceManager extends AbstractFimsMetadataPer
         for (String col : definedColumns) {
             if (!tableColumns.contains(col)) {
                 processController.addMessage(processController.getMapping().getDefaultSheetName(),
-                        new RowMessage("database and configuration file need to be synced", "System Error", Message.ERROR));
+                        new RowMessage("database and configuration file need to be synced", "System Error", RowMessage.ERROR));
                 matches = false;
             }
         }

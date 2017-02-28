@@ -56,6 +56,15 @@ public class ArmsExpeditionService {
         expeditionService.update(armsExpedition.getExpedition());
     }
 
+    public void delete(String expeditionCode, int projectId) {
+        Expedition expedition = expeditionService.getExpedition(expeditionCode, projectId);
+
+        if (expedition != null) {
+            armsExpeditionRepository.deleteByExpeditionId(expedition.getExpeditionId());
+            expeditionService.delete(expedition.getExpeditionId());
+        }
+    }
+
     public ArmsExpedition getArmsExpedition(int armsExpeditionId) {
         Expedition expedition = expeditionService.getExpedition(armsExpeditionId);
 

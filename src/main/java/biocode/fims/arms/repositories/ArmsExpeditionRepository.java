@@ -16,7 +16,7 @@ import java.util.Set;
 public interface ArmsExpeditionRepository extends Repository<ArmsExpedition, Integer> {
 
     @Modifying
-    void delete(ArmsExpedition armsExpedition);
+    void deleteByExpeditionId(int armsExpedition);
 
     void save(ArmsExpedition armsExpedition);
 

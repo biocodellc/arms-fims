@@ -52,7 +52,7 @@ public class ArmsExpeditionController extends FimsService {
 
         int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
 
-        File configFile = new ConfigurationFileFetcher(projectId, uploadPath(), false).getOutputFile();
+        File configFile = new ConfigurationFileFetcher(projectId, defaultOutputDirectory(), false).getOutputFile();
         Mapping mapping = new Mapping();
         mapping.addMappingRules(configFile);
 
