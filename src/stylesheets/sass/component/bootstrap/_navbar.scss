@@ -65,9 +65,9 @@ body {
     padding-left: 0px;
     padding-right: 0px;
     clear: left;
-    background-color: #1D317A;
+    background-color: $navbar-nav-bg;
 
-    border: 1px solid #1D317A;
+    //border: 1px solid $navbar-nav-bg;
 
     .navbar-right {
       clear: none;
@@ -99,10 +99,7 @@ body {
   .nav {
     li {
       a {
-        padding: 9px 15px;
-        @media #{$normal} {
-          padding: 15px 5px;
-        }
+        padding: 10px 5px;
       }
     }
 
@@ -117,8 +114,8 @@ body {
 
             &:hover,
             &:focus {
-              background-color: inherit !important;
-              color: inherit !important;
+              background-color: inherit;
+              color: inherit;
             }
           }
 
@@ -126,11 +123,11 @@ body {
             padding: 3px 20px;
           }
 
-          &:hover,
-          &:focus {
-            background-color: $navbar-default-link-hover-color !important;
-            color: #fff !important;
-          }
+          //&:hover,
+          //&:focus {
+          //  background-color: $navbar-default-link-hover-color !important;
+          //  color: #fff !important;
+          //}
         }
       }
     }

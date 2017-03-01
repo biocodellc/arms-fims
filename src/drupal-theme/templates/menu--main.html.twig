@@ -35,11 +35,15 @@
       {% if menu_level == 0 and item.is_expanded %}
         <li{{ item.attributes.addClass('expanded', 'dropdown') }}>
         <a href="{{ item.url }}" class="dropdown-toggle {{ item.url['routeName'] != "<none>" ? 'disabled' }}" data-target="#" data-toggle="dropdown">{{ item.title }} <span class="caret"></span></a>
+      {% elseif menu_level == 1 and item.is_expanded %}
+        <li{{ item.attributes.addClass('dropdown-submenu') }}>
+        <a href="{{ item.url }}">{{ item.title }}</a>
       {% else %}
         <li{{ item.attributes }}>
         {{ link(item.title, item.url) }}
       {% endif %}
       {% if item.below %}
+          {#{{ dump(item) }}#}
         {{ menus.menu_links(item.below, attributes.removeClass('nav', 'navbar-nav', 'nav-justified'), menu_level + 1) }}
       {% endif %}
       </li>

@@ -46,13 +46,24 @@ app.controller('searchCtrl', ['$scope', '$filter', '$window', 'DataFactory',
         vm.getDatePickerMode = getDatePickerMode;
         vm.getPlaceholder = getPlaceholder;
         vm.getPI = getPI;
+        vm.getGeographic = getGeographic;
+
+        function getGeographic(expeditionId) {
+            for (i=0; i < vm.armsExpeditions.length; i++) {
+                if (vm.armsExpeditions[i].expeditionId == expeditionId) {
+                    return vm.armsExpeditions[i].geographicScope;
+                }
+            }
+
+            return "";
+        }
 
         function getPI(expeditionId) {
-            angular.forEach(vm.armsExpeditions, function(expedition) {
-                if (expedition.expeditionId == expeditionId) {
-                    return expedition.principalInvestigator;
+            for (i=0; i < vm.armsExpeditions.length; i++) {
+                if (vm.armsExpeditions[i].expeditionId == expeditionId) {
+                    return vm.armsExpeditions[i].principalInvestigator;
                 }
-            })
+            }
 
             return "";
         }
@@ -116,13 +127,12 @@ app.controller('searchCtrl', ['$scope', '$filter', '$window', 'DataFactory',
                     });
         }
 
-        function formatDateTime(column, dateTime) {
-            var value = "N/A";
+        function formatDateTime(column, dateTime, value) {
 
             if (dateTime) {
                 angular.forEach(vm.filterOptions.attributes, function (attribute, index) {
                     if (attribute.column == column) {
-                        value = $filter('date')(dateTime, getDateFormat(index));
+                        value = $filter('date')(Date.parse(dateTime), getDateFormat(index));
                     }
                 });
             }

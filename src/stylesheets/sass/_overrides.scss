@@ -53,10 +53,6 @@ ol, ul {
 
 }
 
-.navbar-brand {
-  font-family: 'walkway_semiboldregular';
-}
-
 .page-header {
   display: none;
 }
@@ -123,6 +119,55 @@ p:last-child,
   box-sizing: border-box;
 }
 
+.dropdown-menu {
+  min-width: 190px;
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+  top: 0 !important;
+  left: 100% !important;
+  margin-top: -6px;
+  margin-left: -1px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: $brand-primary;
+  margin-top: 8px;
+  margin-right: -5px;
+}
+
+.dropdown-submenu:hover>a:after {
+  border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+  float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  -webkit-border-radius: 6px 0 6px 6px;
+  -moz-border-radius: 6px 0 6px 6px;
+  border-radius: 6px 0 6px 6px;
+}
+
 //== carousel
 .carousel-control {
   background: none !important;
@@ -136,28 +181,52 @@ p:last-child,
   }
 }
 
-.carousel-caption {
-  padding-bottom: 0px;
-  margin-left: auto;
-  margin-right: auto;
+// Hidden by default for smaller viewports
+.carousel-caption-wrapper {
+  position: absolute;
+  bottom: auto;
+  z-index: 9;
+  width: 100%;
 
-  > p {
-    margin: 0;
-  }
-
-  @media #{$mobile} {
-    font-size: $font-size-small;
-  }
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,0a0809+20,0a0e0a+80,000000+100&0+0,0.8+20,0.8+80,0+100 */
+  background: -moz-linear-gradient(left, rgba(0, 0, 0, 0) 0%, rgba(10, 8, 9, 0.8) 20%, rgba(10, 14, 10, 0.8) 80%, rgba(0, 0, 0, 0) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0%, rgba(10, 8, 9, 0.8) 20%, rgba(10, 14, 10, 0.8) 80%, rgba(0, 0, 0, 0) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(10, 8, 9, 0.8) 20%, rgba(10, 14, 10, 0.8) 80%, rgba(0, 0, 0, 0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#00000000', GradientType=1); /* IE6-9 */
 
   @media #{$tablet} {
-    padding-bottom: 10px;
+    bottom: 10px;
   }
-}
 
-.carousel-copyright {
-  font-size: $font-size-xsmall;
-  @media #{$tablet} {
-    font-size: $font-size-small;
+  > .carousel-caption {
+    position: relative;
+    width: 80%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-bottom: 0px;
+    margin-left: auto;
+    margin-right: auto;
+
+    > p {
+      margin: 0;
+    }
+
+    @media #{$mobile} {
+      font-size: $font-size-small;
+    }
+
+    @media #{$tablet} {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+
+  .carousel-copyright {
+    font-size: $font-size-xsmall;
+    @media #{$tablet} {
+      font-size: $font-size-small;
+    }
   }
 }
 
@@ -220,6 +289,35 @@ p:last-child,
 
 .caption {
   width: 100%;
+}
+
+//== overview item
+.overview-item {
+  margin-bottom: 15px;
+}
+
+.overview-item-img {
+  position: relative;
+}
+
+.overview-item-title {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: $font-size-h3;
+  color: #fff;
+
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#aebcbf+0,000000+51,0a0809+100&0+0,0.75+50,1+100 */
+  background: -moz-linear-gradient(top, rgba(174,188,191,0) 0%, rgba(3,4,4,0.75) 50%, rgba(0,0,0,0.76) 51%, rgba(10,8,9,1) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, rgba(174,188,191,0) 0%,rgba(3,4,4,0.75) 50%,rgba(0,0,0,0.76) 51%,rgba(10,8,9,1) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, rgba(174,188,191,0) 0%,rgba(3,4,4,0.75) 50%,rgba(0,0,0,0.76) 51%,rgba(10,8,9,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00aebcbf', endColorstr='#0a0809',GradientType=0 ); /* IE6-9 */
+}
+
+.overview-item-description {
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 //== pwindicator
@@ -302,7 +400,31 @@ form {
   }
 }
 
+//== drupal videos
+.video-embed-field-responsive-video {
+  max-width: $container-desktop * .67;
+  margin: 30px auto;
+}
+
 //== drupal protocols page content type
+
+.protocols-title {
+  padding: 5px 0;
+  border-bottom: 1px solid #A1A6BB;
+  border-top: 1px solid #A1A6BB;
+  color: $brand-primary;
+}
+
+//.key-points > *,
+.key-points {
+  background-color: #FDEADA;
+  color: #142255;
+  padding: 15px;
+  margin-bottom: $line-height-computed;
+  border: 1px solid darken(#FDEADA, 6.5%);
+  border-radius: 4px;
+}
+
 .illustrations {
   padding-top: 15px;
 }
@@ -338,8 +460,8 @@ form {
 
 //== search projects
 .search-map {
-  margin-left: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
-  margin-right: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
+  //margin-left: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
+  //margin-right: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
   margin-bottom: $navbar-margin-bottom;
   margin-top: 0;
 

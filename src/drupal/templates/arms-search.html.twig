@@ -124,13 +124,12 @@
             <table class="table table-condensed sortable">
                 <thead>
                 <th>Deployment Event ID</th>
-                <th data-dateformat>Estimated Deployment Date</th>
-                <th data-dateformat>Estimated Retrieval Date</th>
                 <th data-dateformat>Actual Deployment Date</th>
                 <th data-dateformat>Actual Retrieval Date</th>
                 <th>Lat/Lng</th>
                 <th>Depth</th>
-                <th>Habitat Type:</th>
+                <th>Habitat Type</th>
+                <th>Geographic</th>
                 <th>PI</th>
                 </thead>
                 <tbody>
@@ -139,13 +138,12 @@
                            data-deployment-id="{{ '{{ deployment.deploymentId }}' }}"
                            data-load-url="/deployments/{{ '{{ deployment.expeditionId }}' }}/{{ '{{ deployment.deploymentId }}' }}">{{ '{{ deployment.deploymentId }}' }}</a>
                     </td>
-                    <td>{{ '{{ vm.formatDateTime("intendedDeploymentDate", deployment.intendedDeploymentDate) }}' }}</td>
-                    <td>{{ '{{ vm.formatDateTime("intendedRecoveryDate", deployment.intendedRecoveryDate) }}' }}</td>
-                    <td>{{ '{{ vm.formatDateTime("actualDeploymentDate", deployment.actualDeploymentDate) }}' }}</td>
-                    <td>{{ '{{ vm.formatDateTime("actualRecoveryDate", deployment.actualRecoveryDate) }}' }}</td>
-                    <td>{{ '{{ deployment.decimalLatitude }}' }}/{{ '{{ deployment.decimalLongitude }}' }}</td>
+                    <td>{{ '{{ vm.formatDateTime("actualDeploymentDate", deployment.actualDeploymentDate, "N/A") }}' }}</td>
+                    <td>{{ '{{ vm.formatDateTime("actualRecoveryDate", deployment.actualRecoveryDate, "ongoing") }}' }}</td>
+                    <td>{{ '{{ deployment.decimalLatitude }}' }} / {{ '{{ deployment.decimalLongitude }}' }}</td>
                     <td>{{ '{{ deployment.depthInMeters }}' }} meters</td>
                     <td>{{ '{{ deployment.habitat }}' }}</td>
+                    <td>{{ '{{ vm.getGeographic(deployment.expeditionId) }}' }}</td>
                     <td>{{ '{{ vm.getPI(deployment.expeditionId) }}' }}</td>
                 </tr>
                 </tbody>
