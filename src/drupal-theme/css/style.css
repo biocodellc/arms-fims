@@ -6179,8 +6179,8 @@ body {
       color: #999999;
       cursor: default; }
       .navbar .nav .dropdown-menu > li > a.disabled:hover, .navbar .nav .dropdown-menu > li > a.disabled:focus {
-        background-color: inherit;
-        color: inherit; }
+        color: #fff;
+        background-color: #1D317A; }
     @media screen and (min-width: 992px) {
       .navbar .nav .dropdown-menu > li > a {
         padding: 3px 20px; } }
@@ -6568,41 +6568,41 @@ p:last-child,
 
 .dropdown-submenu {
   position: relative; }
-
-.dropdown-submenu > .dropdown-menu {
-  top: 0 !important;
-  left: 100% !important;
-  margin-top: -6px;
-  margin-left: -1px; }
-
-.dropdown-submenu:hover > .dropdown-menu {
-  display: block; }
-
-.dropdown-submenu > a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #1D317A;
-  margin-top: 8px;
-  margin-right: -5px; }
-
-.dropdown-submenu:hover > a:after {
-  border-left-color: #fff; }
-
-.dropdown-submenu.pull-left {
-  float: none; }
-
-.dropdown-submenu.pull-left > .dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  -webkit-border-radius: 6px 0 6px 6px;
-  -moz-border-radius: 6px 0 6px 6px;
-  border-radius: 6px 0 6px 6px; }
+  .dropdown-submenu > .dropdown-menu {
+    top: 0 !important;
+    left: 100% !important;
+    margin-top: -6px;
+    margin-left: -1px; }
+  .dropdown-submenu:hover > .dropdown-menu {
+    display: block; }
+  .dropdown-submenu:hover > a:after {
+    border-left-color: #fff; }
+  .dropdown-submenu.disabled > a {
+    color: inherit; }
+    .dropdown-submenu.disabled > a:focus, .dropdown-submenu.disabled > a:hover {
+      color: #fff;
+      background-color: #1D317A;
+      cursor: inherit; }
+  .dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #1D317A;
+    margin-top: 8px;
+    margin-right: -5px; }
+  .dropdown-submenu.pull-left {
+    float: none; }
+    .dropdown-submenu.pull-left > .dropdown-menu {
+      left: -100%;
+      margin-left: 10px;
+      -webkit-border-radius: 6px 0 6px 6px;
+      -moz-border-radius: 6px 0 6px 6px;
+      border-radius: 6px 0 6px 6px; }
 
 .carousel-control {
   background: none !important;
@@ -6629,7 +6629,7 @@ p:last-child,
   /* IE6-9 */ }
   @media screen and (min-width: 768px) {
     .carousel-caption-wrapper {
-      bottom: 10px; } }
+      bottom: 0; } }
   .carousel-caption-wrapper > .carousel-caption {
     position: relative;
     width: 80%;
@@ -6641,19 +6641,58 @@ p:last-child,
     margin-right: auto; }
     .carousel-caption-wrapper > .carousel-caption > p {
       margin: 0; }
-    @media screen and (max-width: 767px) {
-      .carousel-caption-wrapper > .carousel-caption {
-        font-size: 13px; } }
     @media screen and (min-width: 768px) {
       .carousel-caption-wrapper > .carousel-caption {
         padding-top: 10px;
         padding-bottom: 10px; } }
   .carousel-caption-wrapper .carousel-copyright {
-    font-size: 9px; }
-    @media screen and (min-width: 768px) {
-      .carousel-caption-wrapper .carousel-copyright {
-        font-size: 13px; } }
+    font-size: 13px;
+    padding-left: 15px;
+    white-space: nowrap; }
 
+.carousel-fade .carousel-inner .item {
+  opacity: 0;
+  transition-property: opacity; }
+
+.carousel-fade .carousel-inner .active {
+  opacity: 1; }
+
+.carousel-fade .carousel-inner .active.left,
+.carousel-fade .carousel-inner .active.right {
+  left: 0;
+  opacity: 0;
+  z-index: 1; }
+
+.carousel-fade .carousel-inner .next.left,
+.carousel-fade .carousel-inner .prev.right {
+  opacity: 1; }
+
+.carousel-fade .carousel-control {
+  z-index: 2; }
+
+/*
+WHAT IS NEW IN 3.3: "Added transforms to improve carousel performance in modern browsers."
+now override the 3.3 new styles for modern browsers & apply opacity
+*/
+@media all and (transform-3d), (-webkit-transform-3d) {
+  .carousel-fade .carousel-inner > .item.next,
+  .carousel-fade .carousel-inner > .item.active.right {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0); }
+
+  .carousel-fade .carousel-inner > .item.prev,
+  .carousel-fade .carousel-inner > .item.active.left {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0); }
+
+  .carousel-fade .carousel-inner > .item.next.left,
+  .carousel-fade .carousel-inner > .item.prev.right,
+  .carousel-fade .carousel-inner > .item.active {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0); } }
 #featured_slideshow {
   margin-bottom: 24px; }
   #featured_slideshow .carousel-inner {
@@ -6689,9 +6728,19 @@ p:last-child,
 
 .overview-item {
   margin-bottom: 15px; }
+  .overview-item > button {
+    padding: 0;
+    line-height: inherit; }
+  @media screen and (min-width: 768px) and (max-width: 991px) {
+    .overview-item:nth-child(2n+1) {
+      clear: both; } }
+  @media screen and (min-width: 992px) {
+    .overview-item:nth-child(3n+1) {
+      clear: both; } }
 
 .overview-item-img {
-  position: relative; }
+  position: relative;
+  max-width: 400px; }
 
 .overview-item-title {
   position: absolute;
@@ -6707,7 +6756,7 @@ p:last-child,
   /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to bottom, rgba(174, 188, 191, 0) 0%, rgba(3, 4, 4, 0.75) 50%, rgba(0, 0, 0, 0.76) 51%, #0a0809 100%);
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00aebcbf', endColorstr='#0a0809',GradientType=0 );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00aebcbf', endColorstr='#0a0809', GradientType=0);
   /* IE6-9 */ }
 
 .overview-item-description {
@@ -6770,6 +6819,17 @@ form hr {
   max-width: 649.9px;
   margin: 30px auto; }
 
+.download-btn {
+  margin-bottom: 15px; }
+  @media screen and (min-width: 768px) {
+    .download-btn {
+      margin-left: 10px; }
+      .download-btn:first-child {
+        margin-left: 0; } }
+
+.blue-text {
+  color: #1D317A; }
+
 .protocols-title {
   padding: 5px 0;
   border-bottom: 1px solid #A1A6BB;
@@ -6783,6 +6843,8 @@ form hr {
   margin-bottom: 24px;
   border: 1px solid #fbd8bb;
   border-radius: 4px; }
+  .key-points h1, .key-points h2, .key-points h3, .key-points h4, .key-points h5, .key-points h6 {
+    margin-top: 0; }
 
 .illustrations {
   padding-top: 15px; }

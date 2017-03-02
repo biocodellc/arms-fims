@@ -59,7 +59,7 @@
 {% set container = theme.settings.fluid_container ? 'container-fluid' : 'container' %}
 {#<div class="wrapper">#}
 <div class="{{ container }}">
-    {#{{ dump(breadcrumb) }}#}
+    {{ dump(breadcrumb) }}
     {% if page.arms_page_top %}
         {#<div class="page-top {{ container }}">#}
         <div class="page-top">

@@ -349,7 +349,9 @@ app.controller('searchMapCtrl', ['$scope', 'DataFactory',
         function createMap(accessToken) {
             vm.map = L.map('searchMap', {
                 center: [0, 0],
-                zoom: 1
+                zoom: 1,
+                maxBoundsViscosity: .75,
+                worldCopyJump: false
             });
             vm.map.spin(true);
             L.tileLayer('https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token={access_token}',
@@ -359,31 +361,51 @@ app.controller('searchMapCtrl', ['$scope', 'DataFactory',
 
         function addDeploymentsToMap(deployments) {
             var markers = [];
+            var markers2 = [];
             angular.forEach(deployments, function (deployment) {
                 var lat = deployment[LATITUDE_COLUMN];
-                var lng = deployment[LONGITUDE_COLUMN];
+                var lng = L.Util.wrapNum(deployment[LONGITUDE_COLUMN], [0,360], true);
+                // var lat2 = lat + 180;
+                // var lng2 = lng + 360;
 
                 var deploymentMarker = L.marker([lat, lng]);
-                var detailsUrl = '/deployments/' + deployment.expeditionId + '/' + deployment.deploymentId;
+                var deploymentMarker2 = L.marker([(-180+lat)-180, lng]);
+                // var deploymentMarker2 = L.marker([lat2, lng2]);
+                var deploymentUrl = '/deployments/' + deployment.expeditionId + '/' + deployment.deploymentId;
+                var expeditionUrl = '/projects/' + deployment.expeditionId;
                 deploymentMarker.bindPopup(
-                    "ProjectID: " + deployment.expeditionId +
-                    "<br>DeploymentID: " + deployment.deploymentId +
-                    "<br><a href='" + detailsUrl + "'>deployment details</a>"
+                    "ProjectID: <a href='" + expeditionUrl + "'>" + deployment.expeditionId + "</a>" +
+                    "<br>DeploymentID: <a href='" + deploymentUrl + "'>" + deployment.deploymentId + "</a>"
                 );
+                // deploymentMarker2.bindPopup(
+                //     "ProjectID: <a href='" + expeditionUrl + "'>" + deployment.expeditionId + "</a>" +
+                //     "<br>DeploymentID: <a href='" + deploymentUrl + "'>" + deployment.deploymentId + "</a>"
+                // );
 
                 markers.push(deploymentMarker);
+                // markers2.push(deploymentMarker2);
             });
 
             var clusterLayer = L.markerClusterGroup()
                 .addLayers(markers);
+            // var clusterLayer2 = L.markerClusterGroup()
+            //     .addLayers(markers2);
             var bounds = clusterLayer.getBounds();
+
 
             vm.map
                 .addLayer(clusterLayer)
+                // .addLayer(clusterLayer2)
                 .fitBounds(bounds)
-                .setMaxBounds(bounds)
+                // .setMaxBounds([[90,-180], [-90,-180]])
+                // .setMaxBounds([10,-180], [-90,180])
+                // .setMaxBounds(bounds)
                 .setMinZoom(1)
                 .spin(false);
+
+            vm.map.on('moveend', function(){
+                vm.map.getBounds();
+            })
         }
 
         $scope.$watch(function () {

@@ -114,8 +114,8 @@ body {
 
             &:hover,
             &:focus {
-              background-color: inherit;
-              color: inherit;
+              color: $dropdown-link-hover-color;
+              background-color: $dropdown-link-hover-bg;
             }
           }
 
