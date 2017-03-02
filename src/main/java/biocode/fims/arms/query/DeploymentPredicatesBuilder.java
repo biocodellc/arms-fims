@@ -31,7 +31,7 @@ public class DeploymentPredicatesBuilder {
             if (exp == null) {
                 throw new FimsRuntimeException("Invalid criteria provided. Make sure that the search " +
                         "criteria 'key' is the column_internal value. To get a list of search criteria options visit " +
-                        "'biscicol.org/arms/projects/filterOptions'", 400);
+                        "'data.oceanarms.org/projects/filterOptions'", 400);
             }
             if (result == null) {
                 result = new BooleanBuilder(exp);

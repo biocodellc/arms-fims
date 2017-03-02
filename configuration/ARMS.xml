@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <fims>
     <metadata
-            expeditionForwardingAddress="http://arms.biocodellc.com/projects/{ark}"
+            expeditionForwardingAddress="http://oceanarms.org/projects/{ark}"
     >
         <![CDATA[You may un-check desired fields or check any other field on the list but may not un-check mandatory fields.]]>
     </metadata>
     <mapping>
         <entity worksheet="Samples" worksheetUniqueKey="deploymentID" conceptAlias="Event"
                 conceptURI="http://purl.org/dc/dcmitype/Event" entityID="1"
-                conceptForwardingAddress="http://arms.biocodellc.com/deployments/{ark}/{suffix}">
+                conceptForwardingAddress="http://oceanarms.org/deployments/{ark}/{suffix}">
             <attribute column='armsModel' column_internal='armsModel' uri='urn:armsModel' group='ARMS Details'
                        defined_by='urn:armsModel' datatype="string">
                 <![CDATA[description of ARMS structure (e.g. 10 plates with scrubbie, 9 plates with scrubbie, 10 plates without scrubbie, 9 plates without scrubbie)]]>

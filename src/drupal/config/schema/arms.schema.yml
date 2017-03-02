@@ -4,7 +4,7 @@ arms.settings:
   mapping:
     arms_rest_uri:
       type: string
-      label: 'http://biscicol.org/arms/rest/'
+      label: 'http://data.oceanarms.org/rest/'
     berkeley_mapper_template_uri:
       type: string
       label: 'http://berkeleymapper.berkeley.edu/?ViewResults=tab&maptype=Satellite&tabfile=@tabfile&configfile=@configfile'

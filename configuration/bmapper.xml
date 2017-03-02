@@ -3,13 +3,13 @@
 <name>
 ARMS Map Configuration File
 </name>
-<relatedinformation>http://arms.biocodellc.com/</relatedinformation>
+<relatedinformation>http://oceanarms.org/</relatedinformation>
 <abstract>
 GIS configuration file for ARMS project
 </abstract>
 <mapkeyword keyword="arms deployment"/>
 <header location="http://ucjeps.berkeley.edu/consortium/code_banner.html"/>
-<logo img="https://pifsc-www.irc.noaa.gov/cred/images/arms_deployed1_med.jpg" url="http://arms.biocodellc.com/"/>
+<logo img="https://pifsc-www.irc.noaa.gov/cred/images/arms_deployed1_med.jpg" url="http://oceanarms.org/"/>
 </metadata>
 <concepts xmlns:darwin="http://digir.net/schema/conceptual/darwin/2003/1.0">
 <concept order="1" viewlist="1" datatype="char255:1" alias="Deployment ID"/>
