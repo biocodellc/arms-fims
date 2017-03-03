@@ -318,10 +318,12 @@ app.controller('searchMapCtrl', ['$scope', 'DataFactory',
         var LATITUDE_COLUMN = 'decimalLatitude';
         var LONGITUDE_COLUMN = 'decimalLongitude';
         // var map = null;
+        var markers = [];
+        var clusterLayer = null;
 
         var vm = this;
         vm.map = null;
-        vm.error
+        vm.error = null;
 
         function getAccessToken() {
             DataFactory.getMapboxAccessToken()
@@ -350,8 +352,7 @@ app.controller('searchMapCtrl', ['$scope', 'DataFactory',
             vm.map = L.map('searchMap', {
                 center: [0, 0],
                 zoom: 1,
-                maxBoundsViscosity: .75,
-                worldCopyJump: false
+                maxBoundsViscosity: .75
             });
             vm.map.spin(true);
             L.tileLayer('https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token={access_token}',
@@ -360,52 +361,74 @@ app.controller('searchMapCtrl', ['$scope', 'DataFactory',
         }
 
         function addDeploymentsToMap(deployments) {
-            var markers = [];
-            var markers2 = [];
             angular.forEach(deployments, function (deployment) {
                 var lat = deployment[LATITUDE_COLUMN];
-                var lng = L.Util.wrapNum(deployment[LONGITUDE_COLUMN], [0,360], true);
-                // var lat2 = lat + 180;
-                // var lng2 = lng + 360;
+                var lng = deployment[LONGITUDE_COLUMN];
+                // var lng = L.Util.wrapNum(deployment[LONGITUDE_COLUMN], [0,360], true);
 
                 var deploymentMarker = L.marker([lat, lng]);
-                var deploymentMarker2 = L.marker([(-180+lat)-180, lng]);
-                // var deploymentMarker2 = L.marker([lat2, lng2]);
                 var deploymentUrl = '/deployments/' + deployment.expeditionId + '/' + deployment.deploymentId;
                 var expeditionUrl = '/projects/' + deployment.expeditionId;
                 deploymentMarker.bindPopup(
                     "ProjectID: <a href='" + expeditionUrl + "'>" + deployment.expeditionId + "</a>" +
                     "<br>DeploymentID: <a href='" + deploymentUrl + "'>" + deployment.deploymentId + "</a>"
                 );
-                // deploymentMarker2.bindPopup(
-                //     "ProjectID: <a href='" + expeditionUrl + "'>" + deployment.expeditionId + "</a>" +
-                //     "<br>DeploymentID: <a href='" + deploymentUrl + "'>" + deployment.deploymentId + "</a>"
-                // );
 
                 markers.push(deploymentMarker);
-                // markers2.push(deploymentMarker2);
             });
 
-            var clusterLayer = L.markerClusterGroup()
+            clusterLayer = L.markerClusterGroup()
                 .addLayers(markers);
-            // var clusterLayer2 = L.markerClusterGroup()
-            //     .addLayers(markers2);
             var bounds = clusterLayer.getBounds();
 
 
             vm.map
                 .addLayer(clusterLayer)
-                // .addLayer(clusterLayer2)
                 .fitBounds(bounds)
-                // .setMaxBounds([[90,-180], [-90,-180]])
-                // .setMaxBounds([10,-180], [-90,180])
-                // .setMaxBounds(bounds)
                 .setMinZoom(1)
                 .spin(false);
 
-            vm.map.on('moveend', function(){
-                vm.map.getBounds();
-            })
+            vm.map.on('move', updateMarkers);
+
+            vm.map.on('dragstart', function() {
+                centerLng = vm.map.getCenter().lng;
+                // the following is how leaflet internally calculates the max bounds. Leaflet doesn't provide a way
+                // to bound only the latitude, so we do that here. We set the lng to be bound 2x greater the the center
+                // and is recalculated upon every dragstart event, which should essentially keep the lng unbound
+                nwCorner = [90, centerLng - 720];
+                seCorner = [-90, centerLng + 720];
+
+                vm.map.setMaxBounds([nwCorner, seCorner]);
+            });
+
+        }
+
+        function updateMarkers() {
+            centerLng = vm.map.getCenter().lng;
+            updatedMarkers = [];
+            originalMarkers = [];
+            clusterLayer.eachLayer(function(m) {
+                latlng = m.getLatLng();
+                if (latlng.lng < centerLng) {
+                    // marker is W of center
+                    if ((centerLng - 180) > latlng.lng) {
+                        mCopy = L.marker([latlng.lat, latlng.lng + 360]);
+                        mCopy.bindPopup(m.getPopup());
+                        updatedMarkers.push(mCopy);
+                        originalMarkers.push(m);
+                    }
+                } else {
+                    // marker is E of center
+                    if ((centerLng + 180) < latlng.lng) {
+                        mCopy = L.marker([latlng.lat, latlng.lng - 360]);
+                        mCopy.bindPopup(m.getPopup());
+                        updatedMarkers.push(mCopy);
+                        originalMarkers.push(m);
+                    }
+                }
+            });
+            clusterLayer.removeLayers(originalMarkers);
+            clusterLayer.addLayers(updatedMarkers);
         }
 
         $scope.$watch(function () {
