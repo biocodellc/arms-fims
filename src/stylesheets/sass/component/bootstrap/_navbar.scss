@@ -67,8 +67,6 @@ body {
     clear: left;
     background-color: $navbar-nav-bg;
 
-    //border: 1px solid $navbar-nav-bg;
-
     .navbar-right {
       clear: none;
     }
@@ -89,7 +87,6 @@ body {
   &-header {
     padding-top: $navbar-padding-vertical;
     padding-bottom: $navbar-padding-vertical;
-    //margin-bottom: $navbar-margin-bottom;
   }
 
   &-brand {
@@ -123,53 +120,12 @@ body {
             padding: 3px 20px;
           }
 
-          //&:hover,
-          //&:focus {
-          //  background-color: $navbar-default-link-hover-color !important;
-          //  color: #fff !important;
-          //}
         }
       }
     }
-
-    // Justified nav links
-    // -------------------------
-
-    //@media #{$tablet} {
-    //.nav-justified {
-    //  width: 100%;
-    //
-    //  > li {
-    //    float: none;
-    //    > a {
-    //      text-align: center;
-    //      margin-bottom: 5px;
-    //    }
-    //  }
-    //
-    //  > .dropdown .dropdown-menu {
-    //    top: auto;
-    //    left: auto;
-    //  }
-    //}}
-
-      //@media #{$normal} {
-      //  > li {
-      //    display: table-cell;
-      //    width: 1%;
-      //    > a {
-      //      margin-bottom: 0;
-      //    }
-      //  }
-      //}
-    //}
   }
 
   .logo {
-    //padding-left: ($navbar-padding-horizontal + 15px);
-    //padding-top: $navbar-padding-vertical;
-    //padding-bottom: $navbar-padding-vertical;
-
     img {
       max-height: 100px;
     }
@@ -179,26 +135,11 @@ body {
     .navbar-header {
 
       .logo {
-        //width: 100%;
-        //padding-left: 0;
-
         img {
           display: block;
           margin: 5px auto;
         }
       }
-
-      //.navbar-brand {
-      //  width: 100%;
-      //  text-align: center;
-      //  margin: 5px;
-      //}
-
-      //.navbar-toggle {
-      //  display: block;
-      //  margin: 3px auto 10px auto;
-      //  float: none;
-      //}
     }
   }
   .navbar-toggle {

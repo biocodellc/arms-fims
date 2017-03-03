@@ -36,7 +36,7 @@
         <li{{ item.attributes.addClass('expanded', 'dropdown') }}>
         <a href="{{ item.url }}" class="dropdown-toggle {{ item.url['routeName'] != "<none>" ? 'disabled' }}" data-target="#" data-toggle="dropdown">{{ item.title }} <span class="caret"></span></a>
       {% elseif menu_level == 1 and item.is_expanded %}
-        {% set classes = url_path(item.url) in ['', '#'] ? ["disabled", "dropdown-submenu"] : "dropdown-submenu" %}
+        {% set classes = item.url|render|trim == "" ? ["disabled", "dropdown-submenu"] : "dropdown-submenu" %}
         <li{{ item.attributes.addClass(classes) }}>
         <a href="{{ "disabled" in classes ? "#" : item.url }}">{{ item.title }}</a>
       {% else %}

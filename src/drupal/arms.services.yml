@@ -3,7 +3,3 @@ services:
     class: Drupal\arms\TwigExtension\ADate
     tags:
       - { name: twig.extension }
-  arms.twig_extension.url_path:
-    class: Drupal\arms\TwigExtension\UrlPath
-    tags:
-      - { name: twig.extension }

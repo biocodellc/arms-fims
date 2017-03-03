@@ -80,7 +80,6 @@ $font-size-h6:            ceil(($font-size-base * 0.85)) !default; // ~12px
 
 //** Unit-less `line-height` for use in components like buttons.
 $line-height-base:        1.6 !default; // 24/15
-//$line-height-base:        1.428571429 !default; // 24/15
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
 $line-height-computed:    floor(($font-size-base * $line-height-base)) !default; // ~24px
 
@@ -347,8 +346,7 @@ $grid-columns:              12 !default;
 $grid-gutter-width:         30px !default;
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
-//$grid-float-breakpoint:     $screen-md-min !default;
-$grid-float-breakpoint:     $screen-sm-min !default;
+$grid-float-breakpoint:     $screen-md-min !default;
 //** Point at which the navbar begins collapsing.
 $grid-float-breakpoint-max: ($grid-float-breakpoint - 1) !default;
 
@@ -359,7 +357,6 @@ $grid-float-breakpoint-max: ($grid-float-breakpoint - 1) !default;
 
 // Small screen / tablet
 $container-tablet:             (720px + $grid-gutter-width) !default;
-//$container-tablet:             $screen-md-min !default;
 //** For `$screen-sm-min` and up.
 $container-sm:                 $container-tablet !default;
 
@@ -369,7 +366,6 @@ $container-desktop:            (940px + $grid-gutter-width) !default;
 $container-md:                 $container-desktop !default;
 
 // Large screen / wide desktop
-//$container-large-desktop:      (1250px + $grid-gutter-width) !default;
 $container-large-desktop:      (1140px + $grid-gutter-width) !default;
 //** For `$screen-lg-min` and up.
 $container-lg:                 $container-large-desktop !default;
@@ -380,9 +376,7 @@ $container-lg:                 $container-large-desktop !default;
 //##
 
 // Basics of a navbar
-//$navbar-height:                    54px !default;
 $navbar-height:                    60px !default;
-//$navbar-margin-bottom:             ceil($line-height-computed * .75) !default;
 $navbar-margin-bottom:             $line-height-computed !default;
 $navbar-border-radius:             $border-radius-base !default;
 $navbar-padding-horizontal:        floor(($grid-gutter-width / 2)) !default;
@@ -396,16 +390,9 @@ $navbar-nav-bg:                    $brand-primary !default;
 
 // Navbar links
 $navbar-default-link-color:                #fff !default;
-//$navbar-default-link-color:                #000 !default;
-//$navbar-default-link-hover-color:          #2e5077 !default;
 $navbar-default-link-hover-color:                #fff !default;
-//$navbar-default-link-hover-color:          #000 !default;
-//$navbar-default-link-hover-bg:             #fff !default;
 $navbar-default-link-hover-bg:             darken($navbar-nav-bg, 6.5%) !default;
 $navbar-default-link-active-color:         #fff !default;
-//$navbar-default-link-active-color:         #2e5077 !default;
-//$navbar-default-link-active-color:         #000 !default;
-//$navbar-default-link-active-bg:            #fff !default;
 $navbar-default-link-active-bg:            darken($navbar-nav-bg, 6.5%) !default;
 $navbar-default-link-disabled-color:       #ccc !default;
 $navbar-default-link-disabled-bg:          transparent !default;

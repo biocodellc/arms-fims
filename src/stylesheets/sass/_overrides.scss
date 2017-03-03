@@ -21,8 +21,8 @@
 @import "component/projects";
 
 $featured-slideshow-max-height: 425px !default;
-$wrapper-max-width: 1250px !default;
-$wrapper-padding-horizontal: (40px - ($grid-gutter-width / 2));
+
+@import url('https://fonts.googleapis.com/css?family=Assistant:300,400,600,700');
 
 //== angular
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -30,7 +30,6 @@ $wrapper-padding-horizontal: (40px - ($grid-gutter-width / 2));
 }
 
 body {
-  //background-image: url(../images/f40171d6.png);
   margin-top: 0px;
 }
 
@@ -55,6 +54,10 @@ ol, ul {
 
 .page-header {
   display: none;
+}
+
+.blue-text {
+  color: $brand-primary;
 }
 
 // Footer.
@@ -93,32 +96,7 @@ p:last-child,
   }
 }
 
-//== wrapper
-.wrapper {
-  background-color: #fff;
-
-  @media #{$tablet} {
-    width: 100%;
-  }
-  @media #{$normal} {
-    width: 90%;
-    max-width: $wrapper-max-width;
-  }
-
-  margin: 0 auto;
-  margin-bottom: 40px;
-  padding: 15px $wrapper-padding-horizontal;
-  overflow: hidden;
-  border: 1px solid white;
-  border-color: rgba(255, 255, 255, 0.5);
-  -webkit-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5), 0px 0px 50px rgba(0, 0, 0, 0.1) inset;
-  -moz-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5), 0px 0px 50px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5), 0px 0px 50px rgba(0, 0, 0, 0.1) inset;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
+//= dropdown menus
 .dropdown-menu {
   min-width: 190px;
 }
@@ -185,6 +163,47 @@ p:last-child,
   }
 }
 
+.dropdown-toggle {
+  .caret {
+    display: none;
+
+    @media #{$normal} {
+      display: inline-block;
+    }
+  }
+
+}
+
+// Justified nav links
+// -------------------------
+
+.nav-justified {
+  @media (max-width: $screen-sm-max) {
+    margin-left: 0;
+    > li {
+      display: block;
+      width: 100%;
+      > a {
+        margin-bottom: 3px;
+      }
+    }
+  }
+}
+
+.nav-tabs-justified {
+  @media (max-width: $screen-md-max) {
+    > li > a {
+      border-bottom: 0;
+      border-radius: $border-radius-base;
+    }
+    > .active > a,
+    > .active > a:hover,
+    > .active > a:focus {
+      border: 1px solid $nav-tabs-justified-link-border-color;
+    }
+  }
+}
+
 //== carousel
 .carousel-control {
   background: none !important;
@@ -236,13 +255,9 @@ p:last-child,
   }
 
   .carousel-copyright {
-    //font-size: $font-size-xsmall;
     font-size: $font-size-small;
     padding-left: 15px;
     white-space: nowrap;
-    //@media #{$tablet} {
-    //  font-size: $font-size-small;
-    //}
   }
 }
 
@@ -299,14 +314,7 @@ now override the 3.3 new styles for modern browsers & apply opacity
 
 //== featured slideshow
 #featured_slideshow {
-  //margin-top: 0;
-  //margin-left: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
-  //margin-right: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
   margin-bottom: $navbar-margin-bottom;
-
-  @media #{$normal} {
-    //margin-top: -$navbar-margin-bottom;
-  }
 
   .carousel-inner {
     position: relative;
@@ -315,7 +323,7 @@ now override the 3.3 new styles for modern browsers & apply opacity
       display: block;
       content: "";
       width: 100%;
-      padding-top: percentage($featured-slideshow-max-height / $wrapper-max-width);
+      padding-top: percentage($featured-slideshow-max-height / $container-lg);
     }
 
     > .item {
@@ -324,9 +332,6 @@ now override the 3.3 new styles for modern browsers & apply opacity
       left: 0;
       right: 0;
       bottom: 0;
-      //background-color: #f2f2f4;
-      //box-shadow: inset 0px 11px 8px -10px #CCC,
-      //inset 0px -11px 8px -10px #CCC;
 
       img {
         margin: auto;
@@ -336,27 +341,6 @@ now override the 3.3 new styles for modern browsers & apply opacity
   }
 }
 
-//-- embeded images
-
-.figure {
-  display: inline-block;
-
-  &.align-center {
-    width: 100%;
-
-    img {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 100%;
-      height: auto;
-    }
-  }
-}
-
-.caption {
-  width: 100%;
-}
 
 //== overview item
 .overview-item {
@@ -485,6 +469,65 @@ form {
   }
 }
 
+// Comments ==============================================
+.indented {
+  margin-left: 30px;
+}
+
+.comment-subject {
+  font-size: ceil($font-size-base * 1.1);
+  margin-top: ($line-height-computed / 2.5);
+  margin-bottom: ($line-height-computed / 2.5);
+}
+
+.comment-meta {
+  @extend small;
+  margin-top: ($line-height-computed / 2.5);
+  margin-bottom: ($line-height-computed / 2.5);
+  padding-left: 15px;
+
+  .label {
+    margin-left: 5px;
+  }
+}
+
+.comment-date {
+  @extend small;
+}
+
+.comment-content {
+  clear: both;
+
+  ul {
+    margin-bottom: 5px;
+  }
+}
+
+.comment-permalink {
+  @extend small;
+}
+
+//-- embeded images
+.figure {
+  display: inline-block;
+
+  &.align-center {
+    width: 100%;
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
+      height: auto;
+    }
+  }
+}
+
+.caption {
+  width: 100%;
+}
+
 //== drupal videos
 .video-embed-field-responsive-video {
   max-width: $container-desktop * .67;
@@ -504,10 +547,6 @@ form {
   }
 }
 
-.blue-text {
-  color: $brand-primary;
-}
-
 .protocols-title {
   padding: 5px 0;
   border-bottom: 1px solid #A1A6BB;
@@ -515,7 +554,6 @@ form {
   color: $brand-primary;
 }
 
-//.key-points > *,
 .key-points {
   background-color: #FDEADA;
   color: #142255;
@@ -573,8 +611,6 @@ form {
 
 //== search projects
 .search-map {
-  //margin-left: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
-  //margin-right: -($wrapper-padding-horizontal + ($grid-gutter-width / 2));
   margin-bottom: $navbar-margin-bottom;
   margin-top: 0;
 
@@ -596,26 +632,6 @@ form {
   position: relative;
   height: $featured-slideshow-max-height;
   width: 100%;
-}
-
-//== durpal protocols page
-.protocols-media-list {
-  .media {
-    .media-left {
-      padding-right: 30px;
-    }
-
-    img {
-      width: 100px;
-      height: 100px;
-    }
-
-    .media-heading {
-      a {
-        color: #000;
-      }
-    }
-  }
 }
 
 // Existing style.css

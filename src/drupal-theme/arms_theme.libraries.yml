@@ -17,3 +17,10 @@ bootstrap-scripts:
     js/bootstrap/scrollspy.js: {}
     js/bootstrap/tab.js: {}
     js/bootstrap/transition.js: {}
+
+overview-page-scripts:
+  js:
+    js/overview.js: {}
+  dependencies:
+    - core/jquery
+    - arms_theme/bootstrap-scripts

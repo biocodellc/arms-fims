@@ -5,3 +5,18 @@
  *
  * Place your custom PHP code in this file.
  */
+
+function arms_theme_preprocess_comment(&$variables) {
+  $comment = $variables['comment'];
+  $variables['created'] = \Drupal::service('date.formatter')->format($comment->getCreatedTime(), "short");
+
+  $renderer = \Drupal::service('renderer');
+  $variables['author'] = $renderer->render($variables['author']);
+
+  $markup = [
+    '#markup' => '<span class="comment-date">' . $variables['created'] . '</span>'
+  ];
+  $rendered_created = $renderer->render($markup);
+
+  $variables['submitted'] = t('@username commented on @datetime', ['@username' => $variables['author'], '@datetime' => $rendered_created]);
+}
