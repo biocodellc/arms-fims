@@ -6830,7 +6830,7 @@ form hr {
 .blue-text {
   color: #1D317A; }
 
-.protocols-title {
+.protocols-title, .field--type-webform .field--label {
   padding: 5px 0;
   border-bottom: 1px solid #A1A6BB;
   border-top: 1px solid #A1A6BB;
@@ -6867,6 +6867,10 @@ form hr {
     vertical-align: top; } }
 .illustration-caption {
   vertical-align: middle !important; }
+
+.field--type-webform .field--label {
+  margin-bottom: 15px;
+  font-size: 26px; }
 
 .search-map {
   margin-bottom: 24px;

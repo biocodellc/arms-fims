@@ -57,16 +57,12 @@
  */
 #}
 {% set container = theme.settings.fluid_container ? 'container-fluid' : 'container' %}
-{#<div class="wrapper">#}
 <div class="{{ container }}">
-    {{ dump(breadcrumb) }}
     {% if page.arms_page_top %}
-        {#<div class="page-top {{ container }}">#}
         <div class="page-top">
             {{ page.arms_page_top }}
         </div>
     {% endif %}
-    {# Navbar #}
     {% if page.navigation or page.navigation_collapsible %}
         {% block navbar %}
             {% set navbar_classes = [
@@ -75,11 +71,8 @@
             theme.settings.navbar_position ? 'navbar-' ~ theme.settings.navbar_position|clean_class : '',
             ] %}
             <header {{ navbar_attributes.addClass(navbar_classes) }} id="navbar" role="banner">
-                {#<div class="container-fluid">#}
                     <div>
-                        {#<div class="navbar-header">#}
                         {{ page.navigation }}
-                        {# .btn-navbar is used as the toggle for collapsed navbar content #}
                         {% if page.navigation_collapsible %}
                             <button type="button" class="navbar-toggle" data-toggle="collapse"
                                     data-target=".navbar-collapse">
@@ -97,7 +90,6 @@
                             {{ page.navigation_collapsible }}
                         </div>
                     {% endif %}
-                {#</div>#}
             </header>
         {% endblock %}
     {% endif %}
@@ -109,7 +101,6 @@
             {# Header #}
             {% if page.header %}
                 {% block header %}
-                    {#<section class="{{ container }}">#}
                     <section>
                         <div class="col-sm-12" role="heading">
                             {{ page.header }}
@@ -125,7 +116,6 @@
                 </section>
             {% endif %}
 
-            {#<div class="{{ container }}">#}
             <div class="row">
                 {# Sidebar First #}
                 {% if page.sidebar_first %}
@@ -190,13 +180,11 @@
                 {% endif %}
             </div>
         </div>
-        {#</div>#}
     {% endblock %}
 
     {% if page.footer %}
         {% block footer %}
             <footer class="footer {{ container }}" role="contentinfo">
-                {#<footer class="footer" role="contentinfo">#}
                 {{ page.footer }}
             </footer>
         {% endblock %}
