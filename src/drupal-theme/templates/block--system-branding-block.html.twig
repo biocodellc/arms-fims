@@ -16,19 +16,10 @@
  */
 #}
 {% block content %}
-    {#{% if site_logo %}#}
     <div class="navbar-header">
         <a class="logo navbar-btn" href="{{ path('<front>') }}" title="{{ 'Home'|t }}"
            rel="home">
-            <img class="center-block img-responsive" src="{{ site_logo }}" alt="{{ 'Home'|t }}"/>
+            <img class="center-block" src="{{ site_logo }}" alt="{{ 'Home'|t }}"/>
         </a>
     </div>
-    {#{% endif %}#}
-    {#{% elseif site_name %}#}
-    {#<a class="name navbar-brand" href="{{ path('<front>') }}" title="{{ 'Home'|t }}"#}
-    {#rel="home">{{ site_name }}</a>#}
-    {#{% endif %}#}
-    {#{% if site_slogan %}#}
-    {#<p class="navbar-text">{{ site_slogan }}</p>#}
-    {#{% endif %}#}
 {% endblock %}

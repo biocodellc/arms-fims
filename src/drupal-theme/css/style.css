@@ -3259,7 +3259,7 @@ tbody.collapse.in {
     clear: both;
     font-weight: normal;
     line-height: 1.6;
-    color: #666666;
+    color: #142255;
     white-space: nowrap; }
 
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
@@ -6468,7 +6468,7 @@ body.toolbar-fixed.toolbar-vertical.toolbar-tray-open.toolbar-fixed {
     border: 0;
     border-radius: 0;
     clear: both;
-    color: #666666;
+    color: #142255;
     cursor: pointer;
     display: block;
     font-weight: normal;
@@ -6562,6 +6562,14 @@ ol, ul {
   src: url("../fonts/Walkway_SemiBold-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/Walkway_SemiBold-webfont.woff") format("woff"), url("../fonts/Walkway_SemiBold-webfont.ttf") format("truetype"), url("../fonts/Walkway_SemiBold-webfont.svg#walkway_semiboldregular") format("svg");
   font-weight: normal;
   font-style: normal; }
+.img-responsive {
+  position: relative;
+  float: left;
+  width: 100%;
+  min-height: 1px;
+  padding-left: 0;
+  padding-right: 0; }
+
 .page-header {
   display: none; }
 
@@ -6608,7 +6616,7 @@ p:last-child,
   .dropdown-submenu:hover > a:after {
     border-left-color: #fff; }
   .dropdown-submenu.disabled > a {
-    color: inherit; }
+    color: #142255; }
     .dropdown-submenu.disabled > a:focus, .dropdown-submenu.disabled > a:hover {
       color: #fff;
       background-color: #1D317A;

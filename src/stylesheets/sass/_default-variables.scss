@@ -260,7 +260,7 @@ $dropdown-fallback-border:       #ccc !default;
 $dropdown-divider-bg:            #e5e5e5 !default;
 
 //** Dropdown link text color.
-$dropdown-link-color:            $gray-dark !default;
+$dropdown-link-color:            #142255 !default;
 //** Hover color for dropdown links.
 $dropdown-link-hover-color:      #fff !default;
 //** Hover background for dropdown links.
@@ -390,7 +390,7 @@ $navbar-nav-bg:                    $brand-primary !default;
 
 // Navbar links
 $navbar-default-link-color:                #fff !default;
-$navbar-default-link-hover-color:                #fff !default;
+$navbar-default-link-hover-color:          #fff !default;
 $navbar-default-link-hover-bg:             darken($navbar-nav-bg, 6.5%) !default;
 $navbar-default-link-active-color:         #fff !default;
 $navbar-default-link-active-bg:            darken($navbar-nav-bg, 6.5%) !default;
