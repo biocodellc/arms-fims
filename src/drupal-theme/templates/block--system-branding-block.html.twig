@@ -19,7 +19,18 @@
     <div class="navbar-header">
         <a class="logo navbar-btn" href="{{ path('<front>') }}" title="{{ 'Home'|t }}"
            rel="home">
-            <img class="center-block" src="{{ site_logo }}" alt="{{ 'Home'|t }}"/>
+            <img class="pull-left" src="/{{ directory }}/images/arms_logo.png" alt="{{ 'Home'|t }}"/>
         </a>
+
+        <img class="pull-right logo hidden-sm hidden-xs" src="/{{ directory }}/images/nmnh_logo.png"
+             alt="{{ 'Smithsonian National Museum of Natural History'|t }}"/>
+
+        <div class="navbar-center">
+            <a class="navbar-brand" href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home">
+                {{ site_name }}
+            </a>
+            <p>{{ site_slogan }}</p>
+        </div>
+
     </div>
 {% endblock %}

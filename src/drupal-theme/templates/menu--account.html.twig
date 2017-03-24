@@ -27,7 +27,7 @@
   {% import _self as menus %}
   {% if items %}
     {% if menu_level == 0 %}
-<ul{{ attributes.addClass('menu', 'nav', 'navbar-nav', 'account-menu') }}>
+<ul{{ attributes.addClass('menu', 'nav', 'account-menu') }}>
     {% else %}
     <ul{{ attributes.addClass('dropdown-menu') }}>
         {% endif %}
@@ -47,7 +47,7 @@
                 {{ link(item.title, item.url) }}
             {% endif %}
             {% if item.below %}
-                {{ menus.menu_links(item.below, attributes.removeClass('nav', 'navbar-nav'), menu_level + 1) }}
+                {{ menus.menu_links(item.below, attributes.removeClass('nav'), menu_level + 1) }}
             {% endif %}
             </li>
         {% endfor %}

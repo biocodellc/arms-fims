@@ -67,10 +67,35 @@ ol, ul {
 
 // Footer.
 .footer {
-  margin-top: 45px;
-  padding-top: 35px;
-  padding-bottom: 36px;
-  border-top: 1px solid #E5E5E5;
+  color: $navbar-default-link-color;
+  background-color: $navbar-nav-bg;
+  margin-top: 20px;
+  padding: 20px;
+
+  .divider {
+    margin: 0 15px;
+  }
+
+  a {
+    color: $navbar-default-link-color;
+  }
+
+  .nav {
+    @extend .pull-right;
+
+    > li {
+
+      > a {
+        padding: 0;
+      }
+
+      > a:hover,
+      > a:focus {
+        text-decoration: underline;
+        background-color: inherit;
+      }
+    }
+  }
 }
 
 // Paragraphs.
@@ -346,7 +371,6 @@ now override the 3.3 new styles for modern browsers & apply opacity
   }
 }
 
-
 //== overview item
 .overview-item {
   margin-bottom: 15px;
@@ -533,10 +557,55 @@ form {
   width: 100%;
 }
 
+//== drupal new block
+#block-arms-theme-views-block-content-recent-block-1 {
+  li {
+    margin-top: 8px;
+  }
+
+  .block-title {
+    color: #1D317A;
+    margin-bottom: 18px;
+  }
+}
+
 //== drupal videos
 .video-embed-field-responsive-video {
   max-width: $container-desktop * .67;
   margin: 30px auto;
+}
+
+//== drupal front page
+
+.vertical-align {
+  display: flex;
+  flex-direction: row;
+}
+
+.vertical-align > [class^="col-"],
+.vertical-align > [class*=" col-"] {
+  display: flex;
+  align-items: center; /* Align the flex-items vertically */
+  justify-content: center; /* Optional, to align inner flex-items horizontally within the column  */
+  flex-flow: row wrap;
+}
+
+.vertical-align > [class^="col-"] > *,
+.vertical-align > [class*=" col-"] > * {
+  width: 100%;
+}
+
+.collaborators {
+  flex-flow: wrap;
+  margin-top: 20px;
+
+  .field--item {
+    margin-bottom: 15px;
+
+    img {
+      width: auto;
+    }
+  }
 }
 
 //== drupal protocols page content type
@@ -603,6 +672,8 @@ form {
 
 .illustration-caption {
   vertical-align: middle !important;
+  text-align: center;
+  font-weight: 700;
 }
 
 //== getting involved
@@ -612,6 +683,11 @@ form {
     font-size: $font-size-h3;
     @extend .protocols-title
   }
+}
+
+//== drupal getting-involved form
+.form-item-ordering-arms > label {
+  font-weight: 700;
 }
 
 //== search projects

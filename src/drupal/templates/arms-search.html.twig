@@ -129,7 +129,8 @@
                 <th>Lat/Lng</th>
                 <th>Depth</th>
                 <th>Habitat Type</th>
-                <th>Geographic</th>
+                <th>Country</th>
+                <th>Locality</th>
                 <th>PI</th>
                 </thead>
                 <tbody>
@@ -143,7 +144,8 @@
                     <td>{{ '{{ deployment.decimalLatitude }}' }} / {{ '{{ deployment.decimalLongitude }}' }}</td>
                     <td>{{ '{{ deployment.depthInMeters }}' }} meters</td>
                     <td>{{ '{{ deployment.habitat }}' }}</td>
-                    <td>{{ '{{ vm.getGeographic(deployment.expeditionId) }}' }}</td>
+                    <td>{{ '{{ deployment.country }}' }}</td>
+                    <td>{{ '{{ deployment.locality }}' }}</td>
                     <td>{{ '{{ vm.getPI(deployment.expeditionId) }}' }}</td>
                 </tr>
                 </tbody>

@@ -5,7 +5,7 @@ app.controller('searchCtrl', ['$scope', '$filter', '$window', 'DataFactory',
         var defaultFilter = {
             attributeIndex: "0",
             operator: "",
-            value: "",
+            value: ""
         };
 
         var operatorMap = {
@@ -46,17 +46,6 @@ app.controller('searchCtrl', ['$scope', '$filter', '$window', 'DataFactory',
         vm.getDatePickerMode = getDatePickerMode;
         vm.getPlaceholder = getPlaceholder;
         vm.getPI = getPI;
-        vm.getGeographic = getGeographic;
-
-        function getGeographic(expeditionId) {
-            for (i=0; i < vm.armsExpeditions.length; i++) {
-                if (vm.armsExpeditions[i].expeditionId == expeditionId) {
-                    return vm.armsExpeditions[i].geographicScope;
-                }
-            }
-
-            return "";
-        }
 
         function getPI(expeditionId) {
             for (i=0; i < vm.armsExpeditions.length; i++) {

@@ -62,6 +62,7 @@ label_display == 'visually_hidden' ? 'sr-only',
                         <img src="{{ file_url(item.content['#item'].entity.uri.value) }}"
                              class="img-responsive pull-right"/>
                     </div>
+                    {#<div class="col-xs-12 col-sm-6 illustration-caption" style="text-align: right;">#}
                     <div class="col-xs-12 col-sm-6 illustration-caption" style="text-align: right;">
                         {% if item.content['#item'].entity.field_image_caption_text.value %}
                             <p>{{ item.content['#item'].entity.field_image_caption_text.value }}</p>

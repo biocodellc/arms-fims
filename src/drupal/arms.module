@@ -1,5 +1,5 @@
 <?php
-use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\comment\Entity\Comment;
 
 /**
  * @file
@@ -33,8 +33,44 @@ function arms_page_attachments(array &$attachments) {
 }
 
 /**
- * Implements hook_editor_js_settings_alter().
+ * Implements hook_mail().
  */
-function arms_editor_js_settings_alter(array &$settings) {
-  $t = $settings;
+function arms_mail($key, &$message, $params) {
+  $options = array(
+    'langcode' => $message['langcode'],
+  );
+  switch ($key) {
+    case 'create_comment':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['subject'];
+      $message['body'][] = $params['body'];
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function arms_comment_insert(Comment $entity) {
+  $mailManager = \Drupal::service('plugin.manager.mail');
+  $module = 'arms';
+  $key = 'create_comment';
+  $to = \Drupal::config('system.site')->get('mail');
+  $delete_url = \Drupal::request()
+      ->getSchemeAndHttpHost() . '/comment/' . $entity->id() . '/delete';
+  $subject = $entity->getSubject();
+  $url = \Drupal::request()->getSchemeAndHttpHost() . $entity->url();
+  $body = $entity->get('comment_body')->value;
+  $params['body'] = "click $delete_url to delete comment\n\n$subject\n\n$url\n\n$body";
+  $params['subject'] = "New comment Posted";
+  $langcode = \Drupal::config('system.site')->get('langcode');
+
+  $result = $mailManager->mail($module, $key, $to, $langcode, $params);
+
+  if ($result['result'] != TRUE) {
+    $message = t('There was a problem sending your email notification to @email.', array('@email' => $to));
+    drupal_set_message($message, 'error');
+    \Drupal::logger('mail-log')->error($message);
+    return;
+  }
 }
