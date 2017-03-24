@@ -6999,14 +6999,16 @@ form hr {
   color: #1D317A; }
 
 .key-points {
-  background-color: #FDEADA;
-  color: #142255;
+  background-image: url(../images/navy-blue-underwater.png);
+  color: #D9D9D9;
   padding: 15px;
   margin-bottom: 24px;
   border: 1px solid #fbd8bb;
   border-radius: 4px; }
   .key-points h1, .key-points h2, .key-points h3, .key-points h4, .key-points h5, .key-points h6 {
     margin-top: 0; }
+    .key-points h1 span, .key-points h2 span, .key-points h3 span, .key-points h4 span, .key-points h5 span, .key-points h6 span {
+      color: #d9d9d9; }
 
 .illustrations {
   padding-top: 15px; }

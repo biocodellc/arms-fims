@@ -629,8 +629,10 @@ form {
 }
 
 .key-points {
-  background-color: #FDEADA;
-  color: #142255;
+  //background-color: #FDEADA;
+  background-image: url(../images/navy-blue-underwater.png);
+  //color: #142255;
+  color: #D9D9D9;
   padding: 15px;
   margin-bottom: $line-height-computed;
   border: 1px solid darken(#FDEADA, 6.5%);
@@ -638,6 +640,9 @@ form {
 
   h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
+    span {
+      color: #d9d9d9;
+    }
   }
 }
 
