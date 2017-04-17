@@ -113,6 +113,8 @@ task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates
 //=============================
 
 war {
+    exclude "css/style.css"
+
     webInf {
         from("${buildDir}/css") {
             into "/css/"
