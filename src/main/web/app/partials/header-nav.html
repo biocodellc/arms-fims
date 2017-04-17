@@ -3,7 +3,6 @@
     <!-- Brand and toggle get grouped for better mobile display -->
     <div ng-controller="NavCtrl as vm">
         <div class="navbar-header">
-
             <button type="button" class="navbar-toggle" data-toggle="collapse"
                     data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
@@ -11,18 +10,27 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <div>
-                <a class="logo navbar-btn pull-left" ui-sref="home" title="Home" rel="home">
-                    <!--<img src="" alt="Home"/>-->
+
+            <a class="logo navbar-btn" ui-sref="home" title="Home" rel="home">
+                <img class="pull-left" src="images/arms_logo.png" alt="Home"/>
+            </a>
+
+            <img class="pull-right logo hidden-sm hidden-xs" src="images/nmnh_logo.png"
+                 alt="Smithsonian National Museum of Natural History"/>
+
+            <div class="navbar-center">
+                <a class="navbar-brand" ui-sref="home" title="Home" rel="home">
+                    <span class="dauphin">A</span>utonomous <span class="dauphin">R</span>eef <span class="dauphin">M</span>onitoring
+                    <span class="dauphin">S</span>tructures
                 </a>
-                <a class="name navbar-brand" ui-sref="home" title="Home" rel="home">ARMS Information Management
-                    System</a>
+                <p>"Standardizing marine biodiversity assessment and monitoring"</p>
             </div>
+
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav nav-justified">
                 <li><a href="http://www.oceanarms.org" class='enabled'>ARMS Portal</a></li>
                 <li><a ui-sref="template" class='enabled'>Generate Template</a></li>
                 <li><a ui-sref="validate" class='enabled'>Validate and Load Data</a></li>
@@ -38,11 +46,11 @@
                 <li><a href="http://fims.readthedocs.org/en/latest/">Help</a></li>
             </ul>
 
-            <ul class="nav navbar-nav navbar-right">
-                <li ng-show="!vm.isAuthenticated"><a id="login" ng-click="vm.login()" ui-sref="login">Login</a></li>
-                <li ng-show="vm.isAuthenticated"><a ui-sref="profile">{{ vm.user.username }}</a></li>
-                <li ng-show="vm.isAuthenticated"><a ng-click="vm.logout()" ui-sref="home">Logout</a></li>
-            </ul>
+            <!--<ul class="nav navbar-nav navbar-right">-->
+                <!--<li ng-show="!vm.isAuthenticated"><a id="login" ng-click="vm.login()" ui-sref="login">Login</a></li>-->
+                <!--<li ng-show="vm.isAuthenticated"><a ui-sref="profile">{{ vm.user.username }}</a></li>-->
+                <!--<li ng-show="vm.isAuthenticated"><a ng-click="vm.logout()" ui-sref="home">Logout</a></li>-->
+            <!--</ul>-->
         </div><!-- /.navbar-collapse -->
     </div>
 </nav>

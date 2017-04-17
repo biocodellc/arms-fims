@@ -266,7 +266,7 @@ function loadExpeditions(id) {
 // retrieve the expeditions for a project and display them on the page
 function listExpeditions(divId) {
     var projectId = $(divId).data('projectId');
-    var jqxhr = $.getJSON(armsFimsRestRoot + 'projects/' + projectId + '/expeditions/')
+    var jqxhr = $.getJSON(armsFimsRestRoot + 'projects/' + projectId + '/expeditions?user')
         .done(function (data) {
             var html = '';
             var expandTemplate = '<br>\n<a class="expand-content" id="{expedition}-{section}" href="javascript:void(0);">\n'

@@ -3,7 +3,7 @@ package biocode.fims.arms.query;
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.digester.Attribute;
 import biocode.fims.digester.Validation;
-import biocode.fims.query.QueryWriter;
+import biocode.fims.query.writers.QueryWriter;
 import biocode.fims.run.TemplateProcessor;
 import biocode.fims.settings.PathManager;
 import org.apache.poi.ss.usermodel.Row;

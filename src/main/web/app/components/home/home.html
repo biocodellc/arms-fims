@@ -1,12 +1,31 @@
 <div class="row">
     <div class="col-xs-12">
-        <p>A Field Information Management System (FIMS) enables data collection at the source (in the field) by
-            generating spreadsheet templates, validating data, and assigning persistent identifiers to collected
-            samples.
-            The following diagram shows how the system works. The most typical functions are the <b>Generate
-                Template</b>
-            and <b>Validate and Load Data</b> options, both of which can be found under the Tools menu.</p>
+        <p class="blue-text">The ARMS data portal enables data collection at the source (in the field):</p>
 
         <p><img id='workflowImage' src='docs/Workflow_simple.jpeg'></p>
+
+        <ol>
+            <li>Generate the spreadsheet templates. Some fields are mandatory but you can choose from a variety of
+                fields to include in the template.
+            </li>
+            <li>Enter your ARMS metadata on the spreadsheet. Make sure to respect the standards described in the
+                spreadsheet.
+            </li>
+            <li>Validate your spreadsheet in the data portal to make sure the fields don’t contain any errors. Choose
+                the excel spreadsheet that contains your ARMS deployment information and click on “Validate”. Errors
+                will appear in red and require to be addressed before you can upload your data sheet. Warnings will
+                refer to other problems that will not interfere with the upload process.
+            </li>
+            <li>Once the spreadsheet has been successfully validated, you will have the possibility to upload it. Choose
+                the validated spreadsheet, and either “create a new project” if this is the first time you are uploading
+                the data or select an existing project to update the existing data.
+            </li>
+            <li>Visualize and manage your data in “Manage Data”</li>
+        </ol>
+
+        <h4 class="blue-text">To receive access to the ARMS data portal, please register <a
+                href="http://www.oceanarms.org/getting-involved">your project</a> or enter your login information below
+        </h4>
+        <div ng-include="'app/components/auth/login.html'" ng-controller="LoginCtrl as vm"></div>
     </div>
 </div>

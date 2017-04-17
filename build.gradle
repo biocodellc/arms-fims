@@ -83,8 +83,16 @@ dependencies {
     querydslapt group: 'com.querydsl', name: 'querydsl-apt', version: '4.1.2'
 
     testCompile "junit:junit-dep:4.10"
+
+    subprojects.each {
+        project.configurations.server.dependencies.addAll(it.configurations.server.dependencies)
+        project.configurations.serverRuntime.dependencies.addAll(it.configurations.serverRuntime.dependencies)
+    }
 }
 
+clean {
+    delete generatedSourceDir
+}
 
 //=================================
 //= QueryDSL configuration
@@ -263,7 +271,7 @@ jsApp {
 //===========================
 
 libSassParameters {
-    inputFilePath = "${projectDir}/src/stylesheets/style.scss"
+    inputFilePath = "${projectDir}/src/stylesheets/sass/style.scss"
     outputFilePath = "${buildDir}/css/style.css"
     watchedDirectoryPath = "${projectDir}/src/stylesheets"
     sourceMapEmbed = true

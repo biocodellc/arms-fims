@@ -5,7 +5,6 @@ import biocode.fims.digester.*;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 import biocode.fims.mysql.query.Operator;
 import biocode.fims.rest.services.rest.subResources.ArmsExpeditionsResource;
-import biocode.fims.rest.services.rest.subResources.ExpeditionsResource;
 import biocode.fims.run.TemplateProcessor;
 import biocode.fims.service.ExpeditionService;
 import biocode.fims.service.ProjectService;
@@ -340,7 +339,7 @@ public class ProjectController extends FimsAbstractProjectsController {
 
 
                 // Construct the checkbox text
-                thisOutput.append("<input type='checkbox' class='check_boxes' value='" + column + "' data-uri='");
+                thisOutput.append("<label class='checkbox-inline'><input type='checkbox' class='check_boxes' value='" + column + "' data-uri='");
                 thisOutput.append(uri);
                 thisOutput.append("'");
 
@@ -352,7 +351,7 @@ public class ProjectController extends FimsAbstractProjectsController {
 
                 // Close tag and insert Definition link
                 thisOutput.append(">" + column + " \n" +
-                        "<a href='#' class='def_link' name='" + column + "'>DEF</a>\n" + "<br>\n");
+                        "<a href='#' class='def_link' name='" + column + "'>DEF</a></label>\n" + "<br>\n");
 
                 // Fetch any existing content for this key
                 if (group == null || group.equals("")) {

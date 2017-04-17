@@ -17,7 +17,7 @@ angular.module('fims.expeditions')
             return expeditionFactory;
 
             function getArmsExpeditions(includePrivate) {
-                return $http.get(REST_ROOT + 'arms/projects?includePrivate=' + includePrivate)    ;
+                return $http.get(REST_ROOT + 'arms/projects?includePrivate=' + includePrivate);
             }
 
             function getExpeditionsForUser(includePrivate) {
@@ -64,4 +64,27 @@ angular.module('fims.expeditions')
                     keepJson: true
                 });
             }
+
+            // function downloadData(projectId, expeditionId) {
+            //     var criterions = JSON.stringify(
+            //         {
+            //             "criterion": [{
+            //                 "key": "deploymentId",
+            //                 "operator": "IN",
+            //                 "value": expeditionId,
+            //                 "condition": "AND"
+            //             }]
+            //         });
+            //     return $http({
+            //         me
+            //     }).then(function (response) {
+            //         if (response.data.url) {
+            //             $window.open(response.data.url);
+            //         } else {
+            //             vm.error = "Error downloading expedition";
+            //         }
+            //     }, function (response) {
+            //         vm.error = "Error downloading expedition";
+            //     })
+            // }
         }]);
