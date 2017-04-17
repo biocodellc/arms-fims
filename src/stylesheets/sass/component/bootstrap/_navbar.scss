@@ -101,30 +101,41 @@ body {
       p {
         clear: both;
         font-size: $font-size-small;
+        color: #213a57;
 
         @media #{$wide} {
-          font-size: $font-size-base;
+          //font-size: $font-size-base;
         }
       }
     }
 
     .navbar-brand {
-      color: $navbar-default-color;
+      color: #213a57;
       font-size: $font-size-h4;
       text-transform: none;
       width: 100%;
       padding-bottom: 12px;
       height: auto;
+      font-weight: 400;
 
       @media #{$wide} {
-        font-size: $font-size-h3;
+        //font-size: $font-size-h3;
       }
+    }
+
+    .navbar-brand:first-letter {
+      font-family: "dauphin";
+      font-size: $font-size-h2;
     }
 
     .navbar-brand:focus,
     .navbar-brand:hover {
       color: $navbar-default-color;
       background-color: $navbar-default-bg;
+    }
+
+    .navbar-center {
+      font-size: $font-size-small;
     }
   }
 

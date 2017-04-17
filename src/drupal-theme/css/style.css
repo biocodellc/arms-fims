@@ -6242,24 +6242,25 @@ body {
           display: block; } }
       .navbar-header .navbar-center p {
         clear: both;
-        font-size: 13px; }
-        @media screen and (min-width: 1200px) {
-          .navbar-header .navbar-center p {
-            font-size: 15px; } }
+        font-size: 13px;
+        color: #213a57; }
     .navbar-header .navbar-brand {
-      color: #000;
+      color: #213a57;
       font-size: 19px;
       text-transform: none;
       width: 100%;
       padding-bottom: 12px;
-      height: auto; }
-      @media screen and (min-width: 1200px) {
-        .navbar-header .navbar-brand {
-          font-size: 26px; } }
+      height: auto;
+      font-weight: 400; }
+    .navbar-header .navbar-brand:first-letter {
+      font-family: "dauphin";
+      font-size: 32px; }
     .navbar-header .navbar-brand:focus,
     .navbar-header .navbar-brand:hover {
       color: #000;
       background-color: #fff; }
+    .navbar-header .navbar-center {
+      font-size: 13px; }
   .navbar .nav li a {
     padding: 10px 5px; }
   .navbar .nav .dropdown-menu > li > a {
@@ -6602,6 +6603,15 @@ ol, ul {
   src: url("../fonts/Walkway_SemiBold-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/Walkway_SemiBold-webfont.woff") format("woff"), url("../fonts/Walkway_SemiBold-webfont.ttf") format("truetype"), url("../fonts/Walkway_SemiBold-webfont.svg#walkway_semiboldregular") format("svg");
   font-weight: normal;
   font-style: normal; }
+@font-face {
+  font-family: 'dauphin';
+  src: url("../fonts/Dauphinn.ttf");
+  font-weight: normal;
+  font-style: normal; }
+.dauphin {
+  font-family: 'dauphin';
+  font-size: 39px; }
+
 .img-responsive {
   position: relative;
   float: left;
@@ -6620,6 +6630,7 @@ ol, ul {
   color: #fff;
   background-color: #1D317A;
   margin-top: 20px;
+  margin-bottom: 15px;
   padding: 20px; }
   .footer .divider {
     margin: 0 15px; }
@@ -6999,16 +7010,38 @@ form hr {
   color: #1D317A; }
 
 .key-points {
-  background-image: url(../images/navy-blue-underwater.png);
-  color: #D9D9D9;
+  color: #fff;
   padding: 15px;
   margin-bottom: 24px;
-  border: 1px solid #fbd8bb;
-  border-radius: 4px; }
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  -webkit-box-shadow: 3px 3px 8px -1px rgba(74, 74, 74, 0.75);
+  -moz-box-shadow: 3px 3px 8px -1px rgba(74, 74, 74, 0.75);
+  box-shadow: 3px 3px 8px -1px rgba(74, 74, 74, 0.75); }
+  .key-points > * {
+    position: relative;
+    z-index: 2; }
+  .key-points:before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: .9;
+    background-image: url(../images/navy-blue-underwater.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat; }
+  .key-points a {
+    color: #FFEF71; }
   .key-points h1, .key-points h2, .key-points h3, .key-points h4, .key-points h5, .key-points h6 {
-    margin-top: 0; }
+    margin-top: 0;
+    color: #fff; }
     .key-points h1 span, .key-points h2 span, .key-points h3 span, .key-points h4 span, .key-points h5 span, .key-points h6 span {
-      color: #d9d9d9; }
+      color: #fff; }
 
 .illustrations {
   padding-top: 15px; }

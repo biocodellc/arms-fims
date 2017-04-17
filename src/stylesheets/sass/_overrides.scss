@@ -52,6 +52,18 @@ ol, ul {
 
 }
 
+@font-face {
+  font-family: 'dauphin';
+  src: url('../fonts/Dauphinn.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.dauphin {
+  font-family: 'dauphin';
+  font-size: $font-size-h1;
+}
+
 // firefox bug fix
 .img-responsive {
   @include make-xs-column(12, 0);
@@ -70,6 +82,7 @@ ol, ul {
   color: $navbar-default-link-color;
   background-color: $navbar-nav-bg;
   margin-top: 20px;
+  margin-bottom: 15px;
   padding: 20px;
 
   .divider {
@@ -630,18 +643,48 @@ form {
 
 .key-points {
   //background-color: #FDEADA;
-  background-image: url(../images/navy-blue-underwater.png);
   //color: #142255;
-  color: #D9D9D9;
+  color: #fff;
   padding: 15px;
   margin-bottom: $line-height-computed;
-  border: 1px solid darken(#FDEADA, 6.5%);
-  border-radius: 4px;
+  //border: 1px solid darken(#FDEADA, 6.5%);
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+
+  -webkit-box-shadow: 3px 3px 8px -1px rgba(74,74,74,0.75);
+  -moz-box-shadow: 3px 3px 8px -1px rgba(74,74,74,0.75);
+  box-shadow: 3px 3px 8px -1px rgba(74, 74, 74, 0.75);
+
+  > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  &:before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: .9;
+    background-image: url(../images/navy-blue-underwater.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+
+  a {
+    color: #FFEF71;
+  }
 
   h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
+    color: #fff;
     span {
-      color: #d9d9d9;
+      color: #fff;
     }
   }
 }
