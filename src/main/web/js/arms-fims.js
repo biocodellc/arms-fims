@@ -284,6 +284,8 @@ function listExpeditions(divId) {
                 html += '<div id="{expedition}-configuration" class="toggle-content">Loading Expedition Metadata...</div>';
                 html += expandTemplate.replace('{text}', 'Expedition Resources').replace('{section}', 'resources');
                 html += '<div id="{expedition}-resources" class="toggle-content">Loading Expedition Resources...</div>';
+                html += '<br>\n<a href="#" onclick="window.location = \'' + armsFimsRestRoot + 'arms/projects/' + e.expeditionId + '/download\';">\n' +
+                    '\t <img src="' + appRoot + 'css/images/right-arrow.png" class="img-arrow">Download</a>';
                 html += '</div>\n';
 
                 // add current project to element id

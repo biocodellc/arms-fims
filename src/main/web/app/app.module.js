@@ -2,6 +2,7 @@ var app = angular.module('armsApp', [
     'ui.router',
     'ui.bootstrap',
     'fims.auth',
+    'fims.home',
     'fims.templates',
     'fims.expeditions',
     'fims.validation',
@@ -79,7 +80,7 @@ app.controller('NavCtrl', ['$rootScope', '$scope', '$location', '$state', 'AuthF
             function(newVal) {
                 vm.isAuthenticated = newVal;
             }
-        )
+        );
 
         $scope.$watch(
             function(){ return UserFactory.isAdmin},

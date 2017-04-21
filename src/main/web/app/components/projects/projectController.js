@@ -44,7 +44,7 @@ angular.module('fims.projects')
             vm.editExpedition = editExpedition;
             vm.deleteExpedition = deleteExpedition;
             vm.updateExpeditions = updateExpeditions;
-            // vm.downloadExpedition = downloadExpedition;
+            vm.downloadExpedition = ExpeditionFactory.download;
             vm.updateModifiedExpeditions = updateModifiedExpeditions;
             vm.removeMember = removeMember;
             vm.addMember = addMember;

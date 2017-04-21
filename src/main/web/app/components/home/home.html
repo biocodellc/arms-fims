@@ -23,9 +23,12 @@
             <li>Visualize and manage your data in “Manage Data”</li>
         </ol>
 
-        <h4 class="blue-text">To receive access to the ARMS data portal, please register <a
-                href="http://www.oceanarms.org/getting-involved">your project</a> or enter your login information below
-        </h4>
-        <div ng-include="'app/components/auth/login.html'" ng-controller="LoginCtrl as vm"></div>
+        <div ng-show="!vm.isAuthenticated">
+            <h4 class="blue-text text-center">To receive access to the ARMS data portal, please register <a
+                    href="http://www.oceanarms.org/getting-involved">your project</a> or enter your login information
+                below
+            </h4>
+            <div ng-include="'app/components/auth/login.html'" ng-controller="LoginCtrl as vm"></div>
+        </div>
     </div>
 </div>

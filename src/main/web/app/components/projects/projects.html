@@ -110,9 +110,9 @@
                                                        ng-disabled="!pmProjectVm.editExpeditions">
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-primary btn-xs" ng-click="pmProjectVm.editExpedition(expedition)">Edit</button>
-                                                <button type="button" class="btn btn-danger btn-xs" ng-click="pmProjectVm.deleteExpedition(expedition.expeditionCode)">Delete</button>
-                                                <!--<button type="button" class="btn btn-primary btn-xs" ng-click="pmProjectVm.downloadExpedition(expedition.expeditionCode)">Download</button>-->
+                                                <button type="button" class="btn btn-primary btn-sm" ng-click="pmProjectVm.editExpedition(expedition)">Edit</button>
+                                                <button type="button" class="btn btn-danger btn-sm" ng-click="pmProjectVm.deleteExpedition(expedition.expeditionCode)">Delete</button>
+                                                <button type="button" class="btn btn-primary btn-sm" ng-click="pmProjectVm.downloadExpedition(expedition.expeditionId)">Download</button>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -165,10 +165,10 @@
                                          ng-repeat="member in pmProjectVm.members | orderBy: 'member.username' track by member.userId">
                                         <label class="col-xs-4 control-label text-right">{{ member.username }}</label>
                                         <div class="col-xs-2">
-                                            <button type="button" class="btn btn-default btn-xs col-xs-6"
+                                            <button type="button" class="btn btn-default btn-sm col-xs-6"
                                                     ng-click="pmProjectVm.editMember(member.username)">Edit
                                             </button>
-                                            <button type="button" class="btn btn-danger btn-xs col-xs-6"
+                                            <button type="button" class="btn btn-danger btn-sm col-xs-6"
                                                     ng-click="pmProjectVm.removeMember(member.username)">Remove
                                             </button>
                                         </div>

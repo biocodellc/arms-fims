@@ -1,7 +1,10 @@
 package biocode.fims.rest.services.rest;
 
 import biocode.fims.arms.entities.ArmsExpedition;
+import biocode.fims.arms.entities.Deployment;
+import biocode.fims.arms.query.DeploymentsWriter;
 import biocode.fims.arms.services.ArmsExpeditionService;
+import biocode.fims.arms.services.DeploymentService;
 import biocode.fims.bcid.Identifier;
 import biocode.fims.config.ConfigurationFileFetcher;
 import biocode.fims.digester.Mapping;
@@ -29,11 +32,13 @@ import java.util.List;
 public class ArmsExpeditionController extends FimsService {
 
     private final ArmsExpeditionService armsExpeditionService;
+    private final DeploymentService deploymentService;
 
     @Autowired
-    ArmsExpeditionController(ArmsExpeditionService armsExpeditionService, SettingsManager settingsManager) {
+    ArmsExpeditionController(ArmsExpeditionService armsExpeditionService, DeploymentService deploymentService, SettingsManager settingsManager) {
         super(settingsManager);
         this.armsExpeditionService = armsExpeditionService;
+        this.deploymentService = deploymentService;
     }
 
     @JsonView(Views.Detailed.class)
@@ -112,5 +117,31 @@ public class ArmsExpeditionController extends FimsService {
         if (armsExpedition != null)
             return Response.ok(armsExpedition).build();
         return Response.noContent().build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{expeditionId}/download")
+    public Response download(@PathParam("expeditionId") int expeditionId) {
+        List<Deployment> deployments = deploymentService.findAll(expeditionId);
+
+        Integer projectId = Integer.valueOf(settingsManager.retrieveValue("projectId"));
+
+        File configFile = new ConfigurationFileFetcher(projectId, defaultOutputDirectory(), false).getOutputFile();
+        Mapping mapping = new Mapping();
+        mapping.addMappingRules(configFile);
+
+        String defaultSheetName = mapping.getDefaultSheetName();
+
+        DeploymentsWriter deploymentsWriter = new DeploymentsWriter(
+                deployments,
+                defaultOutputDirectory(),
+                mapping.getAllAttributes(defaultSheetName),
+                defaultSheetName);
+
+        return Response
+                .ok(deploymentsWriter.writeExcel(projectId))
+                .header("Content-Disposition", "attachment; filename=arms-fims-output.xlsx")
+                .build();
     }
 }

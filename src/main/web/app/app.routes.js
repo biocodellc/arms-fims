@@ -10,6 +10,7 @@ angular.module('armsApp')
             .state('home', {
                 url: "/",
                 templateUrl: "app/components/home/home.html",
+                controller: "HomeController as vm"
             })
             .state('login', {
                 url: "/login",

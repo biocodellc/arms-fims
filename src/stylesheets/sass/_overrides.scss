@@ -453,6 +453,17 @@ now override the 3.3 new styles for modern browsers & apply opacity
 .btn {
   @include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base * .8, $btn-border-radius-base);
 }
+.btn-lg {
+//   line-height: ensure even-numbered height of button next to large input
+  @include button-size($padding-large-vertical, $padding-large-horizontal, $font-size-large, $line-height-large * .8, $btn-border-radius-large);
+}
+.btn-sm {
+//   line-height: ensure proper height of button next to small input
+  @include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small * .8, $btn-border-radius-small);
+}
+.btn-xs {
+  @include button-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-small, $line-height-small * .8, $btn-border-radius-small);
+}
 
 // Forms ==============================================
 .has-warning {

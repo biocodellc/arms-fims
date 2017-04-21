@@ -1,7 +1,7 @@
 angular.module('fims.expeditions')
 
-    .factory('ExpeditionFactory', ['$http', 'UserFactory', 'REST_ROOT', 'PROJECT_ID',
-        function ($http, UserFactory, REST_ROOT, PROJECT_ID) {
+    .factory('ExpeditionFactory', ['$http', '$window', 'UserFactory', 'REST_ROOT', 'PROJECT_ID',
+        function ($http, $window, UserFactory, REST_ROOT, PROJECT_ID) {
             var expeditionFactory = {
                 getExpeditionsForUser: getExpeditionsForUser,
                 getExpeditions: getExpeditions,
@@ -11,7 +11,8 @@ angular.module('fims.expeditions')
                 updateExpedition: updateExpedition,
                 deleteExpedition: deleteExpedition,
                 createArmsExpedition: createArmsExpedition,
-                getArmsExpeditions: getArmsExpeditions
+                getArmsExpeditions: getArmsExpeditions,
+                download: download
             };
 
             return expeditionFactory;
@@ -65,26 +66,7 @@ angular.module('fims.expeditions')
                 });
             }
 
-            // function downloadData(projectId, expeditionId) {
-            //     var criterions = JSON.stringify(
-            //         {
-            //             "criterion": [{
-            //                 "key": "deploymentId",
-            //                 "operator": "IN",
-            //                 "value": expeditionId,
-            //                 "condition": "AND"
-            //             }]
-            //         });
-            //     return $http({
-            //         me
-            //     }).then(function (response) {
-            //         if (response.data.url) {
-            //             $window.open(response.data.url);
-            //         } else {
-            //             vm.error = "Error downloading expedition";
-            //         }
-            //     }, function (response) {
-            //         vm.error = "Error downloading expedition";
-            //     })
-            // }
+            function download(expeditionId) {
+                $window.location = REST_ROOT + 'arms/projects/' + expeditionId + '/download';
+            }
         }]);

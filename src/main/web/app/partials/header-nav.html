@@ -35,22 +35,18 @@
                 <li><a ui-sref="template" class='enabled'>Generate Template</a></li>
                 <li><a ui-sref="validate" class='enabled'>Validate and Load Data</a></li>
                 <li ng-show="vm.isAuthenticated" class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Manage
-                        Data<b class="caret"></b></a>
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Tools<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a ui-sref="expeditionManager" class='enabled'>Expedition Manager</a></li>
                         <li ng-show="vm.isAdmin"><a ui-sref='projects' class='enabled'>Project Manager</a></li>
-                        <li ng-show="!vm.isAdmin"><a href='#' class='disabled'>Project Manager</a></li>
+                        <li ng-show="vm.isAuthenticated"><a ui-sref="profile">My Profile</a></li>
                     </ul>
                 </li>
+                <li ng-show="!vm.isAuthenticated"><a id="login" ng-click="vm.login()" ui-sref="login">Login</a></li>
+                <li ng-show="vm.isAuthenticated"><a ng-click="vm.logout()" ui-sref="home">Logout</a></li>
                 <li><a href="http://fims.readthedocs.org/en/latest/">Help</a></li>
             </ul>
 
-            <!--<ul class="nav navbar-nav navbar-right">-->
-                <!--<li ng-show="!vm.isAuthenticated"><a id="login" ng-click="vm.login()" ui-sref="login">Login</a></li>-->
-                <!--<li ng-show="vm.isAuthenticated"><a ui-sref="profile">{{ vm.user.username }}</a></li>-->
-                <!--<li ng-show="vm.isAuthenticated"><a ng-click="vm.logout()" ui-sref="home">Logout</a></li>-->
-            <!--</ul>-->
         </div><!-- /.navbar-collapse -->
     </div>
 </nav>
