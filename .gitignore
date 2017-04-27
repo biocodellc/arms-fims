@@ -5,6 +5,7 @@
 !src/main/environment/*/log4j.properties
 !src/main/resources/settings-manager.properties
 !src/main/resources/locale/*
+!gradle/wrapper/gradle-wrapper.properties
 dist/*
 build/*
 classes/*

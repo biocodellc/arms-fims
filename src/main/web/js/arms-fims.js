@@ -3,6 +3,7 @@ var appRoot = "/";
 var armsFimsRestRoot = "/rest/v1/";
 
 $.ajaxSetup({
+    headers: { 'Fims-App': 'Arms-Fims' },
     beforeSend: function (jqxhr, config) {
         jqxhr.config = config;
         var armsSessionStorage = JSON.parse(window.sessionStorage.arms);

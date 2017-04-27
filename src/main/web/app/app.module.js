@@ -18,6 +18,7 @@ var app = angular.module('armsApp', [
 var currentUser = {};
 app.run(['UserFactory', function(UserFactory) {
     UserFactory.setUser(currentUser);
+    $http.defaults.headers.common = {'Fims-App': 'Arms-Fims'};
 }]);
 
 angular.element(document).ready(function() {
