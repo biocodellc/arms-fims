@@ -219,6 +219,7 @@ javascript.source {
             exclude {
                 it.file in files(externLibsOrdered).files
             }
+            exclude "autotrack.js"
         }
     }
     app {
@@ -236,6 +237,7 @@ javascript.source {
         js {
             srcDir "src/main/web/js"
             include "*.js"
+            exclude "fims-analytics.js"
         }
     }
     modules {
