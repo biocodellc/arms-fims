@@ -20,7 +20,7 @@ public class DeploymentRepositoryImpl implements DeploymentBulkUploadRepository 
 
         sql.append("LOAD DATA LOCAL INFILE '");
         sql.append(csvFilepath);
-        sql.append("' INTO TABLE deployments FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n' (");
+        sql.append("' INTO TABLE deployments FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' (");
         int col = 0;
         StringBuilder setColumnStatements = new StringBuilder();
         for (String colname : columnNames) {

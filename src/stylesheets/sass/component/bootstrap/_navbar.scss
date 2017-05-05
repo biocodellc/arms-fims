@@ -123,11 +123,6 @@ body {
       }
     }
 
-    .navbar-brand:first-letter {
-      font-family: "dauphin";
-      font-size: $font-size-h2;
-    }
-
     .navbar-brand:focus,
     .navbar-brand:hover {
       color: $navbar-default-color;
