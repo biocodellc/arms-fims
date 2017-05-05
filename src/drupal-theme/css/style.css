@@ -6252,9 +6252,6 @@ body {
       padding-bottom: 12px;
       height: auto;
       font-weight: 400; }
-    .navbar-header .navbar-brand:first-letter {
-      font-family: "dauphin";
-      font-size: 32px; }
     .navbar-header .navbar-brand:focus,
     .navbar-header .navbar-brand:hover {
       color: #000;
@@ -6893,6 +6890,24 @@ now override the 3.3 new styles for modern browsers & apply opacity
   line-height: 1.28;
   border-radius: 4px; }
 
+.btn-lg, .btn-group-lg > .btn {
+  padding: 14px 16px;
+  font-size: 19px;
+  line-height: 1.06667;
+  border-radius: 6px; }
+
+.btn-sm, .btn-group-sm > .btn {
+  padding: 5px 10px;
+  font-size: 13px;
+  line-height: 1.2;
+  border-radius: 3px; }
+
+.btn-xs, .btn-group-xs > .btn {
+  padding: 1px 5px;
+  font-size: 13px;
+  line-height: 1.2;
+  border-radius: 3px; }
+
 .has-warning .help-block,
 .has-warning .control-label,
 .has-warning .radio,
@@ -7090,6 +7105,9 @@ form hr {
   position: relative;
   height: 425px;
   width: 100%; }
+
+#cat1 {
+  margin-bottom: 15px; }
 
 .form-group-sm select.form-control {
   line-height: inherit; }
