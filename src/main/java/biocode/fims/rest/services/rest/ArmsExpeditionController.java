@@ -44,7 +44,8 @@ public class ArmsExpeditionController extends FimsService {
     @JsonView(Views.Detailed.class)
     @POST
     @Authenticated
-    public Response create(@FormParam("principalInvestigator") String principalInvestigator,
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArmsExpedition create(@FormParam("principalInvestigator") String principalInvestigator,
                            @FormParam("contactName") String contactName,
                            @FormParam("contactEmail") String contactEmail,
                            @FormParam("fundingSource") String fundingSource,
@@ -76,7 +77,7 @@ public class ArmsExpeditionController extends FimsService {
 
         armsExpeditionService.create(armsExpedition, userContext.getUser().getUserId(), projectId, mapping);
 
-        return Response.ok(armsExpedition).build();
+        return armsExpedition;
     }
 
     @JsonView(Views.Detailed.class)
