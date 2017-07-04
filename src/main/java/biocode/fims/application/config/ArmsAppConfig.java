@@ -25,8 +25,6 @@ public class ArmsAppConfig {
     @Autowired
     FimsAppConfig fimsAppConfig;
     @Autowired
-    ProjectService projectService;
-    @Autowired
     DeploymentService deploymentService;
     @Autowired
     MessageSource messageSource;
@@ -37,8 +35,14 @@ public class ArmsAppConfig {
         FimsMetadataPersistenceManager persistenceManager = new MysqlFimsMetadataPersistenceManager(
                 fimsAppConfig.expeditionService,
                 deploymentService,
-                fimsAppConfig.settingsManager);
-        return new FimsMetadataFileManager(persistenceManager, fimsAppConfig.settingsManager,
+                armsProperties());
+        return new FimsMetadataFileManager(persistenceManager, armsProperties(),
                 fimsAppConfig.expeditionService, fimsAppConfig.bcidService, messageSource);
+    }
+
+    @Bean
+    @Primary
+    public ArmsProperties armsProperties() {
+        return new ArmsProperties(fimsAppConfig.env);
     }
 }

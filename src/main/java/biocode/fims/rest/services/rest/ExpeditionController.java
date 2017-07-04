@@ -1,12 +1,11 @@
 package biocode.fims.rest.services.rest;
 
+import biocode.fims.application.config.FimsProperties;
 import biocode.fims.bcid.ExpeditionMinter;
 import biocode.fims.fimsExceptions.ForbiddenRequestException;
 import biocode.fims.rest.filters.Authenticated;
 import biocode.fims.service.ExpeditionService;
-import biocode.fims.service.OAuthProviderService;
 import biocode.fims.service.ProjectService;
-import biocode.fims.settings.SettingsManager;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,8 +26,8 @@ import java.util.ArrayList;
 public class ExpeditionController extends FimsAbstractExpeditionController {
 
     @Autowired
-    public ExpeditionController(ExpeditionService expeditionService, ProjectService projectService, SettingsManager settingsManager) {
-        super(expeditionService, projectService, settingsManager);
+    public ExpeditionController(ExpeditionService expeditionService, ProjectService projectService, FimsProperties props) {
+        super(expeditionService, projectService, props);
     }
 
     @GET
@@ -82,7 +81,7 @@ public class ExpeditionController extends FimsAbstractExpeditionController {
     public Response listMetadataAsTable(@PathParam("expeditionId") int expeditionId) {
         ExpeditionMinter e = new ExpeditionMinter();
 
-        if (!ignoreUser && !e.userOwnsExpedition(userContext.getUser().getUserId(), expeditionId)) {
+        if (!props.ignoreUser() && !e.userOwnsExpedition(userContext.getUser().getUserId(), expeditionId)) {
             throw new ForbiddenRequestException("You must own this expedition in order to view its datasets.");
         }
 

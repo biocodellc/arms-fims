@@ -1,14 +1,13 @@
 package biocode.fims;
 
 import biocode.fims.application.config.ArmsAppConfig;
+import biocode.fims.application.config.ArmsProperties;
 import biocode.fims.digester.Attribute;
 import biocode.fims.digester.Mapping;
-import biocode.fims.settings.*;
 import biocode.fims.utils.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.sql.*;
@@ -20,14 +19,14 @@ import java.sql.Connection;
 public class DbBuilder {
     protected Connection conn;
 
-    private final SettingsManager settingsManager;
+    private final ArmsProperties props;
 
     @Autowired
-    public DbBuilder(SettingsManager settingsManager) throws Exception {
-        this.settingsManager = settingsManager;
-        String url = settingsManager.retrieveValue("datasetUrl");
-        String user = settingsManager.retrieveValue("datasetUser");
-        String pass = settingsManager.retrieveValue("datasetPassword");
+    public DbBuilder(ArmsProperties props) throws Exception {
+        this.props = props;
+        String url = props.datasetUrl();
+        String user = props.datasetUser();
+        String pass = props.datasetPassword();
         conn = DriverManager.getConnection(url, user, pass);
     }
 

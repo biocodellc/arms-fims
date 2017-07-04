@@ -1,5 +1,6 @@
 package biocode.fims.rest.services.rest;
 
+import biocode.fims.application.config.FimsProperties;
 import biocode.fims.config.ConfigurationFileFetcher;
 import biocode.fims.entities.Project;
 import biocode.fims.fileManagers.AuxilaryFileManager;
@@ -10,9 +11,7 @@ import biocode.fims.rest.FimsService;
 import biocode.fims.run.Process;
 import biocode.fims.run.ProcessController;
 import biocode.fims.service.*;
-import biocode.fims.settings.SettingsManager;
 import biocode.fims.utils.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
@@ -38,8 +37,8 @@ public class ValidateController extends FimsService {
     private final ProjectService projectService;
 
     ValidateController(ExpeditionService expeditionService, FimsMetadataFileManager fimsMetadataFileManager,
-                       List<AuxilaryFileManager> fileManagers, SettingsManager settingsManager, ProjectService projectService) {
-        super(settingsManager);
+                       List<AuxilaryFileManager> fileManagers, FimsProperties props, ProjectService projectService) {
+        super(props);
         this.expeditionService = expeditionService;
         this.fimsMetadataFileManager = fimsMetadataFileManager;
         this.fileManagers = fileManagers;
@@ -67,7 +66,7 @@ public class ValidateController extends FimsService {
         boolean closeProcess = true;
         boolean removeController = true;
 
-        Project project = projectService.getProject(projectId, appRoot);
+        Project project = projectService.getProject(projectId, props.appRoot());
 
         if (project == null) {
             throw new BadRequestException("Project not found");
@@ -181,7 +180,7 @@ public class ValidateController extends FimsService {
 
             Process p = processController.getProcess();
 
-            p.upload(false, Boolean.parseBoolean(settingsManager.retrieveValue("ignoreUser")), expeditionService);
+            p.upload(false, props.ignoreUser(), expeditionService);
 
             returnValue.put("done", processController.getSuccessMessage());
             return returnValue;

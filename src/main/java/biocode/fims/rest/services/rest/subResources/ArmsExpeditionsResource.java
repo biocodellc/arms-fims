@@ -1,5 +1,6 @@
 package biocode.fims.rest.services.rest.subResources;
 
+import biocode.fims.application.config.FimsProperties;
 import biocode.fims.arms.services.ArmsExpeditionService;
 import biocode.fims.config.ConfigurationFileFetcher;
 import biocode.fims.digester.Mapping;
@@ -12,7 +13,6 @@ import biocode.fims.rest.filters.Authenticated;
 import biocode.fims.run.ProcessController;
 import biocode.fims.service.ExpeditionService;
 import biocode.fims.service.ProjectService;
-import biocode.fims.settings.SettingsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -35,9 +35,9 @@ public class ArmsExpeditionsResource extends ExpeditionsResource {
 
     @Autowired
     public ArmsExpeditionsResource(ExpeditionService expeditionService, ProjectService projectService,
-                                   SettingsManager settingsManager, FimsMetadataFileManager fimsMetadataFileManager,
+                                   FimsProperties props, FimsMetadataFileManager fimsMetadataFileManager,
                                    ArmsExpeditionService armsExpeditionService) {
-        super(expeditionService, projectService, settingsManager, fimsMetadataFileManager);
+        super(expeditionService, projectService, props, fimsMetadataFileManager);
         this.armsExpeditionService = armsExpeditionService;
         this.projectService = projectService;
         this.fimsMetadataFileManager = fimsMetadataFileManager;

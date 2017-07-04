@@ -1,5 +1,6 @@
 package biocode.fims.rest.services.rest;
 
+import biocode.fims.application.config.ArmsProperties;
 import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.query.DeploymentsWriter;
@@ -12,7 +13,6 @@ import biocode.fims.entities.Expedition;
 import biocode.fims.rest.FimsService;
 import biocode.fims.rest.filters.Authenticated;
 import biocode.fims.serializers.Views;
-import biocode.fims.settings.SettingsManager;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,12 +33,14 @@ public class ArmsExpeditionController extends FimsService {
 
     private final ArmsExpeditionService armsExpeditionService;
     private final DeploymentService deploymentService;
+    private final ArmsProperties props;
 
     @Autowired
-    ArmsExpeditionController(ArmsExpeditionService armsExpeditionService, DeploymentService deploymentService, SettingsManager settingsManager) {
-        super(settingsManager);
+    ArmsExpeditionController(ArmsExpeditionService armsExpeditionService, DeploymentService deploymentService, ArmsProperties props) {
+        super(props);
         this.armsExpeditionService = armsExpeditionService;
         this.deploymentService = deploymentService;
+        this.props = props;
     }
 
     @JsonView(Views.Detailed.class)
@@ -56,7 +58,7 @@ public class ArmsExpeditionController extends FimsService {
                            @FormParam("expeditionCode") String expeditionCode,
                            @FormParam("public") @DefaultValue("true") boolean isPublic) {
 
-        int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
+        int projectId = props.projectId();
 
         File configFile = new ConfigurationFileFetcher(projectId, defaultOutputDirectory(), false).getOutputFile();
         Mapping mapping = new Mapping();
@@ -85,7 +87,7 @@ public class ArmsExpeditionController extends FimsService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response list(@QueryParam("includePrivate") @DefaultValue("false") boolean includePrivate) {
         List<ArmsExpedition> expeditions;
-        Integer projectId = Integer.valueOf(settingsManager.retrieveValue("projectId"));
+        Integer projectId = props.projectId();
 
         if (userContext.getUser() != null) {
             expeditions = armsExpeditionService.getArmsExpeditions(projectId, userContext.getUser().getUserId(), includePrivate);
@@ -111,7 +113,7 @@ public class ArmsExpeditionController extends FimsService {
     @JsonView(ArmsExpedition.withDeploymentsView.class)
     @Path("{identifier: .+}")
     public Response getExpedition(@PathParam("identifier") String identifierString) {
-        String divider = settingsManager.retrieveValue("divider");
+        String divider = props.divider();
         Identifier identifier = new Identifier(identifierString, divider);
 
         ArmsExpedition armsExpedition = armsExpeditionService.getArmsExpeditionByIdentifier(identifier.getBcidIdentifier());
@@ -126,7 +128,7 @@ public class ArmsExpeditionController extends FimsService {
     public Response download(@PathParam("expeditionId") int expeditionId) {
         List<Deployment> deployments = deploymentService.findAll(expeditionId);
 
-        Integer projectId = Integer.valueOf(settingsManager.retrieveValue("projectId"));
+        Integer projectId = props.projectId();
 
         File configFile = new ConfigurationFileFetcher(projectId, defaultOutputDirectory(), false).getOutputFile();
         Mapping mapping = new Mapping();

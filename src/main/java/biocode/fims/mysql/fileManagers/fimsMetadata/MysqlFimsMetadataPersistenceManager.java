@@ -1,5 +1,6 @@
 package biocode.fims.mysql.fileManagers.fimsMetadata;
 
+import biocode.fims.application.config.FimsProperties;
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.services.DeploymentService;
 import biocode.fims.digester.Attribute;
@@ -33,8 +34,8 @@ public class MysqlFimsMetadataPersistenceManager extends AbstractFimsMetadataPer
 
     @Autowired
     public MysqlFimsMetadataPersistenceManager(ExpeditionService expeditionService, DeploymentService deploymentService,
-                                               SettingsManager settingsManager) {
-        super(settingsManager);
+                                               FimsProperties props) {
+        super(props);
         this.expeditionService = expeditionService;
         this.deploymentService = deploymentService;
     }

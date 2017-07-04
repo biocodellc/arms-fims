@@ -1,5 +1,6 @@
 package biocode.fims.rest.services.rest;
 
+import biocode.fims.application.config.ArmsProperties;
 import biocode.fims.config.ConfigurationFileFetcher;
 import biocode.fims.digester.*;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
@@ -8,8 +9,6 @@ import biocode.fims.rest.services.rest.subResources.ArmsExpeditionsResource;
 import biocode.fims.run.TemplateProcessor;
 import biocode.fims.service.ExpeditionService;
 import biocode.fims.service.ProjectService;
-import biocode.fims.service.UserService;
-import biocode.fims.settings.SettingsManager;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.server.model.Resource;
 import org.json.simple.JSONArray;
@@ -36,13 +35,13 @@ import java.util.List;
 public class ProjectController extends FimsAbstractProjectsController {
 
     private static Logger logger = LoggerFactory.getLogger(ProjectController.class);
-    private final UserService userService;
+    private final ArmsProperties props;
 
     @Autowired
-    ProjectController(ExpeditionService expeditionService, SettingsManager settingsManager,
-                      ProjectService projectService, UserService userService) {
-        super(expeditionService, settingsManager, projectService);
-        this.userService = userService;
+    ProjectController(ExpeditionService expeditionService, ArmsProperties props,
+                      ProjectService projectService) {
+        super(expeditionService, props, projectService);
+        this.props = props;
     }
 
     @GET
@@ -83,7 +82,7 @@ public class ProjectController extends FimsAbstractProjectsController {
     @Path("/filterOptions")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFilterOptions() {
-        int projectId = Integer.parseInt(settingsManager.retrieveValue("projectId"));
+        int projectId = props.projectId();
         File configFile = new ConfigurationFileFetcher(projectId, defaultOutputDirectory(), true).getOutputFile();
 
         Mapping mapping = new Mapping();
@@ -141,7 +140,7 @@ public class ProjectController extends FimsAbstractProjectsController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDefinitions(@PathParam("projectId") int projectId,
                                    @PathParam("columnName") String columnName) {
-        TemplateProcessor t = new TemplateProcessor(projectId, defaultOutputDirectory());
+        TemplateProcessor t = new TemplateProcessor(projectId, defaultOutputDirectory(), props.naan());
         StringBuilder output = new StringBuilder();
 
         Iterator attributes = t.getMapping().getAllAttributes(t.getMapping().getDefaultSheetName()).iterator();
@@ -302,7 +301,7 @@ public class ProjectController extends FimsAbstractProjectsController {
     @Path("/{projectId}/attributes")
     @Produces(MediaType.TEXT_HTML)
     public Response getAttributes(@PathParam("projectId") int projectId) {
-        TemplateProcessor t = new TemplateProcessor(projectId, defaultOutputDirectory());
+        TemplateProcessor t = new TemplateProcessor(projectId, defaultOutputDirectory(), props.naan());
         LinkedList<String> requiredColumns = t.getRequiredColumns("error");
         LinkedList<String> desiredColumns = t.getRequiredColumns("warning");
         // Use TreeMap for natural sorting of groups
@@ -450,7 +449,7 @@ public class ProjectController extends FimsAbstractProjectsController {
             @FormParam("projectId") Integer projectId) {
 
         // Create the template processor which handles all functions related to the template, reading, generation
-        TemplateProcessor t = new TemplateProcessor(projectId, defaultOutputDirectory());
+        TemplateProcessor t = new TemplateProcessor(projectId, defaultOutputDirectory(), props.naan());
 
         // Set the default sheet-name
         String defaultSheetname = t.getMapping().getDefaultSheetName();
