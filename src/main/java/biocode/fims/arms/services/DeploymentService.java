@@ -3,7 +3,7 @@ package biocode.fims.arms.services;
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.arms.query.DeploymentPredicatesBuilder;
 import biocode.fims.arms.repositories.DeploymentRepository;
-import biocode.fims.entities.Bcid;
+import biocode.fims.entities.BcidTmp;
 import biocode.fims.mysql.query.Query;
 import biocode.fims.service.BcidService;
 import com.querydsl.core.types.Predicate;
@@ -42,7 +42,7 @@ public class DeploymentService {
 
     public Deployment getDeployment(String rootIdentifier, String deploymentId) {
         Deployment deployment = null;
-        Bcid rootEntity = bcidService.getBcid(rootIdentifier);
+        BcidTmp rootEntity = bcidService.getBcid(rootIdentifier);
 
         if (rootEntity.getExpedition() != null) {
             deployment = deploymentRepository.findOneByArmsExpeditionExpeditionIdAndDeploymentId(

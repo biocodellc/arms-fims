@@ -41,7 +41,6 @@ public class ArmsAppConfig {
     }
 
     @Bean
-    @Primary
     public ArmsProperties armsProperties() {
         return new ArmsProperties(fimsAppConfig.env);
     }

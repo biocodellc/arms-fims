@@ -1,5 +1,6 @@
 package biocode.fims.arms.query;
 
+import biocode.fims.application.config.FimsProperties;
 import biocode.fims.arms.entities.Deployment;
 import biocode.fims.digester.Attribute;
 import biocode.fims.digester.Validation;
@@ -27,6 +28,7 @@ public class DeploymentsWriter {
 
     private final String outputDirectory;
     private final ArrayList<Attribute> attributes;
+    private final int naan;
     private final List<Deployment> deployments;
     private final QueryWriter queryWriter;
 
@@ -38,10 +40,11 @@ public class DeploymentsWriter {
      * @param sheetName name of the sheet in the excel workbook where the data exists
      */
     public DeploymentsWriter(List<Deployment> deployments, String outputDirectory,
-                             ArrayList<Attribute> attributes, String sheetName) {
+                             ArrayList<Attribute> attributes, String sheetName, int naan) {
         this.outputDirectory = outputDirectory;
         this.deployments = deployments;
         this.attributes = attributes;
+        this.naan = naan;
 
         queryWriter = new QueryWriter(
                 attributes,
@@ -97,7 +100,7 @@ public class DeploymentsWriter {
             logger.warn("Unable to open Workbook", e);
         }
 
-        TemplateProcessor t = new TemplateProcessor(projectId, outputDirectory, justData);
+        TemplateProcessor t = new TemplateProcessor(projectId, outputDirectory, justData, naan);
         return new File(t.createExcelFileFromExistingSources("Samples", outputDirectory).getAbsolutePath());
     }
 

@@ -25,4 +25,8 @@ public class ArmsProperties extends FimsProperties {
     public int projectId() {
         return env.getRequiredProperty("projectId", int.class);
     }
+
+    public String expeditionResolverTarget() {
+        return env.getRequiredProperty("bcid.resolverTargets.expedition");
+    }
 }

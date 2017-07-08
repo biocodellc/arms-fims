@@ -140,7 +140,8 @@ public class ArmsExpeditionController extends FimsService {
                 deployments,
                 defaultOutputDirectory(),
                 mapping.getAllAttributes(defaultSheetName),
-                defaultSheetName);
+                defaultSheetName,
+                props.naan());
 
         return Response
                 .ok(deploymentsWriter.writeExcel(projectId))

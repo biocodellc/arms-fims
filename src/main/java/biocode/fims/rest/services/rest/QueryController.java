@@ -60,7 +60,8 @@ public class QueryController extends FimsService {
                 deployments,
                 defaultOutputDirectory(),
                 mapping.getAllAttributes(defaultSheetName),
-                defaultSheetName);
+                defaultSheetName,
+                props.naan());
 
         return Response
                 .ok(deploymentsWriter.writeExcel(projectId))
@@ -86,7 +87,8 @@ public class QueryController extends FimsService {
                 deployments,
                 defaultOutputDirectory(),
                 BerkeleyMapperHelper.getAttributes(mapping.getAllAttributes(defaultSheetName)),
-                defaultSheetName);
+                defaultSheetName,
+                props.naan());
 
         return Response
                 .ok(deploymentsWriter.writeTabDelimitedText())
