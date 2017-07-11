@@ -37,8 +37,7 @@ class ArmsController extends ControllerBase {
       }
 
       asort($options);
-    }
-    catch (RequestException $e) {
+    } catch (RequestException $e) {
       watchdog_exception('arms', $e);
       drupal_set_message('Error fetching projects.', 'error');
     }
@@ -59,19 +58,16 @@ class ArmsController extends ControllerBase {
       if ($deployment == NULL) {
         drupal_set_message("Deployment " . $deployment_id . " doesn't exist for projectId: " . $project_id . ".", 'error');
       }
-      else {
-        try {
-          $result = $this->client->get(
-            $this->rest_root . 'arms/projects/' . $deployment->expeditionId,
-            ['Accept' => 'application/json']
-          );
-          $expedition = json_decode($result->getBody());
-        }
-        catch (RequestException $e) {
-        }
+
+      try {
+        $result = $this->client->get(
+          $this->rest_root . 'arms/projects/' . $deployment->expeditionId,
+          ['Accept' => 'application/json']
+        );
+        $expedition = json_decode($result->getBody());
+      } catch (RequestException $e) {
       }
-    }
-    catch (RequestException $e) {
+    } catch (RequestException $e) {
       watchdog_exception('arms', $e);
       drupal_set_message('Error fetching deployment.', 'error');
     }
@@ -84,10 +80,10 @@ class ArmsController extends ControllerBase {
 
   }
 
-  public function deploymentDetailByIdentifier($scheme, $naan, $shoulder, $suffix) {
+  public function deploymentDetailByIdentifier($scheme, $naan, $shoulder_plus_suffix) {
     $deployment = [];
     $expedition = [];
-    $identifier = $scheme . '/' . $naan . '/' . $shoulder . $suffix;
+    $identifier = $scheme . '/' . $naan . '/' . $shoulder_plus_suffix;
     try {
       $result = $this->client->get(
         $this->rest_root . 'deployments/' . $identifier,
@@ -105,12 +101,10 @@ class ArmsController extends ControllerBase {
             ['Accept' => 'application/json']
           );
           $expedition = json_decode($result->getBody());
-        }
-        catch (RequestException $e) {
+        } catch (RequestException $e) {
         }
       }
-    }
-    catch (RequestException $e) {
+    } catch (RequestException $e) {
       watchdog_exception('arms', $e);
       drupal_set_message('Error fetching deployment.', 'error');
     }
@@ -122,8 +116,8 @@ class ArmsController extends ControllerBase {
     ];
   }
 
-  public function deploymentDetailByIdentifierTitle($scheme, $naan, $shoulder, $suffix) {
-    return 'Deployment: ' . $suffix;
+  public function deploymentDetailByIdentifierTitle($scheme, $naan, $shoulder_plus_suffix) {
+    return 'Deployment: ' . substr($shoulder_plus_suffix, strpos($shoulder_plus_suffix, '2') + 1);
   }
 
   public function expeditionDetailById($expedition_id) {
@@ -138,8 +132,7 @@ class ArmsController extends ControllerBase {
       if ($expedition == NULL) {
         drupal_set_message("Project with id " . $expedition_id . " doesn't exist.", 'error');
       }
-    }
-    catch (RequestException $e) {
+    } catch (RequestException $e) {
       watchdog_exception('arms', $e);
       drupal_set_message('Error fetching project.', 'error');
     }
@@ -167,8 +160,7 @@ class ArmsController extends ControllerBase {
       if ($expedition == NULL) {
         drupal_set_message("Project with identifier " . $identifier . " doesn't exist.", 'error');
       }
-    }
-    catch (RequestException $e) {
+    } catch (RequestException $e) {
       watchdog_exception('arms', $e);
       drupal_set_message('Error fetching project.', 'error');
     }

@@ -1,5 +1,6 @@
 package biocode.fims.arms.services;
 
+import biocode.fims.application.config.ArmsProperties;
 import biocode.fims.arms.entities.ArmsExpedition;
 import biocode.fims.arms.repositories.ArmsExpeditionRepository;
 import biocode.fims.digester.Mapping;
@@ -19,12 +20,14 @@ import java.util.List;
 @Transactional("armsTransactionManager")
 public class ArmsExpeditionService {
     private final ExpeditionService expeditionService;
+    private final ArmsProperties props;
     private final ArmsExpeditionRepository armsExpeditionRepository;
 
     @Autowired
-    public ArmsExpeditionService(ArmsExpeditionRepository armsExpeditionRepository, ExpeditionService expeditionService) {
+    public ArmsExpeditionService(ArmsExpeditionRepository armsExpeditionRepository, ExpeditionService expeditionService, ArmsProperties props) {
         this.armsExpeditionRepository = armsExpeditionRepository;
         this.expeditionService = expeditionService;
+        this.props = props;
     }
 
     /**
@@ -33,7 +36,7 @@ public class ArmsExpeditionService {
      * @param armsExpedition
      */
     public void create(ArmsExpedition armsExpedition, int userId, int projectId, Mapping mapping) {
-        expeditionService.create(armsExpedition.getExpedition(), userId, projectId, null, mapping);
+        expeditionService.create(armsExpedition.getExpedition(), userId, projectId, props.expeditionResolverTarget(), mapping);
 
         try {
             // now that the Expedition's id has been set
