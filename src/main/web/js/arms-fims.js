@@ -7,13 +7,15 @@ $.ajaxSetup({
     beforeSend: function (jqxhr, config) {
         jqxhr.config = config;
         var armsSessionStorage = JSON.parse(window.sessionStorage.arms);
-        var accessToken = armsSessionStorage.accessToken;
-        if (accessToken && config.url.indexOf("access_token") == -1) {
+        if (armsSessionStorage && armsSessionStorage.accessToken) {
+          var accessToken = armsSessionStorage.accessToken;
+          if (accessToken && config.url.indexOf("access_token") == -1) {
             if (config.url.indexOf('?') > -1) {
-                config.url += "&access_token=" + accessToken;
+              config.url += "&access_token=" + accessToken;
             } else {
-                config.url += "?access_token=" + accessToken;
+              config.url += "?access_token=" + accessToken;
             }
+          }
         }
     }
 });

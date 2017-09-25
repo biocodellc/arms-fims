@@ -42,7 +42,7 @@ public class Deployment {
     private String intentToPhotographPlates;
     private String intentToPhotographSpecimens;
     private Integer numReplicatesInSet;
-    private URI photoUrl;
+    private String photoUrl;
 
     // Deployment Time
     private String actualDeploymentDate;
@@ -258,11 +258,11 @@ public class Deployment {
 
     @QueryType(PropertyType.STRING)
     @Column(columnDefinition = "varchar(2083)")
-    public URI getPhotoUrl() {
+    public String getPhotoUrl() {
         return photoUrl;
     }
 
-    public void setPhotoUrl(URI photoUrl) {
+    public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
 
