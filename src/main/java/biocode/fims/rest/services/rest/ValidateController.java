@@ -1,6 +1,8 @@
 package biocode.fims.rest.services.rest;
 
 import biocode.fims.application.config.FimsProperties;
+import biocode.fims.arms.entities.ArmsExpedition;
+import biocode.fims.arms.services.ArmsExpeditionService;
 import biocode.fims.config.ConfigurationFileFetcher;
 import biocode.fims.entities.Project;
 import biocode.fims.fileManagers.AuxilaryFileManager;
@@ -11,6 +13,8 @@ import biocode.fims.rest.FimsService;
 import biocode.fims.run.Process;
 import biocode.fims.run.ProcessController;
 import biocode.fims.service.*;
+import biocode.fims.settings.SettingsManager;
+import biocode.fims.utils.EmailUtils;
 import biocode.fims.utils.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -30,19 +34,24 @@ import java.util.*;
 @Controller
 @Path("validate")
 public class ValidateController extends FimsService {
+    private static final SettingsManager settingManager = SettingsManager.getInstance();
+    private static final String uploadNotificationEmail = settingManager.retrieveValue("uploadNotificationEmail");
 
     private final ExpeditionService expeditionService;
     private final List<AuxilaryFileManager> fileManagers;
     private final FimsMetadataFileManager fimsMetadataFileManager;
     private final ProjectService projectService;
+    private final ArmsExpeditionService armsExpeditionService;
 
     ValidateController(ExpeditionService expeditionService, FimsMetadataFileManager fimsMetadataFileManager,
-                       List<AuxilaryFileManager> fileManagers, FimsProperties props, ProjectService projectService) {
+                       List<AuxilaryFileManager> fileManagers, FimsProperties props, ProjectService projectService,
+                       ArmsExpeditionService armsExpeditionService) {
         super(props);
         this.expeditionService = expeditionService;
         this.fimsMetadataFileManager = fimsMetadataFileManager;
         this.fileManagers = fileManagers;
         this.projectService = projectService;
+        this.armsExpeditionService = armsExpeditionService;
     }
 
     /**
@@ -181,6 +190,16 @@ public class ValidateController extends FimsService {
             Process p = processController.getProcess();
 
             p.upload(false, props.ignoreUser(), expeditionService);
+
+            ArmsExpedition armsExpedition = armsExpeditionService.getArmsExpedition(processController.getExpeditionCode(), processController.getProjectId());
+
+            String emailBody = armsExpedition.getPrincipalInvestigator() + " has uploaded data to project: " + armsExpedition.getExpedition().getExpeditionCode();
+
+            // Send an Email that this completed
+            EmailUtils.sendEmail(
+                    uploadNotificationEmail,
+                    "ARMS Data uploaded",
+                    emailBody);
 
             returnValue.put("done", processController.getSuccessMessage());
             return returnValue;

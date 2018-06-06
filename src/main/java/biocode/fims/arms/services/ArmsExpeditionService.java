@@ -77,6 +77,15 @@ public class ArmsExpeditionService {
         return armsExpedition;
     }
 
+    public ArmsExpedition getArmsExpedition(String armsExpeditionCode, int projectId) {
+        Expedition expedition = expeditionService.getExpedition(armsExpeditionCode, projectId);
+
+        ArmsExpedition armsExpedition = armsExpeditionRepository.findByExpeditionId(expedition.getExpeditionId());
+        armsExpedition.setExpedition(expedition);
+
+        return armsExpedition;
+    }
+
     public ArmsExpedition getArmsExpeditionByIdentifier(String identifier) {
         Expedition expedition = expeditionService.getExpedition(identifier);
 
