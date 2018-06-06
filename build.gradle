@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.fgiannesini.libsass.gradle.plugin:libsass-gradle-plugin:+'
-        classpath "org.biocode:gradle-fims:1.1.5"
+        classpath "org.biocode:gradle-fims:1.3.2"
     }
 }
 
@@ -21,7 +21,7 @@ apply plugin: "org.biocode.fims-web"
 import org.biocode.gradle.web.tasks.RestartRemoteJettyTask
 import org.biocode.gradle.web.tasks.HotDeployRemoteJettyTask
 
-ext.fimsCommonsVersion = "0.2.11"
+ext.fimsCommonsVersion = "0.2.12"
 
 fims {
     maven {
