@@ -24,20 +24,16 @@ import org.springframework.context.annotation.*;
 public class ArmsAppConfig {
     @Autowired
     FimsAppConfig fimsAppConfig;
-    @Autowired
-    DeploymentService deploymentService;
-    @Autowired
-    MessageSource messageSource;
 
     @Bean
     @Scope("prototype")
-    public FimsMetadataFileManager FimsMetadataFileManager() {
+    public FimsMetadataFileManager FimsMetadataFileManager(DeploymentService deploymentService) {
         FimsMetadataPersistenceManager persistenceManager = new MysqlFimsMetadataPersistenceManager(
                 fimsAppConfig.expeditionService,
                 deploymentService,
                 armsProperties());
         return new FimsMetadataFileManager(persistenceManager, armsProperties(),
-                fimsAppConfig.expeditionService, fimsAppConfig.bcidService, messageSource);
+                fimsAppConfig.expeditionService, fimsAppConfig.bcidService, fimsAppConfig.messageSource());
     }
 
     @Bean
