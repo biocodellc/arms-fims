@@ -19,6 +19,7 @@ import biocode.fims.utils.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -43,6 +44,7 @@ public class ValidateController extends FimsService {
     private final ProjectService projectService;
     private final ArmsExpeditionService armsExpeditionService;
 
+    @Autowired
     ValidateController(ExpeditionService expeditionService, FimsMetadataFileManager fimsMetadataFileManager,
                        List<AuxilaryFileManager> fileManagers, FimsProperties props, ProjectService projectService,
                        ArmsExpeditionService armsExpeditionService) {
