@@ -44,8 +44,7 @@ public class ValidateController extends FimsService {
     private final ProjectService projectService;
     private final ArmsExpeditionService armsExpeditionService;
 
-    @Autowired
-    ValidateController(ExpeditionService expeditionService, FimsMetadataFileManager fimsMetadataFileManager,
+    public ValidateController(ExpeditionService expeditionService, FimsMetadataFileManager fimsMetadataFileManager,
                        List<AuxilaryFileManager> fileManagers, FimsProperties props, ProjectService projectService,
                        ArmsExpeditionService armsExpeditionService) {
         super(props);

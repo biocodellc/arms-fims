@@ -103,6 +103,8 @@ dependencies {
     server group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.2.11'
     server group: 'javax.activation', name: 'activation', version: '1.1.1'
     server group: 'javax.el', name: 'javax.el-api', version: '3.0.0'
+    server 'com.sun.mail:javax.mail:1.5.5'
+    server 'joda-time:joda-time:2.1' // TODO replace with java 8 Date/Times
 
     testCompile "junit:junit-dep:4.10"
 

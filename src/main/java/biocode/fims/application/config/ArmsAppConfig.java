@@ -27,7 +27,7 @@ public class ArmsAppConfig {
 
     @Bean
     @Scope("prototype")
-    public FimsMetadataFileManager FimsMetadataFileManager(DeploymentService deploymentService) {
+    public FimsMetadataFileManager fimsMetadataFileManager(DeploymentService deploymentService) {
         FimsMetadataPersistenceManager persistenceManager = new MysqlFimsMetadataPersistenceManager(
                 fimsAppConfig.expeditionService,
                 deploymentService,
